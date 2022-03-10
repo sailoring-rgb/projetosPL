@@ -1,9 +1,12 @@
 import re
 import sys
+from typing import List, Tuple
 
 h = "Número,Nome,Curso,Notas{5}::media,,,,,Idade,Contas{3}"
 
-def header(line):
+# ASSUMI QUE O DELIMITADOR ENTRE CADA CAMPO É UMA VÍRGULA, POSSO?
+
+def header(line) -> Tuple[List[str],List[Tuple]]:
 
 	columns = []                                        # contem o nome das colunas
 	operations = []                                     # contem as funções de agreg. que serão feitas para cada campo se este corresponder a uma lista
@@ -31,5 +34,12 @@ def header(line):
 			operations.append(t)
 	# print(operations)
 	# print(columns)
+	return columns,operations
 
-header(h)
+
+"""
+# o nome das columas do ficheiro
+	print(header(h)[0])
+# as operações para cada campo se este corresponder a uma lista
+	print(header(h)[1])
+"""
