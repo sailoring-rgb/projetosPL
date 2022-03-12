@@ -2,9 +2,8 @@ import re
 import sys
 from typing import List, Tuple
 
-h = "Número,Nome,Curso,Notas{5}::media,,,,,Idade,Contas{3}"
-
-# ASSUMI QUE O DELIMITADOR ENTRE CADA CAMPO É UMA VÍRGULA, POSSO?
+h = "Número;Nome;Curso;Notas{5}::media;;;;;Idade;Contas{3};;;"
+h1 = "Número,Nome,Curso,Notas{5}::media,,,,,Idade,Contas{3},,,"
 
 def header(line) -> Tuple[List[str],List[Tuple]]:
 
@@ -18,9 +17,9 @@ def header(line) -> Tuple[List[str],List[Tuple]]:
 		- segundo: valor de N (pode ser nulo)
 		- terceiro: função de agregação (pode ser nulo)
 	"""
-	elements = re.findall(r'([^:{,]+)(?:{(.*?)})?(?:\:\:(.*?)(?:,))?', line)
+	elements = re.findall(r'([^;:,{]+)(?:{(.*?)})?(?:\:\:(.*?)(?:;|,))?', line)
 	# print(elements)
-
+	
 	for i in elements:
 		columns.append(i[0])
 		if len(list(filter(None,i))) == 1:
@@ -36,6 +35,7 @@ def header(line) -> Tuple[List[str],List[Tuple]]:
 	# print(columns)
 	return columns,operations
 
+# header(h)
 
 """
 # o nome das columas do ficheiro
