@@ -129,18 +129,24 @@ def convertToJSON(separator: str, columnOperations: List[str], lines: List[str])
 
 
 # ABRIR E LER O FICHEIRO
-path = input("Insira o path do ficheiro input: ")     # SOLUÇÃO PROVISÓRIO PARA ABRIR O PATH CORRETO
-file = open(path)
+# path = input("Insira o path do ficheiro input: ")     # SOLUÇÃO PROVISÓRIO PARA ABRIR O PATH CORRETO
+file = open("input/alunos.csv")
 lines = file.read().splitlines()
 file.close()
 
 
 # PROCESSAR O HEADER -- SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
 try:
-	separator,columnNames,columnOperations = header(lines[0])
+	print(lines[0])
+	separator,columnOperations = header(lines[0])
 	lines.remove(lines[0])
 except NameError:
     print("Unsupported function")
+
+
+for line in lines:
+	res = processLine(separator,columnOperations,line)
+	print(res)
 
 
 ########## fileOUTPUT ......
