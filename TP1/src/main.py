@@ -78,6 +78,8 @@ def executeFunction(columnName:str, function: str, values: List[float]):
 # FUNÇÃO RESPONSÁVEL POR PROCESSAR UMA LINHA DO FICHEIRO CSV (SEM SER O CABEÇALHO)
 def processLine(separator: str, columnOperations: List[str], line: str):
 
+	# expressão para apanhar apenas keys e values: (\d+|(?i)([a-zà-ü]+(?-i)\s*)*)
+
 	result = []                         # exemplo: result = ["Número": "12334", "Nome": "Cândida", "Curso": "Desporto", "Notas_media": 15.3]
 	pos = 0
 
