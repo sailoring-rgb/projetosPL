@@ -111,13 +111,12 @@ def processLine(separator: str, columnOperations: List[str], line: str):
 			result.append(f'"{op[0]}": {elements[pos]}')
 
 		pos = pos + 1
-	# print(result)
+	#print(result)
 	return result
 
 
 # FUNÇÃO RESPONSÁVEL POR CONVERTER PARA JSON
 def convertToJSON(separator: str, columnOperations: List[str], lines: List[str]):
-
 	for line in lines:
 		res = processLine(separator,columnOperations,line)
 		print(res)
@@ -130,7 +129,7 @@ def convertToJSON(separator: str, columnOperations: List[str], lines: List[str])
 
 # ABRIR E LER O FICHEIRO
 # path = input("Insira o path do ficheiro input: ")     # SOLUÇÃO PROVISÓRIO PARA ABRIR O PATH CORRETO
-file = open("input/alunos.csv")
+file = open("../input/alunos2.csv") # Abre ficheiro na diretoria de input
 lines = file.read().splitlines()
 file.close()
 
@@ -150,3 +149,5 @@ for line in lines:
 
 
 ########## fileOUTPUT ......
+# outputFile = open("../output/test.json","w")
+# outputFile.write(srt(res))
