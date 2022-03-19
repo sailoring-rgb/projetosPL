@@ -2,19 +2,14 @@ import re
 from typing import List, Tuple
 from xmlrpc.client import Boolean
 
-"""
-# PARA TESTES RÁPIDOS
-h = "Número;Nome;Curso;Notas{5}::a;;;;;Idade;Contas{3};;;"
-h1 = "Número,Nome,Curso,Notas{5}::media,,,,,Idade,Contas{3},,,"
-h2 = "Número;Nome;Curso;Notas{5},,,,,"
-l = "12334;Ana Júlia;Desporto;10,12,11,,"
-l1 = "12334,Ana Júlia,Desporto,10,12,11,,"
-"""
+######### IMPORTS NEEDED FOR TESTING #########
+import json 
+import csv 
 
 # FUNÇÃO RESPONSÁVEL POR PROCESSAR O CABEÇALHO DO FICHEIRO CSV
 def header(line) -> Tuple[str, List[str]]:
 
-	# columnNames = []                                    # contem o nome das colunas
+	columnNames = []                                    # contem o nome das colunas
 	columnOperations = []                               # contem as funções de agreg. que serão feitas para cada campo se este corresponder a uma lista
 	functions = ["sum","media","min","max","count"]     # as funções de agreg. possíveis
 
@@ -27,10 +22,9 @@ def header(line) -> Tuple[str, List[str]]:
 			separator = ","
 
 	elements = re.findall(r'([^;:,{]+)(?:{(.*?)})?(?:\:\:(.*?)(?:;|,))?', line)
-	# print(elements)
 	
 	for i in elements:
-		# columnNames.append(i[0])
+		columnNames.append(i[0])
 		if len(list(filter(None,i))) == 1:
 			t = (i[0],0,"none")
 			columnOperations.append(t)
@@ -44,7 +38,6 @@ def header(line) -> Tuple[str, List[str]]:
 			else:
 				t = (i[0],i[1],i[2])
 				columnOperations.append(t)
-
 	return separator,columnOperations
 
 
@@ -59,7 +52,7 @@ def calculateLength(string: str):
 
 
 # FUNÇÃO RESPONSÁVEL POR APLICAR A FUNÇÃO DE AGREGAÇÃO PASSADA NO CABEÇALHO À RESPETIVA UMA COLUNA
-def executeFunction(columnName:str, function: str, values: List[float]):
+def executeFunction(columnName:str, function: str, values: List[int]):
 	if function == "sum":
 		res = f'"{columnName}_sum": {sum(values)}'
 	elif function == "media":
@@ -77,7 +70,6 @@ def executeFunction(columnName:str, function: str, values: List[float]):
 
 # FUNÇÃO RESPONSÁVEL POR PROCESSAR UMA LINHA DO FICHEIRO CSV (SEM SER O CABEÇALHO)
 def processLine(separator: str, columnOperations: List[str], line: str):
-
 	# expressão para apanhar apenas keys e values: (\d+|(?i)([a-zà-ü]+(?-i)\s*)*)
 
 	result = []                         # exemplo: result = ["Número": "12334", "Nome": "Cândida", "Curso": "Desporto", "Notas_media": 15.3]
@@ -101,12 +93,12 @@ def processLine(separator: str, columnOperations: List[str], line: str):
 					if re.match(r'^-?\d+(?:\.\d+)?$', i):
 						list.append(i)
 			else:    														# se o separador for uma vírgula
-				for i in elements[pos:(pos+length-1)]:
+				for i in elements[pos:(pos+length)]:
 					if re.match(r'^-?\d+(?:\.\d+)?$', i):
 						list.append(i)
 						
-			values = [float(value) for value in list]
-
+			values = [int(value) for value in list]
+			
 			res = executeFunction(op[0],op[2],values)
 			result.append(res)
 		else:
@@ -118,38 +110,60 @@ def processLine(separator: str, columnOperations: List[str], line: str):
 
 
 # FUNÇÃO RESPONSÁVEL POR CONVERTER PARA JSON
-def convertToJSON(separator: str, columnOperations: List[str], lines: List[str]):
-	for line in lines:
-		res = processLine(separator,columnOperations,line)
-		print(res)
-	
-	# ...........................................................................
-
+def prepareJSON(dicionario, columnOperations):
+	res = "[\n"
+	for dic_entry in dicionario:
+		res += "\t{\n"
+		for i in range(len(columnOperations)):
+			name = columnOperations[i][0]
+			res += "\t\t\""+ name + "\": "
+			if "," in dic_entry[name]:
+				res += dic_entry[name]
+			else:
+				res += "\"" + dic_entry[name] + "\""
+			if i == len(columnOperations) - 1:
+				res += "\n"
+			else:
+				res += ",\n"
+		res += "\t},\n"
+	res = res[:-2]
+	res += "\n]"
+	return res
 
 #################################################### MAIN ####################################################
 
-
 # ABRIR E LER O FICHEIRO
-# path = input("Insira o path do ficheiro input: ")     # SOLUÇÃO PROVISÓRIO PARA ABRIR O PATH CORRETO
-file = open("../input/alunos2.csv") # Abre ficheiro na diretoria de input
+file = open("../input/alunos2.csv")
 lines = file.read().splitlines()
 file.close()
 
 
 # PROCESSAR O HEADER -- SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
 try:
-	print(lines[0])
 	separator,columnOperations = header(lines[0])
 	lines.remove(lines[0])
 except NameError:
     print("Unsupported function")
 
 
-for line in lines:
+# PROCESSAR AS RESTANTES LINHAS DO FICHEIRO
+rule = re.compile(r'(?!"([a-zà-ü]+":))( .*)') # RegEx used to access the value of each column
+full_dic = []
+
+for line in lines: # Loop cicle to create a dictionary for each entry of the CSV file
+	dicionario = {}
 	res = processLine(separator,columnOperations,line)
-	print(res)
+	for i in range(len(columnOperations)):
+		m = re.search(rule,res[i])
+		if m:
+			dicionario[columnOperations[i][0]] = m.group()[1:]
+	full_dic.append(dicionario.copy())
 
+outData = prepareJSON(full_dic,columnOperations)
+print(outData)
 
-########## fileOUTPUT ......
-# outputFile = open("../output/test.json","w")
-# outputFile.write(srt(res))
+# GUARDAR O OUTPUT GERADO fileOUTPUT ......
+#outputTest = open("../output/test.json","w")
+#outputFile = open("../output/work.json","w")
+#json.dump(full_dic,outputTest,indent=6) 		# for testing
+#outputFile.write(outData)
