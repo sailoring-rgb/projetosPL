@@ -111,29 +111,42 @@ def processLine(separator: str, columnOperations: List[str], line: str):
 
 # FUNÇÃO RESPONSÁVEL POR CONVERTER PARA JSON
 def prepareJSON(dicionario, columnOperations):
-	res = "[\n"
+	res = "[\n" # Incío do ficheiro JSON
 	for dic_entry in dicionario:
-		res += "\t{\n"
+		res += "\t{\n" # Incío de um dicionário
 		for i in range(len(columnOperations)):
 			name = columnOperations[i][0]
-			res += "\t\t\""+ name + "\": "
-			if "," in dic_entry[name]:
-				res += dic_entry[name].replace(" ","")
+			if dic_entry[name] == "": # Caso não exista nenhum valor, a chave não é introduzida no dicionário
+				break
+			elif "_" in dic_entry[name]:
+				
+				name_regex = re.compile(r'(\w+_\w+)')
+				func_name = name_regex.match(dic_entry[name])
+				if func_name:
+					res += "\t\t\""+ func_name.group() + "\": "
+				value = re.compile(r'\d+((.|,)\d+)?')
+				val = re.search(value, dic_entry[name])
+				if val:
+					res += val.group()				
 			else:
-				res += "\"" + dic_entry[name] + "\""
+				res += "\t\t\""+ name + "\": "
+				if "," in dic_entry[name]: # Verifica se o valor é uma lista
+					res += dic_entry[name].replace(" ","") # Remove os espaços da lista
+				else:
+					res += "\"" + dic_entry[name] + "\"" # Coloca o valor da chave entre aspas
 			if i == len(columnOperations) - 1:
-				res += "\n"
+				res += "\n"	# Se for a última chave do dicionário não se acresventa a vírgula
 			else:
 				res += ",\n"
-		res += "\t},\n"
+		res += "\t},\n" # Fim de um dicionário
 	res = res[:-2]
-	res += "\n]"
+	res += "\n]" # Final do ficheiro JSON
 	return res
 
 #################################################### MAIN ####################################################
 
 # ABRIR E LER O FICHEIRO
-file = open("../input/alunos2.csv")
+file = open("../input/alunos4.csv")
 lines = file.read().splitlines()
 file.close()
 
