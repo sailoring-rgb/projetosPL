@@ -118,7 +118,7 @@ def prepareJSON(dicionario, columnOperations):
 			name = columnOperations[i][0]
 			res += "\t\t\""+ name + "\": "
 			if "," in dic_entry[name]:
-				res += dic_entry[name]
+				res += dic_entry[name].replace(" ","")
 			else:
 				res += "\"" + dic_entry[name] + "\""
 			if i == len(columnOperations) - 1:
