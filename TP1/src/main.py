@@ -1,6 +1,5 @@
 import re
 from typing import List, Tuple
-from xmlrpc.client import Boolean
 
 ######### IMPORTS NEEDED FOR TESTING #########
 import json 
@@ -87,7 +86,6 @@ def processLine(separator: str, columnOperations: List[str], line: str):
 		list = []
 
 		if length > 0:
-
 			if separator == ";":
 				for i in elements[pos].split(","):
 					if re.match(r'^-?\d+(?:\.\d+)?$', i):
@@ -146,9 +144,14 @@ def prepareJSON(dicionario, columnOperations):
 #################################################### MAIN ####################################################
 
 # ABRIR E LER O FICHEIRO
-file = open("../input/alunos4.csv")
+file = open("input/cities.csv")
 lines = file.read().splitlines()
 file.close()
+
+
+for line in lines:
+	if line == '':
+		lines.remove(line)
 
 
 # PROCESSAR O HEADER -- SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
