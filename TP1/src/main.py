@@ -1,146 +1,9 @@
-from ast import Break
-from asyncore import read
-from fileinput import filename
 import re
-import sys
-from typing import List, Tuple
-
-
-# FUNÇÃO RESPONSÁVEL POR PROCESSAR O CABEÇALHO DO FICHEIRO CSV
-def header(line) -> Tuple[str, List[str]]:
-
-	columnOperations = []                               # contem as funções de agreg. que serão feitas para cada campo se este corresponder a uma lista
-	functions = ["sum","media","min","max","count"]     # as funções de agreg. possíveis
-
-	semicolon = re.match(r'(?:(.*?));',line)
-	if semicolon:
-		line.replace(";",",")
-		separator = ","
-	else:	
-		comma = re.match(r'(?:(.*?)),',line)
-		if comma:
-			separator = ","
-
-	elements = re.findall(r'([^;:,{]+)(?:{(.*?)})?(?:\:\:(.*?)(?:;|,))?', line)
-	
-	for i in elements:
-		if len(list(filter(None,i))) == 1:
-			t = (i[0],0,"none")
-			columnOperations.append(t)
-		elif len(list(filter(None,i))) == 2:
-			t = (i[0],i[1],"none")
-			columnOperations.append(t)
-		else:
-			# a função de agregação passada não é reconhecida
-			if i[2] not in functions:
-				raise NameError
-			else:
-				t = (i[0],i[1],i[2])
-				columnOperations.append(t)
-	return separator,columnOperations
-
-
-# FUNÇÃO RESPONSÁVEL POR CALCULAR O MÁXIMO COMPRIMENTO DE UMA LISTA -- CASO EM QUE TEMOS UM INTERVALO DE VALORES {3,5}
-def calculateLength(string: str):
-	res = string.split(",")
-	if len(res) == 1:
-		length = res[0]
-	else:
-		length = res[1]
-	return length
-
-
-# FUNÇÃO RESPONSÁVEL POR APLICAR A FUNÇÃO DE AGREGAÇÃO PASSADA NO CABEÇALHO À RESPETIVA UMA COLUNA
-def executeFunction(columnName:str, function: str, values: List[int]):
-	if function == "sum":
-		res = f'"{columnName}_sum": {sum(values)}'
-	elif function == "media":
-		result = round(sum(values)/len(values),2)
-		res = f'"{columnName}_media": {result}'
-	elif function == "min":
-		res = f'"{columnName}_min": {min(values)}'
-	elif function == "max":
-		res = f'"{columnName}_max": {max(values)}'
-	elif function == "count":
-		res = f'"{columnName}_count": {len(values)}'
-	elif function == "none":
-		res = f'"{columnName}": {values}'
-	return res
-
-
-# FUNÇÃO RESPONSÁVEL POR PROCESSAR UMA LINHA DO FICHEIRO CSV (SEM SER O CABEÇALHO)
-def processLine(separator: str, columnOperations: List[str], line: str):
-    
-    result = []                         # exemplo: result = ["Número": "12334", "Nome": "Cândida", "Curso": "Desporto", "Notas_media": 15.3]
-    pos = 0
-
-    if separator == ";":
-        elements = line.split(";")
-    else:
-        elements = line.split(",")
-
-    # i : (Column Name, Length if List, Fuction Name)
-    for op in columnOperations:
-
-        length = int(calculateLength(str(op[1])))
-        list = []
-
-        if length > 0:
-            if separator == ";":
-                for i in elements[pos:(pos+length)]:
-                    if re.match(r'^-?\d+(?:\.\d+)?$', i):
-                        list.append(i)
-            else:                                                            # se o separador for uma vírgula
-                for i in elements[pos:(pos+length)]:
-                    if re.match(r'^-?\d+(?:\.\d+)?$', i):
-                        list.append(i)
-                                
-            values = [int(value) for value in list]
-
-            res = executeFunction(op[0],op[2],values)
-            result.append(res)
-            pos = pos + length
-        else:
-            result.append(f'"{op[0]}": {elements[pos]}')
-            pos = pos + 1
-
-    return result
-
-
-# FUNÇÃO RESPONSÁVEL POR CONVERTER PARA JSON
-def prepareJSON(dicionario, columnOperations):
-	res = "[\n" # Incío do ficheiro JSON
-	for dic_entry in dicionario:
-		res += "\t{\n" # Incío de um dicionário
-		for i in range(len(columnOperations)):
-			name = columnOperations[i][0]
-			if dic_entry[name] == "": # Caso não exista nenhum valor, a chave não é introduzida no dicionário
-				break
-			elif not "none" in columnOperations[i][2]: # Verifica se existe uma função de agregação
-				res += "\t\t\""+ name + "_"+ columnOperations[i][2] +"\": "
-				value = re.compile(r'\d+((.|,)\d+)?')
-				val = re.search(value, dic_entry[name])
-				if val:
-					res += val.group()
-			else:
-				res += "\t\t\""+ name + "\": "
-				if "," in dic_entry[name]: # Verifica se o valor é uma lista
-					res += dic_entry[name].replace(" ","") # Remove os espaços da lista
-				else:
-					res += "\"" + dic_entry[name] + "\"" # Coloca o valor da chave entre aspas
-			if i == len(columnOperations) - 1:
-				# Verifica se a posição atual é a última
-				res += "\n"
-			else:
-				res += ",\n"
-		res += "\t},\n" # Fim de um dicionário
-	res = res[:-2]
-	res += "\n]" # Final do ficheiro JSON
-	return res
+from helper import *
 
 #################################################### MAIN ####################################################
 
-# LEITURA DE INPUT PARA O FICHEIRO
+# LEITURA DE INPUT PARA O NOME DO FICHEIRO
 file_name = input("Inserir nome do ficheiro a converter, com a respetiva extensão: ")
 
 try:
@@ -155,31 +18,20 @@ if file:
 	file.close()
 	output_name = input("Inserir nome do ficheiro destino, com a respetiva extensão: ")
 	
-	# REMOVER LINHAS VAZIAS DO INPUT
-	for line in lines:
-		if line == '':
-			lines.remove(line)
+	# PROCESSAMENTO INICAL DO INPUT
+	lines = clenInput(lines)
 
-	# PROCESSAR O HEADER -- SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
+	# PROCESSAR O HEADER
 	try:
-		separator,columnOperations = header(lines[0])
+		columnOperations = header(lines[0])
 		lines.remove(lines[0])
-	except NameError:
+	except NameError: # SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
 		print("Unsupported function")
 
 	# PROCESSAR AS RESTANTES LINHAS DO FICHEIRO
-	rule = re.compile(r'(?!"([a-zà-ü]+":))( .*)') # RegEx usada para aceder ao valor de cada coluna
-	full_dic = [] # Lista para guardar todos os dicionários gerados
-	
-	# CRIAÇÃO ITERATIVA DE DICIONÁRIOS
-	for line in lines: 
-		dicionario = {}
-		res = processLine(separator,columnOperations,line)
-		for i in range(len(columnOperations)):
-			m = re.search(rule,res[i])
-			if m:
-				dicionario[columnOperations[i][0]] = m.group()[1:]
-		full_dic.append(dicionario.copy())
+	full_dic = geraDicionario(columnOperations, lines)
+
+	# PREPAR O OUTPUT PARA JSON
 	outData = prepareJSON(full_dic,columnOperations)
 
 	# GUARDAR O OUTPUT
