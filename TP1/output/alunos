@@ -1,0 +1,77 @@
+[
+	{
+		"Número": "12334",
+		"Nome": "Ana Júlia",
+		"Curso": "Desporto",
+		"Notas_media": 11.0,
+		"NotaFinal_max": 12,
+		"Extracurricular": "11"
+	},
+	{
+		"Número": "96248",
+		"Nome": "Ana Murta",
+		"Curso": "Culinária",
+		"Notas_media": 18.75,
+		"NotaFinal_max": 20,
+		"Extracurricular": "18"
+		"Universidade": "18"
+	},
+	{
+		"Número": "96236",
+		"Nome": "Ana Henriques",
+		"Curso": "Desporto",
+		"Notas_media": 17.0,
+		"NotaFinal_max": 18,
+		"Extracurricular": "16"
+	},
+	{
+		"Número": "56471",
+		"Nome": "Rui Coelho",
+		"Curso": "Economia",
+		"Notas_media": 16.67,
+		"NotaFinal_max": 18,
+		"Extracurricular": "17"
+	},
+	{
+		"Número": "11247",
+		"Nome": "João Mendes",
+		"Curso": "Design",
+		"Notas_media": 13.67,
+		"NotaFinal_max": 14,
+		"Extracurricular": "14"
+	},
+	{
+		"Número": "74215",
+		"Nome": "Joana Oliveira",
+		"Curso": "Psicologia",
+		"Notas_media": 14.4,
+		"NotaFinal_max": 16,
+		"Extracurricular": "16"
+		"Universidade": "12"
+	},
+	{
+		"Número": "94521",
+		"Nome": "Mafalda Gomes",
+		"Curso": "Culinária",
+		"Notas_media": 16.0,
+		"NotaFinal_max": 18,
+		"Extracurricular": "18"
+	},
+	{
+		"Número": "45681",
+		"Nome": "Gustavo Cerqueira",
+		"Curso": "Ciência Política",
+		"Notas_media": 15.25,
+		"NotaFinal_max": 16,
+		"Extracurricular": "16"
+		"Universidade": "18"
+	},
+	{
+		"Número": "32187",
+		"Nome": "Alexandre Costa",
+		"Curso": "Economia",
+		"Notas_media": 14.0,
+		"NotaFinal_max": 15,
+		"Extracurricular": "15"
+	}
+]

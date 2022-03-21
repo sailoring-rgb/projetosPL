@@ -1,3 +1,4 @@
+from ast import Break
 from asyncore import read
 from fileinput import filename
 import re
@@ -58,7 +59,8 @@ def executeFunction(columnName:str, function: str, values: List[int]):
 	if function == "sum":
 		res = f'"{columnName}_sum": {sum(values)}'
 	elif function == "media":
-		res = f'"{columnName}_media": {sum(values)/len(values)}'
+		result = round(sum(values)/len(values),2)
+		res = f'"{columnName}_media": {result}'
 	elif function == "min":
 		res = f'"{columnName}_min": {min(values)}'
 	elif function == "max":
@@ -119,25 +121,24 @@ def prepareJSON(dicionario, columnOperations):
 			name = columnOperations[i][0]
 			if dic_entry[name] == "": # Caso não exista nenhum valor, a chave não é introduzida no dicionário
 				break
-			elif "_" in dic_entry[name]:
-				
-				name_regex = re.compile(r'(\w+_\w+)')
-				func_name = name_regex.match(dic_entry[name])
-				if func_name:
-					res += "\t\t\""+ func_name.group() + "\": "
+			elif not "none" in columnOperations[i][2]: # Verifica se existe uma função de agregação
+				res += "\t\t\""+ name + "_"+ columnOperations[i][2] +"\": "
 				value = re.compile(r'\d+((.|,)\d+)?')
 				val = re.search(value, dic_entry[name])
 				if val:
-					res += val.group()				
+					res += val.group()
 			else:
 				res += "\t\t\""+ name + "\": "
 				if "," in dic_entry[name]: # Verifica se o valor é uma lista
 					res += dic_entry[name].replace(" ","") # Remove os espaços da lista
 				else:
 					res += "\"" + dic_entry[name] + "\"" # Coloca o valor da chave entre aspas
-			if i == len(columnOperations) - 1:
-				res += "\n"	# Se for a última chave do dicionário não se acresventa a vírgula
-			else:
+			if (i == len(columnOperations) - 1) or (i + 1 == len(columnOperations) - 1 and 'none' in columnOperations[i+1][2]):  
+				# Verifica:
+				#  i) se a posição em avaliação é a última posição do dicionário
+				# ii) se a posição seguinte for a última e se a próxima entrada é vazia
+				res += "\n"	
+			else:	
 				res += ",\n"
 		res += "\t},\n" # Fim de um dicionário
 	res = res[:-2]
@@ -147,10 +148,11 @@ def prepareJSON(dicionario, columnOperations):
 #################################################### MAIN ####################################################
 
 # ABRIR E LER O FICHEIRO
-file_name = input("Inserir nome do ficheiro a converter: ")
+file_name = input("Inserir nome do ficheiro a converter, com a respetiva extensão: ")
+output_name = input("Inserir nome do ficheiro destino, com a respetiva extensão: ")
 
 try:
-	file = open("../input/"+file_name+".csv")
+	file = open("../input/"+file_name)
 	lines = file.read().splitlines()
 	file.close()
 
@@ -178,15 +180,12 @@ try:
 			if m:
 				dicionario[columnOperations[i][0]] = m.group()[1:]
 		full_dic.append(dicionario.copy())
-
 	outData = prepareJSON(full_dic,columnOperations)
-	print(outData)
 
-	# GUARDAR O OUTPUT GERADO fileOUTPUT ......
-	#outputTest = open("../output/test.json","w")
-	#outputFile = open("../output/work.json","w")
-	#json.dump(full_dic,outputTest,indent=6) 		# for testing
-	#outputFile.write(outData)
+	# GUARDAR O OUTPUT
+	outputFile = open("../output/"+output_name,"w")
+	outputFile.write(outData)
+	outputFile.close
 
 except FileNotFoundError as e:
     print(f"Ficheiro inválido: o \"{file_name}\" não foi encontrado!")
