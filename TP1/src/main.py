@@ -5,29 +5,20 @@ import re
 import sys
 from typing import List, Tuple
 
-######### IMPORTS NEEDED FOR TESTING #########
-import json 
-import csv 
 
 # FUNÇÃO RESPONSÁVEL POR PROCESSAR O CABEÇALHO DO FICHEIRO CSV
 def header(line) -> Tuple[str, List[str]]:
 
-	columnNames = []                                    # contem o nome das colunas
 	columnOperations = []                               # contem as funções de agreg. que serão feitas para cada campo se este corresponder a uma lista
 	functions = ["sum","media","min","max","count"]     # as funções de agreg. possíveis
 
 	semicolon = re.match(r'(?:(.*?));',line)
 	if semicolon:
-		separator = ";"
-	else:	
-		comma = re.match(r'(?:(.*?)),',line)
-		if comma:
-			separator = ","
-
+		line.replace(";",",")
+	
 	elements = re.findall(r'([^;:,{]+)(?:{(.*?)})?(?:\:\:(.*?)(?:;|,))?', line)
 	
 	for i in elements:
-		columnNames.append(i[0])
 		if len(list(filter(None,i))) == 1:
 			t = (i[0],0,"none")
 			columnOperations.append(t)
@@ -79,9 +70,8 @@ def processLine(separator: str, columnOperations: List[str], line: str):
     pos = 0
 
     if separator == ";":
-        elements = line.split(";")
-    else:
-        elements = line.split(",")
+        line.replace(";",",")
+    elements = line.split(",")
 
     # i : (Column Name, Length if List, Fuction Name)
     for op in columnOperations:
@@ -90,14 +80,9 @@ def processLine(separator: str, columnOperations: List[str], line: str):
         list = []
 
         if length > 0:
-            if separator == ";":
-                for i in elements[pos:(pos+length)]:
-                    if re.match(r'^-?\d+(?:\.\d+)?$', i):
-                        list.append(i)
-            else:                                                            # se o separador for uma vírgula
-                for i in elements[pos:(pos+length)]:
-                    if re.match(r'^-?\d+(?:\.\d+)?$', i):
-                        list.append(i)
+            for i in elements[pos:(pos+length)]:
+                if re.match(r'^-?\d+(?:\.\d+)?$', i):
+                    list.append(i)
                                 
             values = [int(value) for value in list]
 
