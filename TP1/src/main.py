@@ -15,8 +15,12 @@ def header(line) -> Tuple[str, List[str]]:
 	semicolon = re.match(r'(?:(.*?));',line)
 	if semicolon:
 		line.replace(";",",")
-	separator = ","
-	
+		separator = ","
+	else:	
+		comma = re.match(r'(?:(.*?)),',line)
+		if comma:
+			separator = ","
+
 	elements = re.findall(r'([^;:,{]+)(?:{(.*?)})?(?:\:\:(.*?)(?:;|,))?', line)
 	
 	for i in elements:
@@ -71,8 +75,9 @@ def processLine(separator: str, columnOperations: List[str], line: str):
     pos = 0
 
     if separator == ";":
-        line.replace(";",",")
-    elements = line.split(",")
+        elements = line.split(";")
+    else:
+        elements = line.split(",")
 
     # i : (Column Name, Length if List, Fuction Name)
     for op in columnOperations:
@@ -81,9 +86,14 @@ def processLine(separator: str, columnOperations: List[str], line: str):
         list = []
 
         if length > 0:
-            for i in elements[pos:(pos+length)]:
-                if re.match(r'^-?\d+(?:\.\d+)?$', i):
-                    list.append(i)
+            if separator == ";":
+                for i in elements[pos:(pos+length)]:
+                    if re.match(r'^-?\d+(?:\.\d+)?$', i):
+                        list.append(i)
+            else:                                                            # se o separador for uma vírgula
+                for i in elements[pos:(pos+length)]:
+                    if re.match(r'^-?\d+(?:\.\d+)?$', i):
+                        list.append(i)
                                 
             values = [int(value) for value in list]
 
