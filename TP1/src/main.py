@@ -15,6 +15,7 @@ def header(line) -> Tuple[str, List[str]]:
 	semicolon = re.match(r'(?:(.*?));',line)
 	if semicolon:
 		line.replace(";",",")
+	separator = ","
 	
 	elements = re.findall(r'([^;:,{]+)(?:{(.*?)})?(?:\:\:(.*?)(?:;|,))?', line)
 	
