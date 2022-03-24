@@ -19,7 +19,7 @@ if file:
 	output_name = input("Inserir nome do ficheiro destino, com a respetiva extensão: ")
 	
 	# PROCESSAMENTO INICAL DO INPUT
-	lines = clenInput(lines)
+	lines = cleanInput(lines)
 
 	# PROCESSAR O HEADER
 	try:
