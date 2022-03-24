@@ -3,8 +3,8 @@ from typing import List
 
 # FUNÇÃO PARA PROCESSAMENTO INICIAL DO INPUT
 
-def clenInput(lines):
-	lines = list(map(lambda st: str.replace(st, ";", ","), lines))
+def cleanInput(lines):
+	lines = list(map(lambda st: re.sub(r';|\||\t',r',',st), lines))
 	# REMOVER LINHAS VAZIAS DO INPUT
 	for line in lines:
 		if line == '':
