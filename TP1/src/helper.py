@@ -2,6 +2,28 @@ import re
 import os
 from typing import List
 
+# MENUS A APRESENTAR
+menu_file = {
+    1: 'CSV file',
+    2: 'JSON file',
+    0: 'Exit',
+}
+
+menu_initial = {
+    1: 'Convert file',
+    2: 'View file',
+    0: 'Exit',
+}
+
+# IMPRESSÃO DO MENU
+def print_menu(menu_opts):
+    for key in menu_opts.keys():
+        print(key, '::', menu_opts[key])
+
+# LIMPAR A CONSOLA
+def clear():
+    os.system('cls' if os.name=='nt' else 'clear')
+
 # FUNÇÃO PARA PROCESSAMENTO INICIAL DO INPUT
 def cleanInput(lines):
 	lines = list(map(lambda st: re.sub(r';|\||\t',r',',st), lines))
@@ -142,94 +164,6 @@ def prepareJSON(dicionario, columnOperations):
 	res += "\n]" # Final do ficheiro JSON
 	return res
 
-
-# MENUS A APRESENTAR
-menu_file = {
-    1: 'CSV file',
-    2: 'JSON file',
-    0: 'Exit',
-}
-
-menu_initial = {
-    1: 'Convert file',
-    2: 'View file',
-    0: 'Exit',
-}
-
-# EXECUTAR O MENU
-def runMenu():
-    run = True
-    while(run):
-        clear()
-        print("\n\n\t**** CSV TO JSON CONVERTER ****\n")
-        print_menu(menu_initial)
-        option = input('\nEnter your choice: ')
-        print()
-        if str(option) == '1':
-            convertFile()
-        elif str(option) == '2':
-            viewFile()
-        elif str(option) == '0':
-            run = False
-        else:
-            pass
-
-# IMPRESSÃO DO MENU
-def print_menu(menu_opts):
-    for key in menu_opts.keys():
-        print(key, '::', menu_opts[key])
-
-# LIMPAR A CONSOLA
-def clear():
-    os.system('cls' if os.name=='nt' else 'clear')
-
-# CONVERTER UM FICHEIRO
-def convertFile():
-    lines = openFile(1)
-    if lines:
-        output_name = input("Inserir nome do ficheiro destino, com a respetiva extensão: ")
-        
-        # PROCESSAMENTO INICAL DO INPUT
-        lines = cleanInput(lines)
-
-        # PROCESSAR O HEADER
-        try:
-            columnOperations = header(lines[0])
-            lines.remove(lines[0])
-        except NameError: # SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
-            print("Unsupported function")
-
-        # PROCESSAR AS RESTANTES LINHAS DO FICHEIRO
-        full_dic = geraDicionario(columnOperations, lines)
-
-        # PREPAR O OUTPUT PARA JSON
-        outData = prepareJSON(full_dic,columnOperations)
-
-        # GUARDAR O OUTPUT
-        outputFile = open("../output/"+output_name,"w")
-        outputFile.write(outData)
-        outputFile.close
-
-# VISUALIZAÇÃO DE FICHEIROS
-def viewFile():
-    clear()
-    run = True
-    while(run):
-        print("\n\n\t* Select file extension *\n")
-        print_menu(menu_file)
-        opt = input("\nSelect option: ")
-        print()
-        if (str(opt) == '1' or str(opt) == '2'):
-            lines = openFile(int(opt))
-            if lines:
-                print()
-                for l in lines:
-                    print(l)
-        elif str(opt) == '0':
-            run = False
-        else:
-            pass
-
 # ABRIR FICHEIROS
 def openFile(opt):
     clear()
@@ -253,4 +187,3 @@ def openFile(opt):
             print(f"[ERROR] Invalid file name: cannot locate JSON file \"{file_name}\".\n")
         else:
             print(f"[ERROR] Invalid file name: cannot locate file \"{file_name}\".\n")
-            
