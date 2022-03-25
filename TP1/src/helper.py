@@ -92,7 +92,7 @@ def processLine(columnOperations: List[str], line: str):
 	result = []                         # exemplo: result = ["Número": "12334", "Nome": "Cândida", "Curso": "Desporto", "Notas_media": 15.3]
 	pos = 0
 
-	elements = line.split(",")
+	components = line.split(",")
 
     # i : (Column Name, Length if List, Fuction Name)
 	for op in columnOperations:
@@ -101,7 +101,7 @@ def processLine(columnOperations: List[str], line: str):
 		list = []
 
 		if length > 0:
-			for i in elements[pos:(pos+length)]:
+			for i in components[pos:(pos+length)]:
 				if re.match(r'^-?\d+(?:\.\d+)?$', i):
 					list.append(i)
                                 
@@ -110,7 +110,7 @@ def processLine(columnOperations: List[str], line: str):
 			result.append(res)
 			pos = pos + length
 		else:
-			result.append(f'"{op[0]}": {elements[pos]}')
+			result.append(f'"{op[0]}": {components[pos]}')
 			pos = pos + 1
 
 	return result
