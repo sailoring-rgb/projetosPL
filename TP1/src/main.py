@@ -4,7 +4,7 @@ from helper import *
 def convertFile():
     lines = openFile(1)
     if lines:
-        output_name = input("Inserir nome do ficheiro destino, com a respetiva extensão: ")
+        output_name = input("[JSON] Insert file name (extension included): ")
         
         # PROCESSAMENTO INICAL DO INPUT
         lines = cleanInput(lines)
@@ -14,7 +14,7 @@ def convertFile():
             columnOperations = header(lines[0])
             lines.remove(lines[0])
         except NameError: # SE A FUNÇÃO DE AGREGAÇÃO NÃO EXISTIR, É LANÇADA UMA EXCEÇÃO
-            print("Unsupported function")
+            print("[ERROR] Unsupported function on CSV file.")
 
         # PROCESSAR AS RESTANTES LINHAS DO FICHEIRO
         full_dic = geraDicionario(columnOperations, lines)
@@ -22,6 +22,7 @@ def convertFile():
         # PREPAR O OUTPUT PARA JSON
         outData = prepareJSON(full_dic,columnOperations)
 
+        print(outData)
         # GUARDAR O OUTPUT
         outputFile = open("../output/"+output_name,'w')
         outputFile.write(outData)
@@ -35,7 +36,6 @@ def viewFile():
         print("\n\n\t* Select file extension *\n")
         print_menu(menu_file)
         opt = input("\nSelect option: ")
-        print()
         if (str(opt) == '1' or str(opt) == '2'):
             lines = openFile(int(opt))
             if lines:
@@ -65,7 +65,5 @@ def runMenu():
             print("\n\n\t**** LEAVING ****\n")
         else:
             pass
-
 #################################################### MAIN ####################################################
-
 runMenu()

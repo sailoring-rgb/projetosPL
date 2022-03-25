@@ -6,7 +6,7 @@ from typing import List
 menu_file = {
     1: 'CSV file',
     2: 'JSON file',
-    0: 'Exit',
+    0: 'Back',
 }
 
 menu_initial = {
@@ -70,21 +70,23 @@ def calculateLength(string: str):
 
 # FUNÇÃO RESPONSÁVEL POR APLICAR A FUNÇÃO DE AGREGAÇÃO PASSADA NO CABEÇALHO À RESPETIVA UMA COLUNA
 def executeFunction(columnName:str, function: str, values: List[int]):
-	if function == "sum":
-		res = f'"{columnName}_sum": {sum(values)}'
-	elif function == "media":
-		result = round(sum(values)/len(values),2)
-		res = f'"{columnName}_media": {result}'
-	elif function == "min":
-		res = f'"{columnName}_min": {min(values)}'
-	elif function == "max":
-		res = f'"{columnName}_max": {max(values)}'
-	elif function == "count":
-		res = f'"{columnName}_count": {len(values)}'
-	elif function == "none":
-		res = f'"{columnName}": {values}'
+	if len(values) != 0:
+		if function == "sum":
+			res = f'"{columnName}_sum": {sum(values)}'
+		elif function == "media":
+			result = round(sum(values)/len(values),2)
+			res = f'"{columnName}_media": {result}'
+		elif function == "min":
+			res = f'"{columnName}_min": {min(values)}'
+		elif function == "max":
+			res = f'"{columnName}_max": {max(values)}'
+		elif function == "count":
+			res = f'"{columnName}_count": {len(values)}'
+		elif function == "none":
+			res = f'"{columnName}": {values}'
+	else:
+		res = f'"{columnName}": '''
 	return res
-
 
 # FUNÇÃO RESPONSÁVEL POR PROCESSAR UMA LINHA DO FICHEIRO CSV (SEM SER O CABEÇALHO)
 def processLine(columnOperations: List[str], line: str):
@@ -166,24 +168,23 @@ def prepareJSON(dicionario, columnOperations):
 
 # ABRIR FICHEIROS
 def openFile(opt):
-    clear()
-    # LEITURA DE INPUT PARA O NOME DO FICHEIRO
-    file_name = input("Insert file name to read (extension included): ")
-    try:
-    # LEITURA DO FICHEIRO
-        if opt == 1:
-            file = open("../input/"+file_name)
-        else:
-            file = open("../output/"+file_name)
-        lines = file.read().splitlines()
-        print("[File opened successfully]")
-        file.close()
-        return lines
-    except FileNotFoundError:
-        clear()
-        if opt == 1:
-            print(f"[ERROR] Invalid file name: cannot locate CSV file \"{file_name}\".\n")
-        elif opt == 2:
-            print(f"[ERROR] Invalid file name: cannot locate JSON file \"{file_name}\".\n")
-        else:
-            print(f"[ERROR] Invalid file name: cannot locate file \"{file_name}\".\n")
+	clear()
+	try:
+		if opt == 1:
+			file_name = input("[CSV] Insert file name (extension included): ")
+			file = open("../input/"+file_name)
+		else:
+			file_name = input("[JSON] Insert file name (extension included): ")
+			file = open("../output/"+file_name)
+		lines = file.read().splitlines()
+		print("[File opened successfully]")
+		file.close()
+		return lines
+	except FileNotFoundError:
+		clear()
+		if opt == 1:
+			print(f"[ERROR] Invalid file name: cannot locate CSV file \"{file_name}\".\n")
+		elif opt == 2:
+			print(f"[ERROR] Invalid file name: cannot locate JSON file \"{file_name}\".\n")
+		else:
+			print(f"[ERROR] Invalid file name: cannot locate file \"{file_name}\".\n")
