@@ -22,7 +22,7 @@ def print_menu(menu_opts):
 
 # LIMPAR A CONSOLA
 def clear():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # FUNÇÃO PARA PROCESSAMENTO INICIAL DO INPUT
 def cleanInput(lines):
@@ -152,7 +152,7 @@ def prepareJSON(dicionario):
 				size += 1
 			elif '_' in key: # Verifica a entrada corresponde a uma função de agregação
 				res += dic_entry[key] 
-				size +=1
+				size += 1
 			else:
 				res += "\"" + dic_entry[key] + "\"" # Coloca o valor da chave entre aspas
 				size += 1
@@ -169,22 +169,25 @@ def prepareJSON(dicionario):
 # ABRIR FICHEIROS
 def openFile(opt):
 	clear()
-	try:
-		if opt == 1:
-			file_name = input("[CSV] Insert file name (extension included): ")
+	if opt == 1:
+		file_name = input("[CSV] Insert file name (extension included): ")
+		try:	
 			file = open("../input/"+file_name)
-		else:
+		except OSError:
+			print(f"[ERROR] Can't locate CSV file \"{file_name}\".\n")
+			input("[PRESS ENTER TO CONTINUE]")
+			return -1
+	else:
+		try:
 			file_name = input("[JSON] Insert file name (extension included): ")
 			file = open("../output/"+file_name)
-		lines = file.read().splitlines()
-		print("[File opened successfully]")
-		file.close()
-		return lines
-	except FileNotFoundError:
-		clear()
-		if opt == 1:
-			print(f"[ERROR] Invalid file name: cannot locate CSV file \"{file_name}\".\n")
-		elif opt == 2:
-			print(f"[ERROR] Invalid file name: cannot locate JSON file \"{file_name}\".\n")
-		else:
-			print(f"[ERROR] Invalid file name: cannot locate file \"{file_name}\".\n")
+		except OSError:
+			print(f"[ERROR] Can't locate JSON file name \"{file_name}\".\n")
+			input("[PRESS ENTER TO CONTINUE]")
+			return -1
+	if file:
+			lines = file.read().splitlines()
+			print("[FILE] Opened successfully.")
+			input("[PRESS ENTER TO CONTINUE]")
+			file.close()
+			return lines
