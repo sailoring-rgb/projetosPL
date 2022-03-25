@@ -172,9 +172,9 @@ def openFile(opt):
     try:
     # LEITURA DO FICHEIRO
         if opt == 1:
-            file = open("../input/"+file_name)
+            file = open(os.path.expanduser("../input/"+file_name))
         else:
-            file = open("../output/"+file_name)
+            file = open(os.path.expanduser("../output/"+file_name))
         lines = file.read().splitlines()
         print("[File opened successfully]")
         file.close()

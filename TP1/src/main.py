@@ -23,7 +23,7 @@ def convertFile():
         outData = prepareJSON(full_dic,columnOperations)
 
         # GUARDAR O OUTPUT
-        outputFile = open("../output/"+output_name,"w")
+        outputFile = open("../output/"+output_name,'w')
         outputFile.write(outData)
         outputFile.close
 

@@ -1,0 +1,52 @@
+[
+	{
+		"Número": "12334",
+		"Nome": "Ana Júlia",
+		"Curso": "Desporto"
+	},
+	{
+		"Número": "96248",
+		"Nome": "Ana Murta",
+		"Curso": "Culinária"
+	},
+	{
+		"Número": "96236",
+		"Nome": "Ana Henriques",
+		"Curso": "Desporto"
+	},
+	{
+		"Número": "56471",
+		"Nome": "Rui Coelho",
+		"Curso": "Economia"
+	},
+	{
+		"Número": "11247",
+		"Nome": "João Mendes",
+		"Curso": "Design"
+	},
+	{
+		"Número": "74215",
+		"Nome": "Joana Oliveira",
+		"Curso": "Psicologia"
+	},
+	{
+		"Número": "94521",
+		"Nome": "Mafalda Gomes",
+		"Curso": "Culinária"
+	},
+	{
+		"Número": "45681",
+		"Nome": "Gustavo Cerqueira",
+		"Curso": "Ciência Política"
+	},
+	{
+		"Número": "32187",
+		"Nome": "Alexandre Costa",
+		"Curso": "Economia"
+	},
+	{
+		"Número": "26498",
+		"Nome": "Henrique Lima",
+		"Curso": "Economia"
+	}
+]
