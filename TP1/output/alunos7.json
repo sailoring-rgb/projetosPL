@@ -1,0 +1,50 @@
+[
+	{
+		"Número": "12334",
+		"Curso": "Desporto",
+		"Notas_count": 3,
+		"NotaFinal_min": 16,
+		"Extracurricular": "Futsal",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "96248",
+		"Nome": "Ana Murta",
+		"Notas_count": 4,
+		"NotaFinal_min": 17,
+		"Extracurricular": "Patinagem Artística"
+	},
+	{
+		"Número": "96236",
+		"Nome": "Ana Henriques",
+		"Curso": "Desporto",
+		"NotaFinal_min": 16,
+		"Extracurricular": "Voleibol",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "56471",
+		"Nome": "Rui Coelho",
+		"Notas_count": 5,
+		"NotaFinal_min": 15,
+		"Extracurricular": "Futsal",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "74215",
+		"Nome": "Joana Oliveira",
+		"Curso": "Psicologia",
+		"Notas_count": 5,
+		"NotaFinal_min": 13,
+		"Extracurricular": "Patinagem Artística",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "94521",
+		"Nome": "Mafalda Gomes",
+		"Curso": "Culinária",
+		"Notas_count": 3,
+		"NotaFinal_min": 14,
+		"Universidade": "Universidade do Minho"
+	}
+]

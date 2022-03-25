@@ -130,33 +130,33 @@ def geraDicionario(columnOperations, lines):
 		for i in range(len(columnOperations)):
 			m = re.search(rule,res[i])
 			if m:
-				dicionario[columnOperations[i][0]] = m.group()[1:]
+				if m.group()[1:] != "": # Verifica se a entrada é vazia
+						if columnOperations[i][2] != 'none': # Verifica se existe função de agregação
+							dicionario[columnOperations[i][0]+"_"+columnOperations[i][2]] = m.group()[1:]
+						else:
+							dicionario[columnOperations[i][0]] = m.group()[1:]
 		full_dic.append(dicionario.copy())
 	return full_dic
 
-
 # FUNÇÃO RESPONSÁVEL POR CONVERTER PARA JSON
-def prepareJSON(dicionario, columnOperations):
+def prepareJSON(dicionario):
 	res = "[\n" # Incío do ficheiro JSON
 	for dic_entry in dicionario:
 		res += "\t{\n" # Incío de um dicionário
-		for i in range(len(columnOperations)):
-			name = columnOperations[i][0]
-			if dic_entry[name] == "": # Caso não exista nenhum valor, a chave não é introduzida no dicionário
-				break
-			elif not "none" in columnOperations[i][2]: # Verifica se existe uma função de agregação
-				res += "\t\t\""+ name + "_"+ columnOperations[i][2] +"\": "
-				value = re.compile(r'\d+((.|,)\d+)?')
-				val = re.search(value, dic_entry[name])
-				if val:
-					res += val.group()
+		items = dic_entry.items()
+		size = 0;
+		for key in dic_entry:
+			res += "\t\t\""+ key + "\": "
+			if "," in dic_entry[key]: # Verifica se o valor é uma lista
+				res += dic_entry[key].replace(" ","") # Remove os espaços da lista
+				size += 1
+			elif '_' in key: # Verifica a entrada corresponde a uma função de agregação
+				res += dic_entry[key] 
+				size +=1
 			else:
-				res += "\t\t\""+ name + "\": "
-				if "," in dic_entry[name]: # Verifica se o valor é uma lista
-					res += dic_entry[name].replace(" ","") # Remove os espaços da lista
-				else:
-					res += "\"" + dic_entry[name] + "\"" # Coloca o valor da chave entre aspas
-			if i == len(columnOperations) - 1:
+				res += "\"" + dic_entry[key] + "\"" # Coloca o valor da chave entre aspas
+				size += 1
+			if size == len(dic_entry):
 				# Verifica se a posição atual é a última
 				res += "\n"
 			else:

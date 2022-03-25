@@ -1,0 +1,83 @@
+[
+	{
+		"Número": "12334",
+		"Nome": "Ana Júlia",
+		"Curso": "Desporto",
+		"Notas_media": 11.0,
+		"NotaFinal_max": 17,
+		"Extracurricular": "Futsal",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "96248",
+		"Nome": "Ana Murta",
+		"Curso": "Culinária",
+		"Notas_media": 18.75,
+		"NotaFinal_max": 18,
+		"Extracurricular": "Patinagem Artística",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "96236",
+		"Nome": "Ana Henriques",
+		"Curso": "Desporto",
+		"Notas_media": 17.0,
+		"NotaFinal_max": 17,
+		"Extracurricular": "Voleibol",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "56471",
+		"Nome": "Rui Coelho",
+		"Curso": "Economia",
+		"Notas_media": 16.67,
+		"NotaFinal_max": 16,
+		"Extracurricular": "Futsal",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "11247",
+		"Nome": "João Mendes",
+		"Curso": "Design",
+		"Notas_media": 13.67,
+		"NotaFinal_max": 14,
+		"Extracurricular": "Voleibol",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "74215",
+		"Nome": "Joana Oliveira",
+		"Curso": "Psicologia",
+		"Notas_media": 14.4,
+		"NotaFinal_max": 14,
+		"Extracurricular": "Patinagem Artística",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "94521",
+		"Nome": "Mafalda Gomes",
+		"Curso": "Culinária",
+		"Notas_media": 16.0,
+		"NotaFinal_max": 15,
+		"Extracurricular": "Voleibol",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "45681",
+		"Nome": "Gustavo Cerqueira",
+		"Curso": "Ciência Política",
+		"Notas_media": 15.25,
+		"NotaFinal_max": 15,
+		"Extracurricular": "Futebol",
+		"Universidade": "Universidade do Minho"
+	},
+	{
+		"Número": "32187",
+		"Nome": "Alexandre Costa",
+		"Curso": "Economia",
+		"Notas_media": 14.0,
+		"NotaFinal_max": 13,
+		"Extracurricular": "Futebol",
+		"Universidade": "Universidade do Minho"
+	}
+]

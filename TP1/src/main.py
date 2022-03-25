@@ -20,9 +20,8 @@ def convertFile():
         full_dic = geraDicionario(columnOperations, lines)
 
         # PREPAR O OUTPUT PARA JSON
-        outData = prepareJSON(full_dic,columnOperations)
+        outData = prepareJSON(full_dic)
 
-        print(outData)
         # GUARDAR O OUTPUT
         outputFile = open("../output/"+output_name,'w')
         outputFile.write(outData)
