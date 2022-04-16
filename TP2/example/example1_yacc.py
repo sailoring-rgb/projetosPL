@@ -30,45 +30,45 @@ precedence = [
 # symboltable : dictionary of variables
 ts = {}
 
-def p_Stat_p1(p):
+def p_Stat_p1(t):
     "Stat : VAR '=' Exp"
-    ts[p[1]] = p[3]
+    ts[p[1]] = t[3]
 
-def p_Stat_p2(p):
+def p_Stat_p2(t):
     "Stat : Exp"
-    print(p[1])
+    print(t[1])
 
-def p_Exp_p3(p):
+def p_Exp_p3(t):
     "Exp : Exp '+' Exp"
-    p[0] = p[1] + p[3]
+    t[0] = t[1] + t[3]
 
-def p_Exp_p4(p):
+def p_Exp_p4(t):
     "Exp : Exp '-' Exp"
-    p[0] = p[1] - p[3]
+    t[0] = t[1] - t[3]
 
-def p_Exp_p5(p):
+def p_Exp_p5(t):
     "Exp : Exp '*' Exp"
-    p[0] = p[1] * p[3]
+    t[0] = t[1] * t[3]
 
-def p_Exp_p6(p):
+def p_Exp_p6(t):
     "Exp : Exp '/' Exp"
-    p[0] = p[1] / p[3]
+    t[0] = t[1] / t[3]
 
-def p_Exp_p7(p):
+def p_Exp_p7(t):
     "Exp : '-' Exp"
-    p[0] = -p[2]
+    t[0] = -t[2]
 
-def p_Exp_p8(p):
+def p_Exp_p8(t):
     "Exp : '(' Exp ')'"
-    p[0] = p[2]
+    t[0] = t[2]
 
-def p_Exp_p9(p):
+def p_Exp_p9(t):
     "Exp : NUMBER"
-    p[0] = p[1]
+    t[0] = t[1]
 
-def p_Exp_p10(p):
+def p_Exp_p10(t):
     "Exp : VAR"
-    p[0] = getval(p[1])
+    t[0] = getval(t[1])
 
 
 def p_error(t):
