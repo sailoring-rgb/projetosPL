@@ -1,3 +1,7 @@
 **.DS_Store
 TP1/.DS_Store
 TP1/src/__pycache__
+TP2/.DS_Store
+TP2/example/__pycache__
+TP2/example/parser.out
+TP2/example/parsetab.py
