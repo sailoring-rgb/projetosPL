@@ -2,6 +2,8 @@ import re
 import sys
 from typing import List
 
+
+# DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
 def lex_or_yacc(lines: List[str]):
 
     pos = 0
@@ -24,3 +26,35 @@ def lex_or_yacc(lines: List[str]):
         lines_for_YACC.append(line)
     
     return lines_for_LEX, lines_for_YACC
+
+"""
+# DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
+def translate_lex(lines_for_lex: List[str]):
+
+    res = "\n"
+    for line in lines_for_lex:
+        if re.search(r'tokens',line):
+            content = line[line.index("tokens") + len("tokens"):]
+            res = res + "tokens" + content + "\n"
+        if re.search(r'ignore',line):
+            content = line[line.index("ignore") + len("ignore"):]
+            res = res + "t_ignore" + content + "\n"
+    print(res)
+"""
+
+# ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
+def open_file():
+    file_name = input("[CSV] Insert file name (extension included): ")
+    try:	
+        file = open("../input/"+file_name)
+    except OSError:
+        print(f"[ERROR] Can't locate CSV file \"{file_name}\".\n")
+        input("[PRESS ENTER TO CONTINUE]")
+        return -1
+
+    if file:
+        lines = file.read().splitlines()
+        print("[FILE] Opened successfully.")
+        input("[PRESS ENTER TO CONTINUE]")
+        file.close()
+        return lines
