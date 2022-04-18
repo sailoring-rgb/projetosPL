@@ -1,4 +1,6 @@
 from helper import *
+from processLEX import *
+from processYACC import *
 
 input_name, lines = open_file()
 lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
