@@ -8,7 +8,6 @@ t_ignore = " \t\n"
 
 def t_VAR(t):
     r'[_A-Za-z][_0-9A-Za-z]*'
-    t.value = t.value
     return t
 
 def t_NUMBER(t):
