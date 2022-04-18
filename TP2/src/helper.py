@@ -49,19 +49,19 @@ def lex_function(tok: str, regex: str, t, type: str):
 
     tok = re.sub(r'\'',r'',tok)
     if type == "float":
-        res = f"""def t_{tok}(t):\n
-                \tr'{regex}'\n
-                \tt.value = float(t.value)\n
-                \treturn t"""
+        res = f"""def t_{tok}(t):
+    r'{regex}'
+    t.value = float(t.value)
+    return t\n"""
     elif type == "int":
-        res = f"""def t_{tok}(t):\n
-                \tr'{regex}'\n
-                \tt.value = int(t.value)\n
-                \treturn t"""
+        res = f"""def t_{tok}(t):
+    r'{regex}'
+    t.value = int(t.value)
+    return t\n"""
     elif type == "str":
-        res = f"""def t_{tok}(t):\n
-                \tr'{regex}'\n
-                \treturn t"""
+        res = f"""def t_{tok}(t):
+    r'{regex}'
+    return t\n"""
     return res
 
 
