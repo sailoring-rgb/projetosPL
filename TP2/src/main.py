@@ -1,6 +1,6 @@
 from helper import *
 
-lines = open_file()
+input_name, lines = open_file()
 lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
 
 """
@@ -12,4 +12,6 @@ for line in lines_for_YACC:
     print(line)
 """
 
-# translate_lex(lines_for_LEX)
+res = translate_lex(lines_for_LEX)
+
+write_file_lex(input_name, res)

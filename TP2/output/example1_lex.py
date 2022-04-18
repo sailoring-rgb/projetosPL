@@ -1,8 +1,9 @@
 import ply.lex as lex
 
+tokens = [ 'VAR', 'NUMBER', 'PFECHAR' ]
 literals = "+-/*=()"                ## a single char
-tokens = [ 'VAR', 'NUMBER' ]
-t_ignore = ' \t\n'
+t_ignore = " \t\n"
+t_pfechar = "]"
 
 def t_VAR(t):
     r'[_A-Za-z][_0-9A-Za-z]*'

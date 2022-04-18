@@ -1,5 +1,5 @@
 import ply.yacc as yacc
-from example1_lex import tokens, literals
+from example1_lex import *
 
 ## YACC
 
