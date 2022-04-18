@@ -27,24 +27,7 @@ def get_lex_yacc(lines: List[str]):
     return lines_for_LEX, lines_for_YACC
 
 
-# DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
-def translate_lex(lines_for_lex: List[str]):
-
-    res = "\n"
-
-    tokens_match = [s for s in lines_for_lex if "tokens" in s][0]                     #string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
-    tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', tokens_match)[0]).split(",")      #list: tokens = ["'VAR'", "'NUMBER'"]
-
-    list_returns = [s for s in res if "return" in s]
-
-    for tok in tokens:
-        tok = re.sub(r'\s+',r'',tok)
-        for s in list_returns:
-            if tok in s:
-                pass
-            else: pass
-
-
+# DEVOLVE UMA STRING COM A DEFINIÇÃO DA FUNÇÃO PARA O FILE LEX
 def lex_function(tok: str, regex: str, t, type: str):
 
     tok = re.sub(r'\'',r'',tok)
@@ -63,6 +46,34 @@ def lex_function(tok: str, regex: str, t, type: str):
     r'{regex}'
     return t\n"""
     return res
+
+
+# DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
+def translate_lex(lines_for_lex: List[str]):
+
+    res = "\n"
+
+    tokens_match = [s for s in lines_for_lex if "tokens" in s][0]                     #string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
+    tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', tokens_match)[0]).split(",")      #list: tokens = ["'VAR'", "'NUMBER'"]
+
+    list_returns = [s for s in res if "return" in s]
+
+    for tok in tokens:
+        tok = re.sub(r'\s+',r'',tok)
+        for s in list_returns:
+            if tok in s:
+                regex = re.findall(r'^(.*)(?:return)',s)[0]
+                regex = re.sub(r' +$','',regex)
+                regex = re.sub(r'\\{2}',r'\\',regex)
+
+                if re.match(f'{regex}',"1.0"):
+                    type = "float"
+                elif re.match(f'{regex}',"1"):
+                    type = "int"
+                else:
+                    type = "str"
+                res = res + lex_function(tok,regex,"t",type)
+            else: pass
 
 
 # ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
