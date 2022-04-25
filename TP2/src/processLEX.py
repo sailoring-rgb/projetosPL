@@ -1,6 +1,7 @@
 import re
 from typing import List
 
+
 # DEVOLVE UMA STRING COM A DEFINIÇÃO DA FUNÇÃO PARA O FILE LEX
 # IMPORTANTE: O FORMATO DA FUNÇÃO TEM DE SER ASSIM!!!
 def lex_function(tok: str, regex: str, t, type: str):
@@ -57,6 +58,7 @@ def process_tokens(tok: str, list_returns: List[str], list_no_returns: List[str]
 
     return tok_func, tok_no_func
 
+
 # DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
 def translate_lex(lines_for_LEX: List[str]):
 
@@ -65,7 +67,7 @@ def translate_lex(lines_for_LEX: List[str]):
     list_returns = [s for s in lines_for_LEX if "return" in s]
     list_no_returns = [s for s in lines_for_LEX if s not in list_returns]
 
-    tokens_match = [s for s in list_no_returns if "tokens" in s][0]                     # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
+    tokens_match = [s for s in list_no_returns if "tokens" in s][0]                   # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
     list_no_returns.remove(tokens_match)
     tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', tokens_match)[0]).split(",")      # list: tokens = ["'VAR'", "'NUMBER'"]
     res_tokens_list = tokens_match[1:] + "\n"
@@ -95,11 +97,11 @@ def translate_lex(lines_for_LEX: List[str]):
         res_toks_func = res_toks_func + tok_func
         res_toks_no_func = res_toks_no_func + tok_no_func
 
-    res = res + res_tokens_list + res_literals + res_ignore + res_toks_no_func + "\n" + res_toks_func
+    res += res_tokens_list + res_literals + res_ignore + res_toks_no_func + "\n" + res_toks_func
 
-    res = res + f"""def t_error(t):
+    res +=  f"""def t_error(t):
     print(f"{error_message}")
     t.lexer.skip(1)\n\n"""
-    res = res + "lexer = lex.lex()"
+    res += "lexer = lex.lex()"
 
     return res
