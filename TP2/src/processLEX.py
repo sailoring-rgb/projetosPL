@@ -20,6 +20,7 @@ def lex_function(tok: str, regex: str, t, type: str):
         res = f"""def t_{tok}(t):
     r'{regex}'
     return t\n\n"""
+    
     return res
 
 

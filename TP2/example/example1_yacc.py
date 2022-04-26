@@ -17,28 +17,28 @@ Exp -> Exp '+' Exp       # p3
      | NUMBER            # p9
      | VAR               # p10
 """
-
+"""
 # >>>>>>> MUITO SINCERAMENTE, NÃO SEI O QUE FAZER COM ISTO. PERCEBO, MAS NÃO SEI A UTILIDADE.
 precedence = [
                 ('left','+','-'),
                 ('left','*','/'),
                 ('right','UMINUS'),
              ]
-
+"""
 
 # symboltable : dictionary of variables
 ts = {}
 
 def p_Stat_p1(t):
-    "Stat : VAR '=' Exp"
-    ts[p[1]] = t[3]
+    "Stat    : VAR '=' Exp"
+    ts[t[1]] = t[3]
 
 def p_Stat_p2(t):
     "Stat : Exp"
     print(t[1])
 
 def p_Exp_p3(t):
-    "Exp : Exp '+' Exp"
+    "Exp         : Exp '+' Exp"
     t[0] = t[1] + t[3]
 
 def p_Exp_p4(t):
@@ -54,7 +54,7 @@ def p_Exp_p6(t):
     t[0] = t[1] / t[3]
 
 def p_Exp_p7(t):
-    "Exp : '-' Exp"
+    "Exp  : '-' Exp"
     t[0] = -t[2]
 
 def p_Exp_p8(t):
