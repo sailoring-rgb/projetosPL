@@ -52,5 +52,3 @@ def translate_yacc(lines: List[str]):
     res += dictionary + "\n\n"
 
     res += process_function(lines)
-
-translate_yacc(ex)
