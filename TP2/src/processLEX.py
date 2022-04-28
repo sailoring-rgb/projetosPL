@@ -60,7 +60,7 @@ def process_tokens(tok: str, list_returns: List[str], list_no_returns: List[str]
     return tok_func, tok_no_func
 
 
-# DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
+# DEVOLVE UMA LISTA COM O CONTEÚDO TRADUZIDO PARA O FILE LEX
 def translate_lex(lines_for_LEX: List[str]):
 
     res = ""

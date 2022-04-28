@@ -17,11 +17,11 @@ def get_lex_yacc(lines: List[str]):
         pos = pos + 1
 
     for line in lines[pos_lex+1:pos_yacc]:
-        if not re.search(r'^$',line) and not re.match(r'^%+$',line):          # remove empty lines or lines like %%
+        if not re.search(r'^$',line):          # remove empty lines or lines like %%
             lines_for_LEX.append(line)
     
     for line in lines[pos_yacc+1:]:
-        if not re.search(r'^$',line) and not re.match(r'^%+$',line):          # remove empty lines or lines like %%
+        if not re.search(r'^$',line):          # remove empty lines or lines like %%
             lines_for_YACC.append(line)
     
     return lines_for_LEX, lines_for_YACC
@@ -58,4 +58,20 @@ def write_file_lex(input_name:str, res0: str):
     outputFile.close
 
     print("[FILE] Translated LEX successfully.")
+    input("[PRESS ENTER TO CONTINUE]")
+
+
+# CRIA E ESCREVE NO FILE YACC
+def write_file_yacc(input_name:str, res0: str):
+
+    imports = """import ply.yacc as yacc
+from example1_lex import *"""
+    res = imports + "\n\n" + res0
+
+    input_name = re.sub(r'\.(.*)',r'',input_name)
+    outputFile = open("../output/"+f'{input_name}_yacc.py','w')
+    outputFile.write(res)
+    outputFile.close
+
+    print("[FILE] Translated YACC successfully.")
     input("[PRESS ENTER TO CONTINUE]")
