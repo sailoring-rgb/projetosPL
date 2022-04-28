@@ -1,4 +1,3 @@
-from cgitb import reset
 import re
 from typing import List
 
@@ -7,18 +6,26 @@ from typing import List
 def process_grammar(grammar: List[str]):
     i = 1
     res = ""
+    defGrammar = ["# Gramática:"]
+
     for line in grammar:
         if line != "":
             group = (re.findall(r'([^: ]+)(?: *: *(.*?) {2,})(?:{ *(.*?) *})',line))[0]
+
             # process a production of grammar
             prod = re.sub(r'( %.*)','',group[1])
+
+            # build grammar as comments
+            if any(f'{group[0]} ->' in s for s in defGrammar):
+                defGrammar.append(f"# p{i}:      | {prod}")
+            else: defGrammar.append(f"# p{i}:    {group[0]} -> {prod}")
+
             res += f"""def p_{group[0]}_p{i}:
     "{group[0]} : {prod}"
     {group[2]}\n\n"""
             i = i+1
-        else: pass
     
-    return res
+    return defGrammar, res
 
 
 # PROCESSA UMA FUNÇÃO DESTINADA AO FILE YACC
@@ -27,7 +34,7 @@ def process_function(lines: List[str], line: str, i: int, res: str):
     function = []
     if re.match(r'def ',line):
         function.append(line)
-        f = i+1
+        f = i + 1
         for s in lines[i+1:]:
             if re.match(r'  ',s):
                function.append(s)
@@ -46,11 +53,14 @@ def translate_yacc(lines: List[str]):
     content = "\n".join(lines)           # converte a lista com as linhas para o yacc numa string
     res = ""
 
+    grammar = content[content.index("{}") + len("{}"):content.index("%%") + len("%%")-2]      # pega nas linhas destinadas à gramática
+    defGrammar, res0 = process_grammar(grammar.split("\n"))
+    res += "\n".join(defGrammar) + "\n\n"                                                       # construir a gramática em comentários
+
     dictionary = (re.findall(r'.*\{\}',content))[0]
     res += dictionary + "\n\n"
 
-    grammar = content[content.index("{}") + len("{}"):content.index("%%") + len("%%")-2]
-    res += process_grammar(grammar.split("\n"))
+    res += res0                         # escreve as funções que processam as produções da gramática
 
     i = 0
     for line in lines:
@@ -62,5 +72,3 @@ def translate_yacc(lines: List[str]):
 {parser_match[0][0]}.parse({parser_match[0][1]})"""
 
     return res
-
-

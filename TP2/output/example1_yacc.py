@@ -1,6 +1,18 @@
 import ply.yacc as yacc
 from example1_lex import *
 
+# Gramática:
+# p1:    stat -> VAR '=' exp
+# p2:      | exp
+# p3:    exp -> exp '+' exp
+# p4:      | exp '-' exp
+# p5:      | exp '*' exp
+# p6:      | exp '/' exp
+# p7:      | '-' exp
+# p8:      | '(' exp ')'
+# p9:      | NUMBER
+# p10:      | VAR
+
 ts = {}
 
 def p_stat_p1:
