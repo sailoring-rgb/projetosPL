@@ -6,23 +6,29 @@ from typing import List
 def process_grammar(grammar: List[str]):
     i = 1
     res = ""
-    defGrammar = ["# Gramática:"]
+    defGrammar = ["# GRAMMAR:"]
 
     for line in grammar:
         if line != "":
             group = (re.findall(r'([^: ]+)(?: *: *(.*?) {2,})(?:{ *(.*?) *})',line))[0]
 
             # process a production of grammar
-            prod = re.sub(r'( %.*)','',group[1])
+            prod = re.sub(r'( %.*)','',group[1])     # remover, por exemplo, %prec UMINUS
+            op = re.findall(r'(.*?[^A-Za-z]?)([A-Za-z])(\[\d+\]\)?)',group[2])
+
+            calc = ""
+            for s in op:
+                s = (s[0],'p',s[2])
+                calc += "".join(s)
 
             # build grammar as comments
             if any(f'{group[0]} ->' in s for s in defGrammar):
                 defGrammar.append(f"# p{i}:      | {prod}")
             else: defGrammar.append(f"# p{i}:    {group[0]} -> {prod}")
 
-            res += f"""def p_{group[0]}_p{i}:
+            res += f"""def p_{group[0]}_p{i}(p):
     "{group[0]} : {prod}"
-    {group[2]}\n\n"""
+    {calc}\n\n"""
             i = i+1
     
     return defGrammar, res
@@ -57,6 +63,7 @@ def translate_yacc(lines: List[str]):
     defGrammar, res0 = process_grammar(grammar.split("\n"))
     res += "\n".join(defGrammar) + "\n\n"                                                       # construir a gramática em comentários
 
+    grammar = content[content.index("{}") + len("{}"):content.index("%%") + len("%%")-2]
     dictionary = (re.findall(r'.*\{\}',content))[0]
     res += dictionary + "\n\n"
 

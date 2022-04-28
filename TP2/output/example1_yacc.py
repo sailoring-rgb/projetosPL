@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from example1_lex import *
 
-# Gramática:
+# GRAMMAR:
 # p1:    stat -> VAR '=' exp
 # p2:      | exp
 # p3:    exp -> exp '+' exp
@@ -15,45 +15,45 @@ from example1_lex import *
 
 ts = {}
 
-def p_stat_p1:
+def p_stat_p1(p):
     "stat : VAR '=' exp"
-    ts[t[1]] = t[3]
+    ts[p[1]] = p[3]
 
-def p_stat_p2:
+def p_stat_p2(p):
     "stat : exp"
-    print(t[1])
+    print(p[1])
 
-def p_exp_p3:
+def p_exp_p3(p):
     "exp : exp '+' exp"
-    t[0] = t[1] + t[3]
+    p[0] = p[1] + p[3]
 
-def p_exp_p4:
+def p_exp_p4(p):
     "exp : exp '-' exp"
-    t[0] = t[1] - t[3]
+    p[0] = p[1] - p[3]
 
-def p_exp_p5:
+def p_exp_p5(p):
     "exp : exp '*' exp"
-    t[0] = t[1] * t[3]
+    p[0] = p[1] * p[3]
 
-def p_exp_p6:
+def p_exp_p6(p):
     "exp : exp '/' exp"
-    t[0] = t[1] / t[3]
+    p[0] = p[1] / p[3]
 
-def p_exp_p7:
+def p_exp_p7(p):
     "exp : '-' exp"
-    t[0] = -t[2]
+    p[0] = -p[2]
 
-def p_exp_p8:
+def p_exp_p8(p):
     "exp : '(' exp ')'"
-    t[0] = t[2]
+    p[0] = p[2]
 
-def p_exp_p9:
+def p_exp_p9(p):
     "exp : NUMBER"
-    t[0] = t[1]
+    p[0] = p[1]
 
-def p_exp_p10:
+def p_exp_p10(p):
     "exp : VAR"
-    t[0] = getval(t[1])
+    p[0] = getval(p[1])
 
 def p_error(t):
     print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
