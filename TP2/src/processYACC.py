@@ -10,10 +10,18 @@ def process_grammar(grammar: List[str]):
 
     for line in grammar:
         if line != "":
+            # exemplo =                         stat : VAR '=' exp              { ts[t[1]] = t[3] }
+            # primeiro termo do grupo =         stat
+            # segundo termo do grupo =          VAR '=' exp
+            # terceiro termo do grupo =         ts[t[1]] = t[3]
             group = (re.findall(r'([^: ]+)(?: *: *(.*?) {2,})(?:{ *(.*?) *})',line))[0]
 
             # process a production of grammar
             prod = re.sub(r'( %.*)','',group[1])     # remover, por exemplo, %prec UMINUS
+
+            # exemplo =         ts[t[1]] = t[3]
+            # op =              [('ts[', 't', '[1]'), ('] = ', 't', '[3]')]
+            # isto serve para substituir o segundo termo de um tuplo (neste caso, t) por um p
             op = re.findall(r'(.*?[^A-Za-z]?)([A-Za-z])(\[\d+\]\)?)',group[2])
 
             calc = ""
@@ -59,7 +67,7 @@ def translate_yacc(lines: List[str]):
     content = "\n".join(lines)           # converte a lista com as linhas para o yacc numa string
     res = ""
 
-    grammar = content[content.index("{}") + len("{}"):content.index("%%") + len("%%")-2]      # pega nas linhas destinadas à gramática
+    grammar = content[content.index("/%") + len("/%"):content.index("%%") + len("%%")-2]        # pega nas linhas destinadas à gramática
     defGrammar, res_grammar = process_grammar(grammar.split("\n"))
     res += "\n".join(defGrammar) + "\n\n"                                                       # construir a gramática em comentários
 
@@ -68,6 +76,7 @@ def translate_yacc(lines: List[str]):
     precedence = []
     for line in lines:
 
+        # process precendence variable if exists
         if re.match(r'%\w+\s?=\s?\[.*',line):
             newline = re.sub(r'%','',line)
             precedence.append(newline)
@@ -78,7 +87,10 @@ def translate_yacc(lines: List[str]):
 
         i, res_functions = process_function(lines, line, i, res_functions)
 
-        parser_match = re.findall(r'([^ \.])(?:\.parse\((.*?)\))',line)       # grupo 1 - nome da var. # grupo 2 - conteúdo do parse
+        # exemplo =                 y.parse("3+4*7")
+        # primeiro termo =          y
+        # segundo tempo =           "3+4*7"
+        parser_match = re.findall(r'([^ \.])(?:\.parse\((.*?)\))',line)
 
     res += "\n".join(precedence) + "\n\n"
 
