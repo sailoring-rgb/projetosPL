@@ -1,7 +1,7 @@
 %% LEX
 %literals = "+-/*=()"                ## a single char
 %ignore = " \t\n"
-%tokens = [ 'VAR', 'NUMBER' ]
+%tokens = ['VAR','NUMBER']
 
 [_A-Za-z][_0-9A-Za-z]* return('VAR', t.value)
 \d+(\.\d+)?            return('NUMBER', float(t.value))

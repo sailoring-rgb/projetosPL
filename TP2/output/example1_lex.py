@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-tokens = [ 'VAR', 'NUMBER' ]
+tokens = ['VAR','NUMBER']
 literals = "+-/*=()"                ## a single char
 t_ignore = " \t\n"
 
