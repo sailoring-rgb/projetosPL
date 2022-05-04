@@ -1,4 +1,5 @@
 import re
+from helper import *
 from typing import List
 
 
@@ -67,9 +68,12 @@ def translate_yacc(lines: List[str]):
     content = "\n".join(lines)           # converte a lista com as linhas para o yacc numa string
     res = ""
 
-    grammar = content[content.index("/%") + len("/%"):content.index("%%") + len("%%")-2]        # pega nas linhas destinadas à gramática
-    defGrammar, res_grammar = process_grammar(grammar.split("\n"))
-    res += "\n".join(defGrammar) + "\n\n"                                                       # construir a gramática em comentários
+    if "/%" in content and "%%" in content:
+        grammar = content[content.index("/%") + len("/%"):content.index("%%") + len("%%")-2]        # pega nas linhas destinadas à gramática
+        defGrammar, res_grammar = process_grammar(grammar.split("\n"))
+        res += "\n".join(defGrammar) + "\n\n"                                                       # construir a gramática em comentários
+    else:
+        raise GrammarError
 
     i = 0
     res_functions = ""
@@ -77,13 +81,16 @@ def translate_yacc(lines: List[str]):
     for line in lines:
 
         # process precendence variable if exists
-        if re.match(r'%\w+\s?=\s?\[.*',line):
-            newline = re.sub(r'%','',line)
-            precedence.append(newline)
-            for s in lines[lines.index(line)-len(lines)+1:]:
-                if re.search(r'\s*\(.*\),|\]',s):
-                    precedence.append(s)
-                else: break
+        if re.search(r'\w+\s?=\s?\[.*',line):
+            if re.match(r'% *',line):
+                newline = re.sub(r'% *','',line)
+                precedence.append(newline)
+                for s in lines[lines.index(line)-len(lines)+1:]:
+                    if re.search(r'\s*\(.*\),|\]',s):
+                        precedence.append(s)
+                    else: break
+            else:
+                raise VariableError
 
         i, res_functions = process_function(lines, line, i, res_functions)
 

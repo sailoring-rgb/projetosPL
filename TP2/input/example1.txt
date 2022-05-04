@@ -10,7 +10,7 @@
 
 %% YACC
 
-%precedence = [
+ precedence = [
     ('left','+','-'),
     ('left','*','/'),
     ('right','UMINUS'),

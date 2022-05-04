@@ -1,5 +1,5 @@
-from pickle import FALSE
 import re
+from helper import *
 from typing import List
 
 
@@ -115,6 +115,6 @@ def translate_lex(lines_for_LEX: List[str]):
         res += "lexer = lex.lex()"
 
     else:
-        raise NameError
+        raise VariableError
 
     return res
