@@ -13,13 +13,12 @@ from example1_lex import *
 # p9:      | NUMBER
 # p10:      | VAR
 
-"""
 precedence = [
     ('left','+','-'),
     ('left','*','/'),
     ('right','UMINUS'),
 ]
-"""
+
 ts = {}
 
 def p_stat_p1(p):

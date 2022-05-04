@@ -1,3 +1,4 @@
+from pickle import FALSE
 import re
 from typing import List
 
@@ -27,12 +28,12 @@ def lex_function(tok: str, regex: str, type: str):
 # PROCESSA OS TOKENS (CASO ESTEJAM ASSOCIADOS A FUNÇÕES OU NÃO) 
 def process_tokens(tok: str, list_regex: List[str]):
 
-    tok = re.sub(r' *|\'','',tok)
+    tok = re.sub(r' *|\'','',tok).upper()
 
     for element in list_regex:
 
         # found an element that is dedicated for token tok
-        if re.search(f'{tok}',element):
+        if re.search(f'\'(?i:{tok})\'',element):
 
             regex = re.findall(r'^(.*)(?:simpleToken|return)',element)[0]               # apanha toda a regex até à palavra return (exclusive) 
             regex = re.sub(r' +$','',regex)                                             # remove todos os espaços à frente da regex
@@ -62,40 +63,58 @@ def process_tokens(tok: str, list_regex: List[str]):
 def translate_lex(lines_for_LEX: List[str]):
 
     res = ""
+    res_literals = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
+    run_literals = True
+    run_ignore = False
+    run_error = False
 
     list_regex = [s for s in lines_for_LEX if "return" in s or "simpleToken" in s]
 
-    list_tokens = [s for s in lines_for_LEX if "tokens" in s][0]                        # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
-    tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', list_tokens)[0]).split(",")         # list: tokens = ["'VAR'", "'NUMBER'"]
-    res_tokens_list = list_tokens[1:] + "\n"
+    list_tokens = [s for s in lines_for_LEX if re.search(r'% ?tokens',s)]                       # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
+    if len(list_tokens) == 0:
+        run_tokens = False
+    else:
+        tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', list_tokens[0])[0]).split(",")             # list: tokens = ["'VAR'", "'NUMBER'"]
+        res_tokens_list = list_tokens[0][list_tokens[0].index("tokens"):] + "\n"
+        run_tokens = True
 
     for line in lines_for_LEX:
 
-        if re.search(r'literals',line):                                                  # LITERALS
+        if re.match(r'% *literals',line):              # é respeitada a regra "variáveis a começar com %"
             literals_match = line
-            res_literals = literals_match[1:] + "\n"
+            res_literals = literals_match[literals_match.index("literals"):] + "\n" 
 
-        elif re.search(r'ignore',line):                                                  # IGNORE
+        elif re.match(r'literals',line):               # existe variável literals, mas não começa com %
+            run_literals = False
+
+        elif re.match(r'% *ignore',line):
             ignore_match = line
             res_ignore = "t_ignore" + ignore_match[ignore_match.index("ignore") + len("ignore"):] + "\n"
+            run_ignore = True
 
-        elif re.search(r'error',line):
+        elif re.search(r'.*?error',line):
             error_match = line
             error_message = (re.findall(r'(?:f\")(.*)(?:\"\,)',error_match))[0]
+            run_error = True
 
-    res_toks_func = ""
-    res_toks_no_func = ""
+    if run_tokens & run_literals & run_error & run_ignore:
 
-    for tok in tokens:
-        tok_func, tok_no_func = process_tokens(tok,list_regex)
-        res_toks_func = res_toks_func + tok_func
-        res_toks_no_func = res_toks_no_func + tok_no_func
+        res_toks_func = ""
+        res_toks_no_func = ""
 
-    res += res_tokens_list + res_literals + res_ignore + res_toks_no_func + "\n" + res_toks_func
+        for tok in tokens:
+            tok_func, tok_no_func = process_tokens(tok,list_regex)
+            res_toks_func = res_toks_func + tok_func
+            res_toks_no_func = res_toks_no_func + tok_no_func
 
-    res +=  f"""def t_error(t):
+        res += res_tokens_list + res_literals + res_ignore + res_toks_no_func + "\n" + res_toks_func
+
+        res +=  f"""def t_error(t):
     print(f"{error_message}")
     t.lexer.skip(1)\n\n"""
-    res += "lexer = lex.lex()"
+        res += "lexer = lex.lex()"
+
+    else:
+        raise NameError
 
     return res

@@ -10,9 +10,9 @@ def get_lex_yacc(lines: List[str]):
     lines_for_YACC = []                     # guarda todo o conteúdo para o file yacc
 
     for line in lines:
-        if re.search(r'LEX',line):
+        if re.search(r'%% *LEX',line):
             pos_lex = pos                   # pos em que começa o conteúdo para o file lex
-        if re.search(r'YACC',line):
+        if re.search(r'%% *YACC',line):
             pos_yacc = pos                  # pos em que começa o conteúdo para o file yacc
         pos = pos + 1
 
