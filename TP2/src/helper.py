@@ -10,6 +10,10 @@ class GrammarError(Exception):
 class VariableError(Exception):
     """Raised when variables are missing or not correctly introduced"""
     pass
+
+class YaccBeforeLex(Exception):
+    """Raised when YACC is defined before LEX in PLY-Simple"""
+    pass
 #######################################################################################################################
 
 
@@ -17,25 +21,40 @@ class VariableError(Exception):
 def get_lex_yacc(lines: List[str]):
 
     pos = 0
+    pos_lex = -1
+    pos_yacc = -1
+    lex_exists = False
+    yacc_exists = False
     lines_for_LEX = []                      # guarda todo o conteúdo para o file lex
     lines_for_YACC = []                     # guarda todo o conteúdo para o file yacc
 
     for line in lines:
         if re.search(r'%% *LEX',line):
             pos_lex = pos                   # pos em que começa o conteúdo para o file lex
+            lex_exists = True
         if re.search(r'%% *YACC',line):
             pos_yacc = pos                  # pos em que começa o conteúdo para o file yacc
+            yacc_exists = True
         pos = pos + 1
 
-    for line in lines[pos_lex+1:pos_yacc]:
-        if not re.search(r'^$',line):          # remove empty lines or lines like %%
-            lines_for_LEX.append(line)
-    
-    for line in lines[pos_yacc+1:]:
-        if not re.search(r'^$',line):          # remove empty lines or lines like %%
-            lines_for_YACC.append(line)
-    
-    return lines_for_LEX, lines_for_YACC
+    if pos_lex > pos_yacc and yacc_exists and lex_exists:
+        raise YaccBeforeLex
+
+    elif lex_exists:
+        if yacc_exists:
+            about_LEX = lines[pos_lex+1:pos_yacc]
+            # for yacc
+            for line in lines[pos_yacc+1:]:
+                if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                    lines_for_YACC.append(line)
+        else:
+            about_LEX = lines[pos_lex+1:]
+        # for lex
+        for line in about_LEX:
+            if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                lines_for_LEX.append(line)
+
+    return lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC
 
 
 # ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO

@@ -3,5 +3,12 @@
 %states = [("state1",'inclusive')]
 %ignore = '\n\t '
 
-\d+                            
+\d+                             return('state1_NUM','t.lexer.soma+=int(t.value)')
+\d+                             return('NUM','')
+,                               return('SEPARATOR','')
+\+                              return('PLUS','t.lexer.begin("state1")')
+\+                              return('state1_PLUS','t.lexer.begin("INITIAL")')
+.                               error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",
+                                t.lexer.skip(1) )
+lexer = lex.lex()
 /%lexer.soma = 0

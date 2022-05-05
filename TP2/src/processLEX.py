@@ -16,18 +16,21 @@ def lex_function(tok: str, regex: str, content: str):
     r'{regex}'
     {content}
     return t\n\n"""
+
     return res
 
 
 # PROCESSA OS TOKENS (CASO ESTEJAM ASSOCIADOS A FUNÇÕES OU NÃO) 
 def process_tokens(tok: str, list_regex: List[str]):
 
+    tok_no_func = ""
+    tok_func = ""
     tok = re.sub(r' *|\'','',tok).upper()
 
     for element in list_regex:
 
         # found an element that is dedicated for token tok
-        if re.search(f'\'(?i:{tok})\'',element):
+        if re.search(f'\'\w*(?i:{tok})\'',element):
 
             regex = re.findall(r'^(.*)(?:simpleToken|return)',element)[0]               # apanha toda a regex até à palavra return (exclusive) 
             regex = re.sub(r' +$','',regex)                                             # remove todos os espaços à frente da regex
@@ -37,13 +40,10 @@ def process_tokens(tok: str, list_regex: List[str]):
 
                 group = (re.findall(r'(?:\(\s*\'(.*?)\'\s*,\s*\'(.*?)\'\s*\))',element))[0]
 
-                tok_func = lex_function(tok,regex,group[1])
-                tok_no_func = ""
+                tok_func += lex_function(group[0],regex,group[1])
 
             elif re.search('simpleToken',element):
-                
-                tok_func = ""
-                tok_no_func = f't_{tok}' + " = r'" + regex + "'\n"
+                tok_no_func += f't_{tok}' + " = r'" + regex + "'\n"
 
     return tok_func, tok_no_func
 
@@ -53,6 +53,7 @@ def translate_lex(lines_for_LEX: List[str]):
 
     res = ""
     res_literals = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
+    about_lexer = ""
     run_literals = True
     run_ignore = False
     run_error = False
@@ -86,7 +87,10 @@ def translate_lex(lines_for_LEX: List[str]):
             error_message = (re.findall(r'(?:f\")(.*)(?:\"\,)',error_match))[0]
             run_error = True
 
-    if run_tokens & run_literals & run_error & run_ignore:
+        if re.match(r'\/%',line):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
+            about_lexer = line[line.index("/%")+len("/%"):] + "\n"
+
+    if run_tokens and run_literals and run_error and run_ignore:
 
         res_toks_func = ""
         res_toks_no_func = ""
@@ -101,7 +105,7 @@ def translate_lex(lines_for_LEX: List[str]):
         res +=  f"""def t_error(t):
     print(f"{error_message}")
     t.lexer.skip(1)\n\n"""
-        res += "lexer = lex.lex()"
+        res += "lexer = lex.lex()\n" + about_lexer
 
     else:
         raise VariableError
