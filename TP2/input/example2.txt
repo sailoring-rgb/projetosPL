@@ -1,0 +1,7 @@
+%% LEX
+%tokens = ['PLUS','MINUS','SEPARATOR','NUM']
+%states = [("state1",'inclusive')]
+%ignore = '\n\t '
+
+\d+                            
+/%lexer.soma = 0

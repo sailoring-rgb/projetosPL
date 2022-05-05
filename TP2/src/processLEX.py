@@ -5,23 +5,17 @@ from typing import List
 
 # DEVOLVE UMA STRING COM A DEFINIÇÃO DA FUNÇÃO PARA O FILE LEX
 # IMPORTANTE: O FORMATO DA FUNÇÃO TEM DE SER ASSIM!!!
-def lex_function(tok: str, regex: str, type: str):
+def lex_function(tok: str, regex: str, content: str):
 
-    if type == "float":
-        res = f"""def t_{tok}(t):
-    r'{regex}'
-    t.value = float(t.value)
-    return t\n\n"""
-    elif type == "int":
-        res = f"""def t_{tok}(t):
-    r'{regex}'
-    t.value = int(t.value)
-    return t\n\n"""
-    elif type == "str":
+    if content == '':
         res = f"""def t_{tok}(t):
     r'{regex}'
     return t\n\n"""
-    
+    else:
+        res = f"""def t_{tok}(t):
+    r'{regex}'
+    {content}
+    return t\n\n"""
     return res
 
 
@@ -41,14 +35,9 @@ def process_tokens(tok: str, list_regex: List[str]):
 
             if re.search('return',element):
 
-                if re.match(f'{regex}',"1.0"):                                          # se a regex apanhar floats, então o tipo é um float
-                    type = "float" 
-                elif re.match(f'{regex}',"1"):                                          # se a regex apanhar ints, então o tipo é um int
-                    type = "int"
-                else:
-                    type = "str"                                                        # caso contrário, o tipo é tratado como uma string
+                group = (re.findall(r'(?:\(\s*\'(.*?)\'\s*,\s*\'(.*?)\'\s*\))',element))[0]
 
-                tok_func = lex_function(tok,regex,type)
+                tok_func = lex_function(tok,regex,group[1])
                 tok_no_func = ""
 
             elif re.search('simpleToken',element):
