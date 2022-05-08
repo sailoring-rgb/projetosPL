@@ -1,0 +1,30 @@
+%% LEX 
+
+%tokens = ['PA', 'PF', 'NUM', 'VIRG']
+%PA = '\('
+%PF = '\)'
+%VIRG = '\,'
+%NUM = '\d+'
+%ignore = " \t\n"
+
+.                               error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+
+%%YACC
+
+/%
+
+Lista : PA PF
+Lista : PA Elems PF
+Elems : Elem Resto
+Resto :
+Resto : VIRG Elems
+Elem  : NUM
+Elem : Lista
+
+%%
+
+def p_error(p):
+    print("Erro sintático",p)
+
+
+parser = yacc.yacc()
