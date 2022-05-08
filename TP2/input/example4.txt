@@ -1,0 +1,28 @@
+%% YACC
+
+/%
+
+Z : Exp FIM                             {print("Resultado: ", p[1])}
+Exp : '(' '+' Lista Exp ')'             {p[0] = somatorio(p[3]) + p[4]}
+Exp : '(' '*' Lista Exp ')'             {p[0] = produtorio(p[3]) * p[4]}
+Exp : num                               {p[0] = p[1]}
+Lista : Lista Exp                       {p[0] = p[1] + [p[2]]}
+Lista : Exp                             {p[0] = [p[1]]}
+
+%%
+
+def produtorio(lista):
+    res = 1
+    for elem in lista:
+        res *= elem
+    return res
+
+def somatorio(lista):
+    res = 0
+    for elem in lista:
+        res += elem
+    return res
+
+def p_error(p):
+    print("Erro sintático: ", p)
+    parser.success = False

@@ -1,0 +1,18 @@
+%% YAC
+
+/%
+
+S : A a S
+S : A
+A : A a F
+A : F
+F : F S
+
+%%
+
+def p_error(p):
+    print("Erro sintático: ", p)
+    parser.success = False
+
+
+parser = yacc.yacc()
