@@ -1,5 +1,5 @@
 %% LEX
-%tokens = ('INI','FIM','nome','real','int','sinal')
+%tokens = ['INI','FIM','nome','real','int','sinal']
 %sinal = '[=+\-*/()]'
 %ignore = " \n\t"
 

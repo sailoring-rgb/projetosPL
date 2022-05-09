@@ -52,15 +52,15 @@ def process_tokens(tok: str, list_regex: List[str]):
 def translate_lex(lines_for_LEX: List[str]):
 
     res = ""
-    res_literals = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
+    res_var = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
     about_lexer = ""
-    run_literals = True
+    run_var = True
     run_ignore = False
     run_error = False
 
     list_regex = [s for s in lines_for_LEX if "return" in s or "simpleToken" in s]
 
-    list_tokens = [s for s in lines_for_LEX if re.search(r'% ?tokens',s)]                       # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
+    list_tokens = [s for s in lines_for_LEX if re.search(r'%tokens',s)]                       # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
     if len(list_tokens) == 0:
         run_tokens = False
     else:
@@ -70,27 +70,24 @@ def translate_lex(lines_for_LEX: List[str]):
 
     for line in lines_for_LEX:
 
-        if re.match(r'% *literals',line):              # é respeitada a regra "variáveis a começar com %"
-            literals_match = line
-            res_literals = literals_match[literals_match.index("literals"):] + "\n" 
-
-        elif re.match(r'literals',line):               # existe variável literals, mas não começa com %
-            run_literals = False
-
-        elif re.match(r'% *ignore',line):
+        if re.match(r'%i(?i:gnore)',line):
             ignore_match = line
             res_ignore = "t_ignore" + ignore_match[ignore_match.index("ignore") + len("ignore"):] + "\n"
             run_ignore = True
-
+    
         elif re.search(r'.*?error',line):
             error_match = line
             error_message = (re.findall(r'(?:f\")(.*)(?:\"\,)',error_match))[0]
             run_error = True
 
+        elif re.match(r'%\w+ *=',line):              # é respeitada a regra "variáveis a começar com %"
+            var_match = line
+            res_var = var_match[var_match.index("%")+len("%"):] + "\n" 
+
         if re.match(r'\/%',line):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
             about_lexer = line[line.index("/%")+len("/%"):] + "\n"
 
-    if run_tokens and run_literals and run_error and run_ignore:
+    if run_tokens and run_error and run_ignore:
 
         res_toks_func = ""
         res_toks_no_func = ""
@@ -100,7 +97,7 @@ def translate_lex(lines_for_LEX: List[str]):
             res_toks_func = res_toks_func + tok_func
             res_toks_no_func = res_toks_no_func + tok_no_func
 
-        res += res_tokens_list + res_literals + res_ignore + res_toks_no_func + "\n" + res_toks_func
+        res += res_tokens_list + res_var + res_ignore + res_toks_no_func + "\n" + res_toks_func
 
         res +=  f"""def t_error(t):
     print(f"{error_message}")

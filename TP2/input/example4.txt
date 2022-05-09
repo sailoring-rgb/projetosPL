@@ -3,9 +3,9 @@
 %literals = ['(',')','+','*']
 %tokens = ['num','FIM']
 %ignore = " \t\n"
-%FIM = '\.'
 
 \d+                         return('num','t.value=int(t.value)')
+\.                          simpleToken('FIM','')
 .                           error(f"Caracter ilegal: , {t.value[0]}",t.lexer.skip(1))
 
 lexer = lex.lex()
@@ -23,6 +23,10 @@ Lista : Exp                             {p[0] = [p[1]]}
 
 %%
 
+def p_error(p):
+    print("Erro sintático: ", p)
+    parser.success = False
+
 def produtorio(lista):
     res = 1
     for elem in lista:
@@ -35,6 +39,13 @@ def somatorio(lista):
         res += elem
     return res
 
-def p_error(p):
-    print("Erro sintático: ", p)
-    parser.success = False
+/%parser = yacc.yacc()
+
+/%import sys
+/%for linha in sys.stdin:
+/%      parser.success = True
+/%      parser.parse(linha)
+/%      if parser.success:
+/%          print('Frase válida: ', linha)
+/%      else:
+/%          print('Frase inválida.')

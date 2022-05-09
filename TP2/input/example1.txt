@@ -41,5 +41,5 @@ def getval(n):
     if n not in ts: print(f"Undefined name '{n}'")
     return ts.get(n,0)
 
-y=yacc()
-y.parse("3+4*7")
+/%y=yacc()
+/%y.parse("3+4*7")

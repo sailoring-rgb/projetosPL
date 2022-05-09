@@ -23,7 +23,7 @@ def process_grammar(grammar: List[str]):
             # exemplo =         ts[t[1]] = t[3]
             # op =              [('ts[', 't', '[1]'), ('] = ', 't', '[3]')]
             # isto serve para substituir o segundo termo de um tuplo (neste caso, t) por um p
-            op = re.findall(r'(.*?[^A-Za-z]?)([A-Za-z])(\[\d+\]\)?)',group[2])
+            op = re.findall(r'(.*?[^A-Za-z]?)([A-Za-z])(\[\d+\]+\)?)',group[2])
 
             calc = ""
             for s in op:
@@ -47,19 +47,23 @@ def process_grammar(grammar: List[str]):
 def process_function(lines: List[str], line: str, i: int, res_functions: str):
 
     function = []
+    res_error = ""
     if re.match(r'def ',line):
         function.append(line)
         f = i + 1
         for s in lines[i+1:]:
-            if re.match(r'  ',s):
+            if re.match(r'  +|( {4})+',s):
                function.append(s)
             else: break
             f = f + 1
-        res_functions += "\n".join(function) + "\n\n"
+        if re.search(r'error',line):
+            res_error = "\n".join(function) + "\n\n"
+        else:
+            res_functions += "\n".join(function) + "\n\n"
         i = f - 1
     else: i = i + 1
 
-    return i, res_functions
+    return i, res_error, res_functions
 
 
 # DEVOLVE UMA LISTA COM O CONTEÚDO TRADUZIDO PARA O FILE YACC
@@ -78,6 +82,7 @@ def translate_yacc(lines: List[str]):
     i = 0
     res_functions = ""
     precedence = []
+    about_parser = ""
     for line in lines:
 
         # process precendence variable if exists
@@ -92,19 +97,23 @@ def translate_yacc(lines: List[str]):
             else:
                 raise VariableError
 
-        i, res_functions = process_function(lines, line, i, res_functions)
+        i, res_error, res_functions = process_function(lines, line, i, res_functions)
+
+        if re.search(r'.*\{\}',line):
+            dictionary = line
+        else: dictionary = ""
 
         # exemplo =                 y.parse("3+4*7")
         # primeiro termo =          y
         # segundo tempo =           "3+4*7"
-        parser_match = re.findall(r'([^ \.])(?:\.parse\((.*?)\))',line)
+        
+        if re.match(r'\/%',line):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
+            about_parser += line[line.index("/%")+len("/%"):] + "\n"
 
     res += "\n".join(precedence) + "\n\n"
 
-    dictionary = (re.findall(r'.*\{\}',content))[0]
-    res += dictionary + "\n\n" + res_grammar + res_functions
+    res += dictionary + "\n\n" + res_functions + res_grammar + res_error
 
-    res += f"""{parser_match[0][0]} = yacc.yacc()
-{parser_match[0][0]}.parse({parser_match[0][1]})"""
+    res += about_parser
 
     return res
