@@ -7,13 +7,11 @@ input_name, lines = open_file()
 
 if lines != "":
 
-
     try:
         lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
 
     except YaccBeforeLex:
         print('\033[91m' + "ERROR BEFORE TRANSLATING: YACC can't be defined before LEX in PLY-Simple" + '\033[0m')
-
 
     if lex_exists:
         try:                                                               # controlling lex possible errors
