@@ -1,5 +1,5 @@
 import ply.yacc as yacc
-from example1_lex import *
+from example4_lex import *
 
 # GRAMMAR:
 # p1:    Z -> Exp FIM
@@ -11,14 +11,16 @@ from example1_lex import *
 
 
 
-
-
 def produtorio(lista):
+    res = 1
     for elem in lista:
         res *= elem
     return res
 
 def somatorio(lista):
+    res = 0
+    for elem in lista:
+        res += elem
     return res
 
 def p_Z_p1(p):
@@ -44,6 +46,10 @@ def p_Lista_p5(p):
 def p_Lista_p6(p):
     "Lista : Exp"
     p[0] = [p[1]]
+
+def p_error(p):
+    print("Erro sintático: ", p)
+    parser.success = False
 
 
 parser = yacc.yacc()

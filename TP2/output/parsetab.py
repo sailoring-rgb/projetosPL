@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = "NUMBER VARstat : VAR '=' expstat : expexp : exp '+' expexp : exp '-' expexp : exp '*' expexp : exp '/' expexp : '-' expexp : '(' exp ')'exp : NUMBERexp : VAR"
+_lr_signature = "FIM numZ : Exp FIMExp : '(' '+' Lista Exp ')'Exp : '(' '*' Lista Exp ')'Exp : numLista : Lista ExpLista : Exp"
     
-_lr_action_items = {'VAR':([0,4,5,7,8,9,10,11,],[2,13,13,13,13,13,13,13,]),'-':([0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,],[4,-10,9,4,4,-9,4,4,4,4,4,9,-10,9,9,9,9,9,9,-8,]),'(':([0,4,5,7,8,9,10,11,],[5,5,5,5,5,5,5,5,]),'NUMBER':([0,4,5,7,8,9,10,11,],[6,6,6,6,6,6,6,6,]),'$end':([1,2,3,6,12,13,15,16,17,18,19,20,],[0,-10,-2,-9,-7,-10,-1,-3,-4,-5,-6,-8,]),'=':([2,],[7,]),'+':([2,3,6,12,13,14,15,16,17,18,19,20,],[-10,8,-9,8,-10,8,8,8,8,8,8,-8,]),'*':([2,3,6,12,13,14,15,16,17,18,19,20,],[-10,10,-9,10,-10,10,10,10,10,10,10,-8,]),'/':([2,3,6,12,13,14,15,16,17,18,19,20,],[-10,11,-9,11,-10,11,11,11,11,11,11,-8,]),')':([6,12,13,14,16,17,18,19,20,],[-9,-7,-10,20,-3,-4,-5,-6,-8,]),}
+_lr_action_items = {'(':([0,4,6,7,8,9,10,11,12,13,14,],[3,-4,3,3,3,-6,3,-5,-5,-2,-3,]),'num':([0,4,6,7,8,9,10,11,12,13,14,],[4,-4,4,4,4,-6,4,-5,-5,-2,-3,]),'$end':([1,5,],[0,-1,]),'FIM':([2,4,13,14,],[5,-4,-2,-3,]),'+':([3,],[6,]),'*':([3,],[7,]),')':([4,11,12,13,14,],[-4,13,14,-2,-3,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'stat':([0,],[1,]),'exp':([0,4,5,7,8,9,10,11,],[3,12,14,15,16,17,18,19,]),}
+_lr_goto_items = {'Z':([0,],[1,]),'Exp':([0,6,7,8,10,],[2,9,9,11,12,]),'Lista':([6,7,],[8,10,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,15 +26,11 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> stat","S'",1,None,None,None),
-  ('stat -> VAR = exp','stat',3,'p_stat_p1','example1_yacc.py',26),
-  ('stat -> exp','stat',1,'p_stat_p2','example1_yacc.py',30),
-  ('exp -> exp + exp','exp',3,'p_exp_p3','example1_yacc.py',34),
-  ('exp -> exp - exp','exp',3,'p_exp_p4','example1_yacc.py',38),
-  ('exp -> exp * exp','exp',3,'p_exp_p5','example1_yacc.py',42),
-  ('exp -> exp / exp','exp',3,'p_exp_p6','example1_yacc.py',46),
-  ('exp -> - exp','exp',2,'p_exp_p7','example1_yacc.py',50),
-  ('exp -> ( exp )','exp',3,'p_exp_p8','example1_yacc.py',54),
-  ('exp -> NUMBER','exp',1,'p_exp_p9','example1_yacc.py',58),
-  ('exp -> VAR','exp',1,'p_exp_p10','example1_yacc.py',62),
+  ("S' -> Z","S'",1,None,None,None),
+  ('Z -> Exp FIM','Z',2,'p_Z_p1','example4_yacc.py',27),
+  ('Exp -> ( + Lista Exp )','Exp',5,'p_Exp_p2','example4_yacc.py',31),
+  ('Exp -> ( * Lista Exp )','Exp',5,'p_Exp_p3','example4_yacc.py',35),
+  ('Exp -> num','Exp',1,'p_Exp_p4','example4_yacc.py',39),
+  ('Lista -> Lista Exp','Lista',2,'p_Lista_p5','example4_yacc.py',43),
+  ('Lista -> Exp','Lista',1,'p_Lista_p6','example4_yacc.py',47),
 ]

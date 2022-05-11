@@ -54,7 +54,6 @@ def translate_lex(lines_for_LEX: List[str]):
     res = ""
     res_var = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
     about_lexer = ""
-    run_var = True
     run_ignore = False
     run_error = False
 
@@ -80,7 +79,7 @@ def translate_lex(lines_for_LEX: List[str]):
             error_message = (re.findall(r'(?:f\")(.*)(?:\"\,)',error_match))[0]
             run_error = True
 
-        elif re.match(r'%\w+ *=',line):              # é respeitada a regra "variáveis a começar com %"
+        elif re.match(r'%[^tokens]+ *=',line):              # é respeitada a regra "variáveis a começar com %"
             var_match = line
             res_var = var_match[var_match.index("%")+len("%"):] + "\n" 
 

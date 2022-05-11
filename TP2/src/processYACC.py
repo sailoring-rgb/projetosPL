@@ -47,23 +47,21 @@ def process_grammar(grammar: List[str]):
 def process_function(lines: List[str], line: str, i: int, res_functions: str):
 
     function = []
-    res_error = ""
+    def_match = ""
     if re.match(r'def ',line):
         function.append(line)
         f = i + 1
-        for s in lines[i+1:]:
-            if re.match(r'  +|( {4})+',s):
+        for s in lines[f:]:
+            if re.match(r'  +',s):
                function.append(s)
-            else: break
+            else:
+                break
             f = f + 1
-        if re.search(r'error',line):
-            res_error = "\n".join(function) + "\n\n"
-        else:
-            res_functions += "\n".join(function) + "\n\n"
-        i = f - 1
-    else: i = i + 1
 
-    return i, res_error, res_functions
+        def_match = "\n".join(function) + "\n\n"
+        i = f - 1
+
+    return i, def_match
 
 
 # DEVOLVE UMA LISTA COM O CONTEÚDO TRADUZIDO PARA O FILE YACC
@@ -79,40 +77,50 @@ def translate_yacc(lines: List[str]):
     else:
         raise GrammarError
 
-    i = 0
+    i = -1
+    pos = 0
     res_functions = ""
-    precedence = []
+    dictionary = ""
+    res_error = ""
     about_parser = ""
+    precedence = []
+    
     for line in lines:
 
-        # process precendence variable if exists
-        if re.search(r'\w+\s?=\s?\[.*',line):
-            if re.match(r'% *',line):
-                newline = re.sub(r'% *','',line)
-                precedence.append(newline)
-                for s in lines[lines.index(line)-len(lines)+1:]:
-                    if re.search(r'\s*\(.*\),|\]',s):
-                        precedence.append(s)
-                    else: break
+        if pos > i:
+            # process precendence variable if exists
+            if re.search(r'\w+\s?=\s?\[.*',line):
+                if re.match(r'% *',line):
+                    newline = re.sub(r'% *','',line)
+                    precedence.append(newline)
+                    for s in lines[lines.index(line)-len(lines)+1:]:
+                        if re.search(r'\s*\(.*\),|\]',s):
+                            precedence.append(s)
+                        else: break
+                else:
+                    raise VariableError
+
+            i, def_match = process_function(lines, line, pos, res_functions)
+            if re.search(r'error',line):
+                res_error = def_match
             else:
-                raise VariableError
+                res_functions += def_match
 
-        i, res_error, res_functions = process_function(lines, line, i, res_functions)
+            if re.search(r'.*= *\{\}',line):
+                dictionary = line + "\n\n"
 
-        if re.search(r'.*\{\}',line):
-            dictionary = line
-        else: dictionary = ""
-
-        # exemplo =                 y.parse("3+4*7")
-        # primeiro termo =          y
-        # segundo tempo =           "3+4*7"
-        
-        if re.match(r'\/%',line):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
-            about_parser += line[line.index("/%")+len("/%"):] + "\n"
+            # exemplo =                 y.parse("3+4*7")
+            # primeiro termo =          y
+            # segundo tempo =           "3+4*7"
+            if re.match(r'\/%',line):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
+                about_parser += line[line.index("/%")+len("/%"):] + "\n"
+        else:
+            pass
+        pos = pos + 1
 
     res += "\n".join(precedence) + "\n\n"
 
-    res += dictionary + "\n\n" + res_functions + res_grammar + res_error
+    res += dictionary + res_functions + res_grammar + res_error        # a função de error tem de aparecer depois das funções da gramática
 
     res += about_parser
 

@@ -1,7 +1,6 @@
 import ply.lex as lex
 
 tokens = ['num','FIM']
-tokens = ['num','FIM']
 t_ignore = " \t\n"
 t_FIM = r'\.'
 

@@ -2,7 +2,7 @@
 
 %literals = "[]"
 %tokens = ['id','num']
-%id = \"[^"]+\"
+%id = \"[^'']+\"
 %ignore = " \t\n"
 
 \d+                         return('num','t.value = int(t.value)')

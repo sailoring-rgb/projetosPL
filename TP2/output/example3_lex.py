@@ -1,7 +1,6 @@
 import ply.lex as lex
 
 tokens = ['INI','FIM','nome','real','int','sinal']
-sinal = '[=+\-*/()]'
 t_ignore = " \n\t"
 
 def t_INI(t):

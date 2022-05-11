@@ -40,20 +40,28 @@ def get_lex_yacc(lines: List[str]):
     if pos_lex > pos_yacc and yacc_exists and lex_exists:
         raise YaccBeforeLex
 
-    elif lex_exists:
-        if yacc_exists:
-            about_LEX = lines[pos_lex+1:pos_yacc]
-            # for yacc
-            for line in lines[pos_yacc+1:]:
-                if not re.search(r'^$',line):          # remove empty lines or lines like %%
-                    lines_for_YACC.append(line)
-        else:
-            about_LEX = lines[pos_lex+1:]
+    elif lex_exists and yacc_exists:
         # for lex
-        for line in about_LEX:
+        for line in lines[pos_lex+1:pos_yacc]:
+            if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                lines_for_LEX.append(line)
+        # for yacc
+        for line in lines[pos_yacc+1:]:
+            if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                lines_for_YACC.append(line)
+
+    elif lex_exists and not yacc_exists:
+        # for lex
+        for line in lines[pos_lex+1:]:
             if not re.search(r'^$',line):          # remove empty lines or lines like %%
                 lines_for_LEX.append(line)
 
+    elif not lex_exists and yacc_exists:
+        # for yacc
+        for line in lines[pos_yacc+1:]:
+            if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                lines_for_YACC.append(line)
+                
     return lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC
 
 
@@ -94,11 +102,12 @@ def write_file_lex(input_name:str, res0: str):
 # CRIA E ESCREVE NO FILE YACC
 def write_file_yacc(input_name:str, res0: str):
 
-    imports = """import ply.yacc as yacc
-from example1_lex import *"""
+    input_name = re.sub(r'\.(.*)',r'',input_name)
+
+    imports = f"""import ply.yacc as yacc
+from {input_name}_lex import *"""
     res = imports + "\n\n" + res0
 
-    input_name = re.sub(r'\.(.*)',r'',input_name)
     outputFile = open("../output/"+f'{input_name}_yacc.py','w')
     outputFile.write(res)
     outputFile.close

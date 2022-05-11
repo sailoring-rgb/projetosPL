@@ -21,6 +21,10 @@ precedence = [
 
 ts = {}
 
+def getval(n):
+    if n not in ts: print(f"Undefined name '{n}'")
+    return ts.get(n,0)
+
 def p_stat_p1(p):
     "stat : VAR '=' exp"
     ts[p[1]] = p[3]
@@ -64,9 +68,6 @@ def p_exp_p10(p):
 def p_error(t):
     print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
 
-def getval(n):
-    if n not in ts: print(f"Undefined name '{n}'")
-    return ts.get(n,0)
 
-y = yacc.yacc()
+y=yacc()
 y.parse("3+4*7")

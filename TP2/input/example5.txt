@@ -1,12 +1,12 @@
-%% YAC
+%% YACC
 
 /%
 
-S : A a S
-S : A
-A : A a F
-A : F
-F : F S
+S : A a S               {}
+S : A                   {}
+A : A a F               {}
+A : F                   {}
+F : F S                 {}
 
 %%
 
@@ -15,4 +15,4 @@ def p_error(p):
     parser.success = False
 
 
-parser = yacc.yacc()
+/%parser = yacc.yacc()

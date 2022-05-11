@@ -1,25 +1,25 @@
 %% LEX 
 
 %tokens = ['PA', 'PF', 'NUM', 'VIRG']
-%PA = '\('
-%PF = '\)'
-%VIRG = '\,'
-%NUM = '\d+'
 %ignore = " \t\n"
 
+\d+                             simpleToken('NUM','')
+\,                              simpleToken('VIRG','')
+\)                              simpleToken('PF','')
+\(                              simpleToken('PA','')
 .                               error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
 %%YACC
 
 /%
 
-Lista : PA PF
-Lista : PA Elems PF
-Elems : Elem Resto
-Resto :
-Resto : VIRG Elems
-Elem  : NUM
-Elem : Lista
+Lista : PA PF                                   {}
+Lista : PA Elems PF                             {}
+Elems : Elem Resto                              {}
+Resto :                                         {}
+Resto : VIRG Elems                              {}
+Elem  : NUM                                     {}
+Elem : Lista                                    {}
 
 %%
 
