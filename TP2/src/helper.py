@@ -67,12 +67,12 @@ def get_lex_yacc(lines: List[str]):
 
 # ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
 def open_file():
-    input_name = input("[CSV] Insert file name (extension included): ")
+    input_name = input("[PLY-simple] Insert file name (extension included): ")
 
     try:	
         file = open("../input/"+input_name)
     except OSError:
-        print(f"[ERROR] Can't locate CSV file \"{input_name}\".\n")
+        print(f"[ERROR] Can't locate file \"{input_name}\".\n")
         input("[PRESS ENTER TO CONTINUE]")
         return -1
 
@@ -81,7 +81,7 @@ def open_file():
         print("[FILE] Opened successfully.")
         input("[PRESS ENTER TO CONTINUE]")
         file.close()
-        return input_name, lines
+        return input_name,lines
 
 
 # CRIA E ESCREVE NO FILE LEX
