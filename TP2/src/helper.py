@@ -71,10 +71,9 @@ def open_file():
 
     try:	
         file = open("../input/"+input_name)
-    except OSError:
-        print(f"[ERROR] Can't locate file \"{input_name}\".\n")
-        input("[PRESS ENTER TO CONTINUE]")
-        return -1
+    except:
+        print('\033[91m' + "ERROR : Can't locate file " + '\033[1;32m' +input_name +'\033[91m' + '.'+'\033[0m')
+        return input_name,""
 
     if file:
         lines = file.read().splitlines()
