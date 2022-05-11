@@ -43,5 +43,4 @@ def p_Elem_p7(p):
 def p_error(p):
     print("Erro sintático",p)
 
-
 parser = yacc.yacc()

@@ -44,10 +44,11 @@ def process_grammar(grammar: List[str]):
 
 
 # PROCESSA UMA FUNÇÃO DESTINADA AO FILE YACC
-def process_function(lines: List[str], line: str, i: int, res_functions: str):
+def process_function(lines: List[str], line: str, i: int, res_error: str, res_functions: str):
 
     function = []
     def_match = ""
+
     if re.match(r'def ',line):
         function.append(line)
         f = i + 1
@@ -61,67 +62,73 @@ def process_function(lines: List[str], line: str, i: int, res_functions: str):
         def_match = "\n".join(function) + "\n\n"
         i = f - 1
 
-    return i, def_match
+    if re.search(r'error',line):
+        res_error += def_match
+    else:
+        res_functions += def_match
+
+    return i, res_error, res_functions
 
 
 # DEVOLVE UMA LISTA COM O CONTEÚDO TRADUZIDO PARA O FILE YACC
 def translate_yacc(lines: List[str]):
     
-    content = "\n".join(lines)           # converte a lista com as linhas para o yacc numa string
-    res = ""
-
-    if "/%" in content and "%%" in content:
-        grammar = content[content.index("/%") + len("/%"):content.index("%%") + len("%%")-2]        # pega nas linhas destinadas à gramática
-        defGrammar, res_grammar = process_grammar(grammar.split("\n"))
-        res += "\n".join(defGrammar) + "\n\n"                                                       # construir a gramática em comentários
-    else:
-        raise GrammarError
-
-    i = -1
     pos = 0
+    found_grammar = False
+
+    res = ""
     res_functions = ""
     dictionary = ""
     res_error = ""
     about_parser = ""
+
     precedence = []
-    
-    for line in lines:
+    grammar = []
 
-        if pos > i:
-            # process precendence variable if exists
-            if re.search(r'\w+\s?=\s?\[.*',line):
-                if re.match(r'% *',line):
-                    newline = re.sub(r'% *','',line)
-                    precedence.append(newline)
-                    for s in lines[lines.index(line)-len(lines)+1:]:
-                        if re.search(r'\s*\(.*\),|\]',s):
-                            precedence.append(s)
-                        else: break
-                else:
-                    raise VariableError
+    while pos < len(lines):
+        
+        # process grammar
+        if re.match(r'^/%$',lines[pos]):
+            found_grammar = True
+            for subline in lines[pos+1:]:
+                if not re.match(r'^%%$',subline):
+                    grammar.append(subline)
+                    pos = pos + 1
+                else: break
+            pos = pos + 1                               # avançar a última posição da gramática e a linha %%
 
-            i, def_match = process_function(lines, line, pos, res_functions)
-            if re.search(r'error',line):
-                res_error = def_match
+        # process yacc parser
+        elif re.match(r'/%.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
+            about_parser += (lines[pos])[lines[pos].index("/%")+len("/%"):] + "\n"
+
+        # process precendence variable if exists
+        elif re.search(r'[a-z][A-Za-z]+\s?=\s?\[.*',lines[pos]):
+            if re.match(r'% *',lines[pos]):
+                newline = re.sub(r'% *','',lines[pos])
+                precedence.append(newline)
+                for subline in lines[lines.index(lines[pos])-len(lines)+1:]:
+                    if re.search(r'\s*\(.*\),|\]',subline):
+                        precedence.append(subline)
+                    else: break
             else:
-                res_functions += def_match
+                raise VariableError
 
-            if re.search(r'.*= *\{\}',line):
-                dictionary = line + "\n\n"
+        # if dictionary exists
+        elif re.search(r'.*= *\{\}',lines[pos]):
+            dictionary = lines[pos] + "\n\n"
 
-            # exemplo =                 y.parse("3+4*7")
-            # primeiro termo =          y
-            # segundo tempo =           "3+4*7"
-            if re.match(r'\/%',line):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
-                about_parser += line[line.index("/%")+len("/%"):] + "\n"
-        else:
-            pass
+        # process functions -- def
+        pos, res_error, res_functions = process_function(lines, lines[pos], pos, res_error, res_functions)
+
         pos = pos + 1
 
-    res += "\n".join(precedence) + "\n\n"
+    if found_grammar == False:
+        raise GrammarError
+    else:
+        defGrammar, res_grammar = process_grammar(grammar)
+        res += "\n".join(defGrammar) + "\n\n" + "\n".join(precedence) + "\n\n"
 
-    res += dictionary + res_functions + res_grammar + res_error        # a função de error tem de aparecer depois das funções da gramática
-
-    res += about_parser
+    # a função de error tem de aparecer depois das funções da gramática
+    res += dictionary + res_functions + res_grammar + res_error + about_parser
 
     return res

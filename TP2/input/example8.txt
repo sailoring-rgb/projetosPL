@@ -2,11 +2,12 @@
 
 %literals = ['+','-','*','/','(',')','=','?','!']   
 %tokens = ['num', 'id', 'DUMP','FIM']  
-%id = '[_A-Za-z]\w*'  
-%DUMP = '!!'
-%FIM = '\.'
 %ignore = " \t\n"
 
+
+[_A-Za-z]\w*            simpleToken('id','')
+!!                      simpleToken('DUMP','')
+\.                      simpleToken('FIM','')
 \d+                     return('num','t.value = int(t.value)')
 .                       error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
@@ -16,9 +17,9 @@ lexer = lex.lex()
 
 /%
 
-Calc : Comandos FIM
-Comandos : Comandos Comando
-Comandos : Comando
+Calc : Comandos FIM                         {}
+Comandos : Comandos Comando                 {}
+Comandos : Comando                          {}
 Comando : id '=' Exp                        {p.parser.registos[p[1]] = p[3]}
 Comando : '!' Exp                           {print(p[2])}
 Comando : '?' id                            {p.parser.registos[p[2]] = input(“Introduzir um valor inteiro: “) }
@@ -34,14 +35,5 @@ Fator : id                                  {p[0] = p.parser.registos[p[1]]}
 
 %%
 
-def p_Calc(p):
-    'Calc : Comandos FIM'
-
-def p_Comandos_Lista(p):
-    'Comandos : Comandos Comando'
-
-def p_Comandos_Simples(p):
-    'Comandos : Comando'
-
-parser = yacc.yacc()
-parser.registos = {} 
+/%parser = yacc.yacc()
+/%parser.registos = {} 

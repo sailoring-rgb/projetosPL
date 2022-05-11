@@ -68,6 +68,5 @@ def p_exp_p10(p):
 def p_error(t):
     print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
 
-
 y=yacc()
 y.parse("3+4*7")

@@ -25,7 +25,7 @@ def process_tokens(tok: str, list_regex: List[str]):
 
     tok_no_func = ""
     tok_func = ""
-    tok = re.sub(r' *|\'','',tok).upper()
+    tok = re.sub(r' *|\'','',tok)
 
     for element in list_regex:
 

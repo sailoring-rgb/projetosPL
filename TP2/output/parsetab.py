@@ -27,10 +27,10 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> Z","S'",1,None,None,None),
-  ('Z -> Exp FIM','Z',2,'p_Z_p1','example4_yacc.py',27),
-  ('Exp -> ( + Lista Exp )','Exp',5,'p_Exp_p2','example4_yacc.py',31),
-  ('Exp -> ( * Lista Exp )','Exp',5,'p_Exp_p3','example4_yacc.py',35),
-  ('Exp -> num','Exp',1,'p_Exp_p4','example4_yacc.py',39),
-  ('Lista -> Lista Exp','Lista',2,'p_Lista_p5','example4_yacc.py',43),
-  ('Lista -> Exp','Lista',1,'p_Lista_p6','example4_yacc.py',47),
+  ('Z -> Exp FIM','Z',2,'p_Z_p1','example4_yacc.py',31),
+  ('Exp -> ( + Lista Exp )','Exp',5,'p_Exp_p2','example4_yacc.py',35),
+  ('Exp -> ( * Lista Exp )','Exp',5,'p_Exp_p3','example4_yacc.py',39),
+  ('Exp -> num','Exp',1,'p_Exp_p4','example4_yacc.py',43),
+  ('Lista -> Lista Exp','Lista',2,'p_Lista_p5','example4_yacc.py',47),
+  ('Lista -> Exp','Lista',1,'p_Lista_p6','example4_yacc.py',51),
 ]

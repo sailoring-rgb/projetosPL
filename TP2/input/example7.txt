@@ -1,31 +1,25 @@
 %% LEX
 
 %tokens = ['PA', 'PF', 'NUM']
-%PA = '\('
-%PF = '\)'
-%NUM = '\d+'
 %ignore = " \t\n"
 
+\(                  simpleToken('PA','')
+\)                  simpleToken('PF','')
+\d+                 simpleToken('NUM','')
 .                   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
 %%YACC
 
 /%
 
-ABin : PA PF
-ABin : PA NUM ABin ABin PF
+ABin : PA PF                            {}
+ABin : PA NUM ABin ABin PF              {}
 
 %%
-
-def p_ABin_vazia(p):
-    'ABin : PA PF'
-
-def p_ABin_naoVazia(p):
-    'ABin : PA NUM ABin ABin PF'
 
 def p_error(p):
     print("Erro sintático",p)
     parser.success = False
 
-parser = yacc.yacc()
-parser.abins = {}
+/%parser = yacc.yacc()
+/%parser.abins = {}

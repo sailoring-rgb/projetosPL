@@ -34,5 +34,4 @@ def p_error(p):
     print("Erro sintático: ", p)
     parser.success = False
 
-
 parser = yacc.yacc()
