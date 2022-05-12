@@ -18,6 +18,7 @@ Exp -> Exp '+' Exp       # p3
      | VAR               # p10
 """
 """
+# >>>>>>> MUITO SINCERAMENTE, NÃO SEI O QUE FAZER COM ISTO. PERCEBO, MAS NÃO SEI A UTILIDADE.
 precedence = [
                 ('left','+','-'),
                 ('left','*','/'),

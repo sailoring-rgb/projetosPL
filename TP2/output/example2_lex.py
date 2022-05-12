@@ -1,29 +1,16 @@
 import ply.lex as lex
 
-tokens = ['PLUS','MINUS','SEPARATOR','NUM']
-t_ignore = '\n\t '
+literals = "+-/*=()"                ## a single char
+tokens = ['VAR','NUMBER']
+t_ignore = " \t\n"
 
-def t_PLUS(t):
-    r'\+'
-    t.lexer.begin("state1")
+def t_VAR(t):
+    r'[_A-Za-z][_0-9A-Za-z]*'
     return t
 
-def t_state1_PLUS(t):
-    r'\+'
-    t.lexer.begin("INITIAL")
-    return t
-
-def t_SEPARATOR(t):
-    r','
-    return t
-
-def t_state1_NUM(t):
-    r'\d+'
-    t.lexer.soma+=int(t.value)
-    return t
-
-def t_NUM(t):
-    r'\d+'
+def t_NUMBER(t):
+    r'\d+(\.\d+)?'
+    t.value = float(t.value)
     return t
 
 def t_error(t):
@@ -31,4 +18,3 @@ def t_error(t):
     t.lexer.skip(1)
 
 lexer = lex.lex()
-lexer.soma = 0

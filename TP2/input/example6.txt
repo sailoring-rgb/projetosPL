@@ -1,6 +1,6 @@
 %% LEX
 
-%literals = "[]"
+%literals = ['[',']']
 %tokens = ['id','num']
 %ignore = " \t\n"
 

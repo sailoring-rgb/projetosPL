@@ -1,5 +1,6 @@
 import ply.lex as lex
 
+literals = ['[',']']
 tokens = ['id','num']
 t_ignore = " \t\n"
 t_id = r'\"[^'']+\"'

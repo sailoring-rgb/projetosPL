@@ -53,6 +53,8 @@ def translate_lex(lines_for_LEX: List[str]):
 
     res = ""
     res_var = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
+    literals_match = ""
+    res_literals = ""
     about_lexer = ""
     run_ignore = False
     run_error = False
@@ -69,15 +71,19 @@ def translate_lex(lines_for_LEX: List[str]):
 
     for line in lines_for_LEX:
 
-        if re.match(r'%i(?i:gnore)',line):
+        if re.match(r'%ignore',line):
             ignore_match = line
             res_ignore = "t_ignore" + ignore_match[ignore_match.index("ignore") + len("ignore"):] + "\n"
-            run_ignore = True
-    
+            run_ignore = True                                                       # garante que a variável existe e está introduzida com um %
+
         elif re.search(r'.*?error',line):
             error_match = line
             error_message = (re.findall(r'(?:f\")(.*)(?:\"\,)',error_match))[0]
-            run_error = True
+            run_error = True                                                        # garante que a variável existe e está introduzida com um %
+
+        elif re.search(r'%literals',line):
+            literals_match = line
+            res_literals = literals_match[literals_match.index("%")+len("%"):] + "\n" 
 
         elif re.match(r'%[^tokens]+ *=',line):              # é respeitada a regra "variáveis a começar com %"
             var_match = line
@@ -96,7 +102,7 @@ def translate_lex(lines_for_LEX: List[str]):
             res_toks_func = res_toks_func + tok_func
             res_toks_no_func = res_toks_no_func + tok_no_func
 
-        res += res_tokens_list + res_var + res_ignore + res_toks_no_func + "\n" + res_toks_func
+        res += res_literals + res_tokens_list + res_var + res_ignore + res_toks_no_func + "\n" + res_toks_func
 
         res +=  f"""def t_error(t):
     print(f"{error_message}")

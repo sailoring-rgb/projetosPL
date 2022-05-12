@@ -1,5 +1,6 @@
 import ply.lex as lex
 
+literals = ['(',')','+','*']
 tokens = ['num','FIM']
 t_ignore = " \t\n"
 t_FIM = r'\.'
