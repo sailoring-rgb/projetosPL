@@ -1,11 +1,17 @@
 import ply.lex as lex
 
-tokens = ['PA', 'PF', 'NUM', 'VIRG']
+literals = "+-/*=()"                ## a single char
+tokens = ['VAR','NUMBER']
 t_ignore = " \t\n"
-t_PA = r'\('
-t_PF = r'\)'
-t_NUM = r'\d+'
-t_VIRG = r'\,'
+
+def t_VAR(t):
+    r'[_A-Za-z][_0-9A-Za-z]*'
+    return t
+
+def t_NUMBER(t):
+    r'\d+(\.\d+)?'
+    t.value = float(t.value)
+    return t
 
 def t_error(t):
     print(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]")
