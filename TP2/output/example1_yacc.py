@@ -28,43 +28,33 @@ def getval(n):
 def p_stat_p1(p):
     "stat : VAR '=' exp"
     ts[p[1]] = p[3]
-
 def p_stat_p2(p):
     "stat : exp"
     print(p[1])
-
 def p_exp_p3(p):
     "exp : exp '+' exp"
     p[0] = p[1] + p[3]
-
 def p_exp_p4(p):
     "exp : exp '-' exp"
     p[0] = p[1] - p[3]
-
 def p_exp_p5(p):
     "exp : exp '*' exp"
     p[0] = p[1] * p[3]
-
 def p_exp_p6(p):
     "exp : exp '/' exp"
     p[0] = p[1] / p[3]
-
 def p_exp_p7(p):
     "exp : '-' exp"
     p[0] = -p[2]
-
 def p_exp_p8(p):
     "exp : '(' exp ')'"
     p[0] = p[2]
-
 def p_exp_p9(p):
     "exp : NUMBER"
     p[0] = p[1]
-
 def p_exp_p10(p):
     "exp : VAR"
     p[0] = getval(p[1])
-
 def p_error(t):
     print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
 
