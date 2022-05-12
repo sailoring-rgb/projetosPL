@@ -37,7 +37,7 @@ def process_grammar(grammar: List[str]):
 
             res_grammar += f"""def p_{group[0]}_p{i}(p):
     "{group[0]} : {prod}"
-    {calc}\n\n"""
+    {calc}\n"""
             i = i+1
     
     return defGrammar, res_grammar
