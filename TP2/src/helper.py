@@ -76,8 +76,8 @@ def open_file(input_name:str):
         raise FileNotFoundError
 
     lines = file.read().splitlines()
-    print("\033[92m[FILE] opened successfully.\033[0m")
     file.close()
+    print("\033[96m[" + input_name[:-4] + "]\033[0m\033[92m opened successfully.\033[0m")
     return lines
 
 
@@ -92,7 +92,7 @@ def write_file_lex(input_name:str, res0: str):
     outputFile.write(res)
     outputFile.close
 
-    print("\033[92m[FILE] Translated LEX successfully.\033[0m")
+    print("\033[96m[" + input_name + "]\033[92m translated LEX successfully.\033[0m")
 
 
 # CRIA E ESCREVE NO FILE YACC
@@ -107,4 +107,4 @@ def write_file_yacc(input_name:str, res0: str):
     outputFile.write(res)
     outputFile.close
 
-    print("\033[92m[FILE] Translated YACC successfully.\033[0m")
+    print("\033[96m[" + input_name + "]\033[92m translated YACC successfully.\033[0m")
