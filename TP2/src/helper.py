@@ -73,22 +73,17 @@ def get_lex_yacc(lines: List[str]):
 
 
 # ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
-def open_file():
-    input_name = input("[CSV] Insert file name (extension included): ")
+def open_file(input_name:str):
+    file = open("../input/"+input_name)
+    
+    if not file:
+        raise FileNotFoundError
 
-    try:	
-        file = open("../input/"+input_name)
-    except OSError:
-        print(f"[ERROR] Can't locate CSV file \"{input_name}\".\n")
-        input("[PRESS ENTER TO CONTINUE]")
-        return -1
-
-    if file:
-        lines = file.read().splitlines()
-        print("[FILE] Opened successfully.")
-        input("[PRESS ENTER TO CONTINUE]")
-        file.close()
-        return input_name, lines
+    lines = file.read().splitlines()
+    print("\033[92m[FILE] opened successfully.\033[0m")
+    input("[PRESS ENTER TO \033[96mCONTINUE\033[0m]")
+    file.close()
+    return lines
 
 
 # CRIA E ESCREVE NO FILE LEX
@@ -102,8 +97,8 @@ def write_file_lex(input_name:str, res0: str):
     outputFile.write(res)
     outputFile.close
 
-    print("[FILE] Translated LEX successfully.")
-    input("[PRESS ENTER TO CONTINUE]")
+    print("\033[92m[FILE] Translated LEX successfully.\033[0m")
+    
 
 
 # CRIA E ESCREVE NO FILE YACC
@@ -119,5 +114,5 @@ from {input_name}_lex import *"""
     outputFile.write(res)
     outputFile.close
 
-    print("[FILE] Translated YACC successfully.")
-    input("[PRESS ENTER TO CONTINUE]")
+    print("\033[92m[FILE] Translated YACC successfully.\033[0m")
+    input("[PRESS ENTER TO \033[96mCONTINUE\033[0m]")
