@@ -6,11 +6,7 @@ from processYACC import *
 input_name, lines = open_file()
 
 
-try:
-    lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
-
-except YaccBeforeLex:
-    print('\033[91m' + "ERROR BEFORE TRANSLATING: YACC can't be defined before LEX in PLY-Simple" + '\033[0m')
+lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
 
 
 if lex_exists:

@@ -38,7 +38,14 @@ def get_lex_yacc(lines: List[str]):
         pos = pos + 1
 
     if pos_lex > pos_yacc and yacc_exists and lex_exists:
-        raise YaccBeforeLex
+        # for yacc
+        for line in lines[pos_yacc+1:pos_lex]:
+            if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                lines_for_YACC.append(line)
+        # for lex
+        for line in lines[pos_lex+1:]:
+            if not re.search(r'^$',line):          # remove empty lines or lines like %%
+                lines_for_LEX.append(line)
 
     elif lex_exists and yacc_exists:
         # for lex

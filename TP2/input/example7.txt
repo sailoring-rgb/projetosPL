@@ -1,6 +1,6 @@
 %% LEX
 
-%tokens = ['PA', 'PF', 'NUM']
+#não possui tokens
 %ignore = " \t\n"
 
 \(                  simpleToken('PA','')

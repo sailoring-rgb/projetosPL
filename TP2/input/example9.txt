@@ -11,14 +11,10 @@ lexer = lex.lex()
 
 %%YACC
 
-/%
-
 S : Z S Z                       {}
 S : U S U                       {}
 S : Z                           {}
 S : U                           {}
-
-%%
 
 def p_error(p):
     print("Erro sintático: ", p)

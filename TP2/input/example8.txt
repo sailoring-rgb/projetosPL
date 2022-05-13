@@ -1,18 +1,3 @@
-%% LEX
-
-%literals = ['+','-','*','/','(',')','=','?','!']   
-%tokens = ['num', 'id', 'DUMP','FIM']  
-%ignore = " \t\n"
-
-
-[_A-Za-z]\w*            simpleToken('id','')
-!!                      simpleToken('DUMP','')
-\.                      simpleToken('FIM','')
-\d+                     return('num','t.value = int(t.value)')
-.                       error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
-
-lexer = lex.lex()
-
 %%YACC
 
 /%
@@ -37,3 +22,18 @@ Fator : id                                  {p[0] = p.parser.registos[p[1]]}
 
 /%parser = yacc.yacc()
 /%parser.registos = {} 
+
+%% LEX
+
+%literals = ['+','-','*','/','(',')','=','?','!']   
+%tokens = ['num', 'id', 'DUMP','FIM']  
+%ignore = " \t\n"
+
+
+[_A-Za-z]\w*            simpleToken('id','')
+!!                      simpleToken('DUMP','')
+\.                      simpleToken('FIM','')
+\d+                     return('num','t.value = int(t.value)')
+.                       error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+
+lexer = lex.lex()
