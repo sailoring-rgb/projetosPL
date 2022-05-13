@@ -10,7 +10,6 @@ try:
 except FileNotFoundError:
     lines = ''
     print('\033[91m' + "[ERROR] file "+ input_name + " not found." + '\033[0m')
-    input("[PRESS ENTER TO \033[96mEXIT\033[0m]")
 
 if lines != '':
 
