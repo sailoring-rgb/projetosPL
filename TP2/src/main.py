@@ -4,8 +4,6 @@ from helper import *
 from processLEX import *
 from processYACC import *
 
-#input_name = input("[PLY-Simple] insert file name (extension included): ")
-#input_name = sys.argv[1]
 files = sys.argv[1:]
 
 for input_name in files:
