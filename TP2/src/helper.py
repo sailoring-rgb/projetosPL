@@ -10,10 +10,6 @@ class GrammarError(Exception):
 class VariableError(Exception):
     """Raised when variables are missing or not correctly introduced"""
     pass
-
-class YaccBeforeLex(Exception):
-    """Raised when YACC is defined before LEX in PLY-Simple"""
-    pass
 #######################################################################################################################
 
 
@@ -81,7 +77,6 @@ def open_file(input_name:str):
 
     lines = file.read().splitlines()
     print("\033[92m[FILE] opened successfully.\033[0m")
-    input("[PRESS ENTER TO \033[96mCONTINUE\033[0m]")
     file.close()
     return lines
 
@@ -98,7 +93,6 @@ def write_file_lex(input_name:str, res0: str):
     outputFile.close
 
     print("\033[92m[FILE] Translated LEX successfully.\033[0m")
-    
 
 
 # CRIA E ESCREVE NO FILE YACC
@@ -106,8 +100,7 @@ def write_file_yacc(input_name:str, res0: str):
 
     input_name = re.sub(r'\.(.*)',r'',input_name)
 
-    imports = f"""import ply.yacc as yacc
-from {input_name}_lex import *"""
+    imports = f"""import ply.yacc as yacc from {input_name}_lex import *"""
     res = imports + "\n\n" + res0
 
     outputFile = open("../output/"+f'{input_name}_yacc.py','w')
@@ -115,4 +108,3 @@ from {input_name}_lex import *"""
     outputFile.close
 
     print("\033[92m[FILE] Translated YACC successfully.\033[0m")
-    input("[PRESS ENTER TO \033[96mCONTINUE\033[0m]")
