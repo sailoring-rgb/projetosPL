@@ -100,7 +100,7 @@ def write_file_yacc(input_name:str, res0: str):
 
     input_name = re.sub(r'\.(.*)',r'',input_name)
 
-    imports = f"""import ply.yacc as yacc from {input_name}_lex import *"""
+    imports = f"""import ply.yacc as yacc\nfrom {input_name}_lex import *"""
     res = imports + "\n\n" + res0
 
     outputFile = open("../output/"+f'{input_name}_yacc.py','w')
