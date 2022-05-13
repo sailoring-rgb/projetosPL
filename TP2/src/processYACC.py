@@ -98,7 +98,7 @@ def translate_yacc(lines: List[str]):
             pos = pos + 1                               # avançar a última posição da gramática e a linha %%
 
         # process yacc parser
-        elif re.match(r'/%.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no lex
+        elif re.match(r'/%.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no yacc
             about_parser += (lines[pos])[lines[pos].index("/%")+len("/%"):] + "\n"
 
         # process precendence variable if exists
