@@ -1,29 +1,23 @@
 %% LEX
 
-%literals = ['[',']']
-%tokens = ['id','num']
+%tokens = ['Z', 'U']
 %ignore = " \t\n"
 
-\d+                         return('num','t.value = int(t.value)')
-\"[^'']+\"                  simpleToken('id','')
-.                           error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+0                               simpleToken('Z','')
+1                               simpleToken('U','')
+.                               error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
 lexer = lex.lex()
 
-%% YACC
+%%YACC
 
-/%
-
-Lista : Lista                           {}
-Lista : Lista Ficheiro                  {}
-Lista :                                 {}
-Ficheiro : '(' id id ')'                {p.parser.itens.appen(p[2])}
-
-%%
+S : Z S Z                       {}
+S : U S U                       {}
+S : Z                           {}
+S : U                           {}
 
 def p_error(p):
     print("Erro sintático: ", p)
     parser.success = False
 
 /%parser = yacc.yacc()
-/%parser.itens = []    
