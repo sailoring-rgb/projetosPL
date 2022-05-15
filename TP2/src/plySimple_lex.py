@@ -42,22 +42,13 @@ def t_lex_RET(t):
     t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
-def t_EOF(t):
-    r'$'
-    return t
-
-def t_lex_EOF(t):
-    r'$'
+def t_ANY_EOF(t):
+    r'\$'
     t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
-def t_yacc_EOF(t):
-    r'$'
-    t.lexer.forLEX = t.lexer.forYACC.append(t.value)
-    return t
-
 def t_error(t):
-    print('Illegal Caracter: ',t.value[0])
+    print(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]")
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -66,7 +57,9 @@ lexer.forYACC = []
 
 import sys
 # cat text.txt | python3.10 ex2.py
-f = open("../input/example1.txt")
+f = open("../old/input/example1.txt")
 for line in f:
     lexer.input(line)
+    for tok in lexer:
+        print(tok)
 print("\n\nEncontrei " + "\n".join(lexer.forLEX))
