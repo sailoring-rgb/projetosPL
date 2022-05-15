@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-tokens = ['LIT','TOK', 'IGN','BLEX','RET', 'EOF']
+tokens = ['LIT','TOK', 'IGN','BLEX','RET','ERR','EOF']
 states = [("lex", 'inclusive'),
           ("yacc", 'inclusive')]
 
@@ -34,10 +34,12 @@ def t_lex_ERR(t):
 
 def t_lex_IGN(t):
     r'% *ignore *= *'
+    t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
 def t_lex_RET(t):
     r'% *return'
+    t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
 def t_EOF(t):
@@ -46,11 +48,12 @@ def t_EOF(t):
 
 def t_lex_EOF(t):
     r'$'
-
+    t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
 def t_yacc_EOF(t):
     r'$'
+    t.lexer.forLEX = t.lexer.forYACC.append(t.value)
     return t
 
 def t_error(t):
