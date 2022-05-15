@@ -11,22 +11,22 @@ def t_BLEX(t):
     t.lexer.begin("lex")
     return t 
 
-def t_YACC(t):
+def t_BYACC(t):
     r'%% *YACC'
     t.lexer.begin("yacc")
     return t 
 
 def t_lex_TOK(t):
-    r'% *tokens'
+    r'% *tokens *= *'
     t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
 def t_LIT(t):
-    r'% *literals *='
+    r'% *literals *= *'
     return t
 
 def t_TOK(t):
-    r'% *tokens'
+    r'% *tokens *= *'
     return t
 
 def t_ERR(t):
@@ -34,7 +34,7 @@ def t_ERR(t):
     t.lexer.skip(1)
 
 def t_IGN(t):
-    r' \t\n'
+    r'% *ignore *= *'
     return t
 
 def t_RET(t):
