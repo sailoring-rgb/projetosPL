@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-tokens = ['TOK', 'IGNORE', 'ERROR', 'VAR']
+tokens = ['LIT','TOK', 'IGNORE', 'ERROR', 'VAR']
 states = [("lex", 'inclusive'),
           ("yacc", 'inclusive')]
 
@@ -19,6 +19,10 @@ def t_YACC(t):
 def t_lex_TOK(t):
     r'% *tokens'
     t.lexer.forLEX = t.lexer.forLEX.append(t.value)
+    return t
+
+def t_LIT(t):
+    r'% *literals *='
     return t
 
 def t_TOK(t):
