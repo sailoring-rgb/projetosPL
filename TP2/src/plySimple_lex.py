@@ -58,8 +58,9 @@ lexer.forYACC = []
 
 import sys
 # cat text.txt | python3.10 ex2.py
-f = open("../old/input/example1.txt")
+f = open("example1.txt")
 for line in f:
-    print(line)
     lexer.input(line)
+    for tok in lexer:
+        print(tok)
 print("\n\nEncontrei " + "\n".join(lexer.forLEX))
