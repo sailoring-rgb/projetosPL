@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-tokens = ['LIT','TOK', 'IGN','ERR','BLEX','RET']
+tokens = ['LIT','TOK', 'IGN','BLEX','RET', 'EOF']
 states = [("lex", 'inclusive'),
           ("yacc", 'inclusive')]
 
@@ -10,40 +10,52 @@ def t_BLEX(t):
     r'%% *LEX'
     t.lexer.begin("lex")
     return t 
-
+"""
 def t_BYACC(t):
     r'%% *YACC'
     t.lexer.begin("yacc")
     return t 
-
+"""
 def t_lex_TOK(t):
     r'% *tokens *= *'
     t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
-def t_LIT(t):
+def t_lex_LIT(t):
     r'% *literals *= *'
+    t.lexer.forLEX = t.lexer.forLEX.append(t.value)
     return t
 
-def t_TOK(t):
-    r'% *tokens *= *'
-    return t
-
-def t_ERR(t):
+"""
+def t_lex_ERR(t):
     print(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]")
     t.lexer.skip(1)
+"""
 
-def t_IGN(t):
+def t_lex_IGN(t):
     r'% *ignore *= *'
     return t
 
-def t_RET(t):
+def t_lex_RET(t):
     r'% *return'
     return t
 
 def t_EOF(t):
     r'$'
     return t
+
+def t_lex_EOF(t):
+    r'$'
+
+    return t
+
+def t_yacc_EOF(t):
+    r'$'
+    return t
+
+def t_error(t):
+    print('Illegal Caracter: ',t.value[0])
+    t.lexer.skip(1)
 
 lexer = lex.lex()
 lexer.forLEX = []
