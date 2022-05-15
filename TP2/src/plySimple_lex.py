@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-tokens = ['LIT','TOK', 'IGN','BLEX','RET','ERR','EOF']
+tokens = ['LIT','TOK', 'IGN','BLEX','RET','ERR','EOF','NLINE','VIRG','TAB','SEP','SEP1','SEP2','BYACC']
 states = [("lex", 'inclusive'),
           ("yacc", 'inclusive')]
 
@@ -17,6 +17,11 @@ def t_BYACC(t):
     t.lexer.begin("yacc")
     return t 
 """
+
+def t_lex_tok(t):
+    r'\".*\"'
+    t.lexer.forLEX.append(t.value)
+    
 def t_lex_TOK(t):
     r'% *tokens *=.*'
     t.lexer.forLEX.append(t.value)
@@ -42,6 +47,36 @@ def t_lex_ERR(t):
     r'.*?error'
     t.lexer.forLEX.append(t.value)
     return t
+
+def t_yacc_VIRG(t):
+    r'\,'
+    t.lexer.forYACC.append(t.value)
+    return t 
+
+def t_yacc_SEP(t):
+    r'\-'
+    t.lexer.forYACC.append(t.value)
+    return t 
+
+def t_yacc_SEP1(t):
+    r'\-\-'
+    t.lexer.forYACC.append(t.value)
+    return t 
+
+def t_yacc_SEP2(t):
+    r'\-\-\-'
+    t.lexer.forYACC.append(t.value)
+    return t 
+
+def t_yacc_TAB(t):
+    r'  '
+    t.lexer.forYACC.append(t.value)
+    return t 
+
+def t_yacc_NLINE(t):
+    r'\n'
+    t.lexer.forYACC.append(t.value)
+    return t 
 
 def t_ANY_EOF(t):
     r'\$'
