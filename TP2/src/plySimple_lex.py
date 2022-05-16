@@ -201,6 +201,7 @@ lexer.forYACCgram = []
 lexer.forYACCfun = []
 lexer.forParser = []
 
+"""
 ## PARSING TO EVENTUALLY MOVE TO YACC
 import sys
 files = sys.argv[1:]
@@ -216,3 +217,4 @@ for file_name in files:
         lexer.input(line)
         for tok in lexer:
             print(tok)
+"""

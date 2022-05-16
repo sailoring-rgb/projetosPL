@@ -1,3 +1,7 @@
+import ply.yacc as yacc
+from plySimple_lex import tokens
+from helper import *
+
 # Production rules
 def p_plySimple_EOF(p):
     "Ply-Simple : EOF"
@@ -7,9 +11,6 @@ def p_plySimple_BLEX(p):
 
 def p_plySimple_BYACC(p):
     "Ply-Simple : BYACC Yacc BLEX Lex EOF"
-
-def p_Calc(p):
-    'Calc : Comandos FIM'
 
 def p_Lex(p):
     'Lex : Vars Funs'
@@ -85,3 +86,32 @@ def p_RestProd_SEP3(p):
     
 def p_RestProd_Empty(p):
     "RestProd : "
+
+def p_error(p):
+    print("ERROR",p)
+    parser.success = False
+
+# Build the parser
+parser = yacc.yacc()
+
+# Definir estado / modelo
+parser.info = {}
+
+## PARSING TO EVENTUALLY MOVE TO YACC
+import sys
+files = sys.argv[1:]
+
+for file_name in files:
+    try:
+        lines = open_file(file_name)
+    except FileNotFoundError:
+        lines = ''
+        print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
+
+    for line in lines:
+        parser.success = True
+        parser.parse(line)
+        if parser.success:
+            print('Frase válida: ', line)
+        else:
+            print('Frase inválida.')

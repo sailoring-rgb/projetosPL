@@ -1,0 +1,125 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    BCOM
+    BFUNL
+    BFUNY
+    BGRAM
+    BPARSER
+    ECOM
+    EFUNL
+    EFUNY
+    EGRAM
+    TS
+    comm
+    funL
+    funY
+    gram
+    ig
+    instructions
+    preceList
+    tokenList
+    tsList
+
+Grammar
+
+Rule 0     S' -> Ply-Simple
+Rule 1     Ply-Simple -> EOF
+Rule 2     Ply-Simple -> BLEX Lex BYACC Yacc EOF
+Rule 3     Ply-Simple -> BYACC Yacc BLEX Lex EOF
+Rule 4     Lex -> Vars Funs
+Rule 5     Vars -> Var RestVars
+Rule 6     Var -> LIT literals
+Rule 7     Var -> IGN ignore
+Rule 8     Var -> TOK ListTok
+Rule 9     RestVars -> NLINE Vars
+Rule 10    RestVars -> <empty>
+Rule 11    ListTok -> token ResTok
+Rule 12    RestTok -> VIRG ListTok
+Rule 13    RestTok -> <empty>
+Rule 14    Funs -> Fun RestFun
+Rule 15    Fun -> regex FunOP
+Rule 16    FunOP -> RET result
+Rule 17    FunOP -> ERR erro
+Rule 18    RestFun -> SEP Funs
+Rule 19    RestFun -> <empty>
+Rule 20    Yacc -> PrecList ListProd
+Rule 21    PrecList -> Predence PrecRest
+Rule 22    Predence -> PREC cenas
+Rule 23    PrecRest -> SEP2 PrecList
+Rule 24    PrecRest -> <empty>
+Rule 25    ListProd -> Prod RestProd
+Rule 26    Prod -> regra TAB prodOp
+Rule 27    RestProd -> SEP3 ListProd
+Rule 28    RestProd -> <empty>
+
+Terminals, with rules where they appear
+
+BCOM                 : 
+BFUNL                : 
+BFUNY                : 
+BGRAM                : 
+BLEX                 : 2 3
+BPARSER              : 
+BYACC                : 2 3
+ECOM                 : 
+EFUNL                : 
+EFUNY                : 
+EGRAM                : 
+EOF                  : 1 2 3
+IGN                  : 7
+LIT                  : 6
+PREC                 : 22
+TOK                  : 8
+TS                   : 
+comm                 : 
+error                : 
+funL                 : 
+funY                 : 
+gram                 : 
+ig                   : 
+instructions         : 
+literals             : 6
+preceList            : 
+tokenList            : 
+tsList               : 
+
+Nonterminals, with rules where they appear
+
+ERR                  : 17
+Fun                  : 14
+FunOP                : 15
+Funs                 : 4 18
+Lex                  : 2 3
+ListProd             : 20 27
+ListTok              : 8 12
+NLINE                : 9
+Ply-Simple           : 0
+PrecList             : 20 23
+PrecRest             : 21
+Predence             : 21
+Prod                 : 25
+RET                  : 16
+ResTok               : 11
+RestFun              : 14
+RestProd             : 25
+RestTok              : 
+RestVars             : 5
+SEP                  : 18
+SEP2                 : 23
+SEP3                 : 27
+TAB                  : 26
+VIRG                 : 12
+Var                  : 5
+Vars                 : 4 9
+Yacc                 : 2 3
+cenas                : 22
+erro                 : 17
+ignore               : 7
+prodOp               : 26
+regex                : 15
+regra                : 26
+result               : 16
+token                : 11
+
