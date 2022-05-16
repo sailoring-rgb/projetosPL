@@ -13,22 +13,28 @@ from helper import *
          | TOK tokenList
     Funs : Funs Fun
          |
-    Fun : BUNL fun
-    Yacc : Precedence Dictionary Grammar Funs
+    Fun : BFUN function
+    Yacc : Precedence Dictionary Grammar Defs InstrList
     Dictionary : TS tsList
                |
     Grammar : BGRAM ProdList
             |
     ProdList : ProdList prod
              |
+    Defs : Defs Def
+         |
+    Def : BDEF definition
+    InstrList : InstrList Inst
+              |
+    Inst : BINST instruction
 """
 
 # Production rules
-def p_PlySiple(p):
+def p_PlySimple(p):
     'PlySimple : BLEX Lex BYACC Yacc EOF'
 
 def p_Yacc(p):
-    'Yacc : Precedence Dictionary Grammar'
+    'Yacc : Precedence Dictionary Grammar Defs InstrList'
 
 def p_Precedence(p):
     'Precedence : PREC preceList'
@@ -53,6 +59,24 @@ def p_ProdList(p):
 
 def p_ProdList_Empty(p):
     'ProdList : '
+
+def p_Defs(p):
+    'Defs : Defs Def'
+
+def p_Defs_Empty(p):
+    'Defs : '
+ 
+def p_Def(p):
+    'Def : BDEF definition'
+
+def p_InstrList(p):
+    'InstrList : InstrList Inst'
+
+def p_InstrList_Empty(p):
+    'InstrList : '
+
+def p_Inst(p):
+    'Inst : BINST instruction'
 
 def p_Lex(p):
     'Lex : Vars Funs'
@@ -79,10 +103,10 @@ def p_Funs_Empty(p):
     'Funs : '
 
 def p_Fun(p):
-    'Fun : BFUN fun'
+    'Fun : BFUN function'
 
 def p_error(p):
-    print("ERROR",p)
+    print("ERROR", p)
     parser.success = False
     exit(1)
 
@@ -96,8 +120,14 @@ import sys
 files = sys.argv[1:]
 
 for file_name in files:
-    f = open("../input/"+file_name, 'r')
-    parser.success = True
-    parser.parse(f.read())
-    if parser.success:
-        print("###### END YACC PROCESSING ######")
+    try:
+        f = open("../input/"+file_name, 'r')
+        input = f.read()
+    except FileNotFoundError:
+        input = ""
+        print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
+    if input != "":
+        parser.success = True
+        parser.parse(f.read())
+        if parser.success:
+            print("###### END YACC PROCESSING ######")
