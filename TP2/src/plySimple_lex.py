@@ -1,4 +1,6 @@
+from ast import arg
 import ply.lex as lex
+from helper import *
 
 tokens = [
     'EOF',
@@ -24,7 +26,10 @@ tokens = [
     'BFUNY',
     'funY',
     'BPARSER',
-    'instructions'
+    'instructions',
+    'BCOM',
+    'ECOM',
+    'comm'
     ]
 
 states = [
@@ -33,10 +38,25 @@ states = [
     ("yacc", 'inclusive'),
     ("yaccFun", 'inclusive'),
     ("grammar", 'inclusive'),
-    ("parser", 'inclusive')
+    ("parser", 'inclusive'),
+    ("comment", 'inclusive')
     ]
 
 t_ignore = " \t\n"
+
+def t_ANY_BCOM(t):
+    r'\<\#\>'
+    t.lexer.begin("comment")
+    return t
+
+def t_ANY_ECOM(t):
+    r'\>\#\<'
+    t.lexer.begin("INITIAL")
+    return t
+
+def t_comment_comm(t):
+    r'(:?\s*:?[A-z]+:?\s*)+'
+    return t
 
 def t_ANY_EOF(t):
     r'\$\$'
@@ -172,9 +192,16 @@ lexer.forYACCfun = []
 lexer.forParser = []
 
 import sys
-f = open("example1.txt")
-for line in f:
-    lexer.input(line)
-    for tok in lexer:
-        print(tok)
-print("\n\nEncontrei\n " + "\n".join(lexer.forParser))
+files = sys.argv[1:]
+
+for file_name in files:
+    try:
+        lines = open_file(file_name)
+    except FileNotFoundError:
+        lines = ''
+        print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
+
+    for line in lines:
+        lexer.input(line)
+        for tok in lexer:
+            print(tok)

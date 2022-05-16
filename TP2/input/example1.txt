@@ -1,3 +1,4 @@
+<#> THIS IS A COMMENT >#<
 %% LEX %%
 %literals = "+-/*=()"              
 %ignore = " \t\n"
@@ -9,6 +10,8 @@
 .   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 (%
 
+
+<#> ANOTHER COMMENT >#<
 %% YACC %%
 
 %precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
