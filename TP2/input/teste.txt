@@ -1,2 +1,10 @@
 %% LEX %%
-%literals = "+-/*=()"
+%literals = "+-/*=()"              
+%ignore = " \t\n"
+%tokens = ['VAR','NUMBER']
+
+%) [_A-Za-z][_0-9A-Za-z]*  return('VAR', '')
+%) \d+(\.\d+)? return('NUMBER', 't.value = float(t.value)')
+%) .   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+
+$$

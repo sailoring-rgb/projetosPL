@@ -4,14 +4,13 @@ from helper import *
 
 tokens = [
     'BLEX',
+    'EOF',
     'LIT',
     'IGN',
     'TOK',
     'literals',
-    'ig',
     'tokenList',
-    'BFUNL',
-    'EFUNL',
+    'BLFUN',
     'funL',
     'BYACC',
     'PREC',
@@ -28,7 +27,7 @@ tokens = [
     'instructions',
     'BCOM',
     'ECOM',
-    'comm'
+    'comm',
     ]
 
 states = [
@@ -38,7 +37,7 @@ states = [
     ("yaccFun", 'inclusive'),
     ("grammar", 'inclusive'),
     ("parser", 'inclusive'),
-    ("comment", 'inclusive')
+    ("comment", 'exclusive')
     ]
 
 t_ANY_ignore = " \t\n"
@@ -58,6 +57,11 @@ def t_comment_comm(t):
     r'(:?\s*:?[A-z]+:?\s*)+'
     return t
 
+### MARKER FOR EOF ###
+def t_ANY_EOF(t):
+    r'\$\$'
+    return t
+
 ### PARSER INFORMATION AND INSTRUCTIONS ###
 def t_yacc_BPARSER(t):
     r'%%\s*PARSER\s*%%'
@@ -66,7 +70,6 @@ def t_yacc_BPARSER(t):
 
 def t_parser_instructions(t):
     r'.*parse(.*).*'
-    t.lexer.forParser.append(t.value)
     return t
 
 ### YACC SECTION ###
@@ -77,22 +80,18 @@ def t_ANY_BYACC(t):
 
 def t_yacc_PREC(t):
     r'%\s*precedence\s*=\s*'
-    t.lexer.forYACC.append(t.value)
     return t
 
 def t_yacc_preceList(t):
     r'\[\(.*\]'
-    t.lexer.forYACC.append(t.value)
     return t
 
 def t_yacc_TS(t):
     r'%\s*ts\s*=\s*'
-    t.lexer.forYACC.append(t.value)
     return t
 
 def t_yacc_tsList(t):
     r'\{\}'
-    t.lexer.forYACC.append(t.value)
     return t
 
 ### GRAMMAR ###
@@ -108,7 +107,6 @@ def t_grammar_EGRAM(t):
 
 def t_grammar_gram(t):
     r'(.*\{.*\})'
-    t.lexer.forYACCgram.append(t.value)
     return t
 
 ### YACC FUNCTIONS ###
@@ -124,7 +122,6 @@ def t_yaccFun_EFUNY(t):
 
 def t_yaccFun_funY(t):
     r'def .*'
-    t.lexer.forYACCfun.append(t.value)
     return t
 
 ### LEX SECTION ###
@@ -135,48 +132,33 @@ def t_ANY_BLEX(t):
 
 def t_lex_LIT(t):
     r'%\s*literals\s*=\s*'
-    t.lexer.forLEX.append(t.value)
     return t
 
 def t_lex_literals(t):
     r'\".*\"'
-    t.lexer.forLEX.append(t.value)
     return t
 
 def t_lex_IGN(t):
     r'%\s*ignore\s*=\s*'
-    t.lexer.forLEX.append(t.value)
-    return t
-
-def t_lex_ig(t):
-    r'\".*\"'
-    t.lexer.forLEX.append(t.value)
     return t
 
 def t_lex_TOK(t):
     r'%\s*tokens\s*=\s*'
-    t.lexer.forLEX.append(t.value)
     return t
 
 def t_lex_tokenList(t):
     r'\[(\'*.*\')+\]'
-    t.lexer.forLEX.append(t.value)
     return t
 
 ### LEX FUNCTIONS ###
-def t_lex_BFUNL(t):
-    r'%\)'
+def t_lex_BLFUN(t):
+    r'\s*%\)\s*'
     t.lexer.begin("lexFun")
     return t
 
-def t_lexFun_EFUNL(t):
-    r'\(%'
-    t.lexer.begin("lex")
-    return t
-
 def t_lexFun_funL(t):
-    r'(.*(return|error).*)'
-    t.lexer.forLEXfun.append(t.value)
+    r'.*(return|error).*'
+    t.lexer.begin("lex")
     return t
 
 ### ERRO FUNCTION ###
@@ -186,17 +168,7 @@ def t_ANY_error(t):
 
 lexer = lex.lex()
 
-## LEX VARIABLES TO REMOVE 
-lexer.forLEX = []
-lexer.forLEXfun = []
-lexer.forYACC = []
-lexer.forYACCgram = []
-lexer.forYACCfun = []
-lexer.forParser = []
-
-
-## PARSING TO EVENTUALLY MOVE TO YACC
-import sys
+"""import sys
 files = sys.argv[1:]
 
 for file_name in files:
@@ -209,4 +181,4 @@ for file_name in files:
         lexer.input(line)
         for tok in lexer:
             print(tok)
-    print("###### END LEX PROCESSING ######")
+    print("###### END LEX PROCESSING ######")"""
