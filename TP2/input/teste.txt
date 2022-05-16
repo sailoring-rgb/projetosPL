@@ -1,3 +1,2 @@
-%% LEX %%   
-%literals = "+-/*=()"     
-$$
+%% LEX %%
+%literals = "+-/*=()"

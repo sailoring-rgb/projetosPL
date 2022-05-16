@@ -3,7 +3,6 @@ import ply.lex as lex
 from helper import *
 
 tokens = [
-    'EOF',
     'BLEX',
     'LIT',
     'IGN',
@@ -42,7 +41,7 @@ states = [
     ("comment", 'inclusive')
     ]
 
-t_ignore = " \t\n"
+t_ANY_ignore = " \t\n"
 
 ### TREATING COMMENTS ###
 def t_ANY_BCOM(t):
@@ -57,12 +56,6 @@ def t_ANY_ECOM(t):
 
 def t_comment_comm(t):
     r'(:?\s*:?[A-z]+:?\s*)+'
-    return t
-
-### MARKER FOR EOF ###
-def t_ANY_EOF(t):
-    r'\$\$'
-    t.lexer.forLEX.append(t.value)
     return t
 
 ### PARSER INFORMATION AND INSTRUCTIONS ###

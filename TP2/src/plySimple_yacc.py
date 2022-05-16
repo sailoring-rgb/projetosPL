@@ -5,39 +5,29 @@ from helper import *
 
 """
     PlySimple : BLEX Lex
-              | EOF
     Lex : Vars Funs
-        | 
     Vars : Vars Var
          |
     Var : LIT literals
-         | IGN ig"
-         | TOK tokenList"
+         | IGN ig
+         | TOK tokenList
     Funs : Funs Fun EFUNL
          |
     Fun : BFUNL funL
 """
 
 # Production rules
-def p_PlySiple_Empty(p):
-    'PlySimple : EOF'
-
-def p_PlySiple_notEmpty(p):
+def p_PlySiple(p):
     'PlySimple : BLEX Lex'
-
-def p_Lex(p):
-    'Lex : '
-    pass
 
 def p_Lex(p):
     'Lex : Vars'
 
-def p_Vars_notEmpty(p):
+def p_Vars(p):
     'Vars : Vars "+" Var'
 
 def p_Vars_Empty(p):
     'Vars : '
-    pass
 
 def p_Var_Literals(p):
     'Var : LIT literals'
