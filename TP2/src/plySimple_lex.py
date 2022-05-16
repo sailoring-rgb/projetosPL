@@ -202,7 +202,7 @@ lexer.forYACCfun = []
 lexer.forParser = []
 
 
-"""## PARSING TO EVENTUALLY MOVE TO YACC
+## PARSING TO EVENTUALLY MOVE TO YACC
 import sys
 files = sys.argv[1:]
 
@@ -216,4 +216,5 @@ for file_name in files:
     for line in lines:
         lexer.input(line)
         for tok in lexer:
-            print(tok)"""
+            print(tok)
+    print("###### END LEX PROCESSING ######")
