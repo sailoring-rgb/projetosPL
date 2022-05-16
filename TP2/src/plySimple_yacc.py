@@ -4,7 +4,7 @@ from plySimple_lex import tokens
 from helper import *
 
 """
-    PlySimple : BLEX Lex
+    PlySimple : BLEX Lex BYACC Yacc EOF
     Lex : Vars Funs
     Vars : Vars Var
          |
@@ -13,13 +13,46 @@ from helper import *
          | TOK tokenList
     Funs : Funs Fun
          |
-    Fun : BFUNL funL
+    Fun : BUNL fun
+    Yacc : Precedence Dictionary Grammar Funs
+    Dictionary : TS tsList
+               |
+    Grammar : BGRAM ProdList
+            |
+    ProdList : ProdList prod
+             |
 """
 
 # Production rules
-
 def p_PlySiple(p):
-    'PlySimple : BLEX Lex EOF'
+    'PlySimple : BLEX Lex BYACC Yacc EOF'
+
+def p_Yacc(p):
+    'Yacc : Precedence Dictionary Grammar'
+
+def p_Precedence(p):
+    'Precedence : PREC preceList'
+
+def p_Precedence_Empty(p):
+    'Precedence : '
+
+def p_Dictionary(p):
+    'Dictionary : TS tsList'
+
+def p_Dictionary_Empty(p):
+    'Dictionary : '
+
+def p_Grammar(p):
+    'Grammar : BGRAM ProdList'
+
+def p_Grammar_Empty(p):
+    'Grammar : '
+
+def p_ProdList(p):
+    'ProdList : ProdList prod'
+
+def p_ProdList_Empty(p):
+    'ProdList : '
 
 def p_Lex(p):
     'Lex : Vars Funs'
@@ -46,7 +79,7 @@ def p_Funs_Empty(p):
     'Funs : '
 
 def p_Fun(p):
-    'Fun : BLFUN funL '
+    'Fun : BFUN fun'
 
 def p_error(p):
     print("ERROR",p)

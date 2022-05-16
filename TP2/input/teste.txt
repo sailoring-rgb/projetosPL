@@ -7,4 +7,24 @@
 %) \d+(\.\d+)? return('NUMBER', 't.value = float(t.value)')
 %) .   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
+
+%% YACC %%
+
+%precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
+
+%ts = {}
+
+/%\
+
+stat : VAR '=' exp              { ts[t[1]] = t[3] }
+stat : exp                      { print(t[1]) }
+exp  : exp '+' exp              { t[0] = t[1] + t[3] }
+exp  : exp '-' exp              { t[0] = t[1] - t[3] }
+exp  : exp '*' exp              { t[0] = t[1] * t[3] }
+exp  : exp '/' exp              { t[0] = t[1] / t[3] }
+exp  : '-' exp %prec UMINUS     { t[0] = -t[2] }
+exp  : '(' exp ')'              { t[0] = t[2] }
+exp  : NUMBER                   { t[0] = t[1] }
+exp  : VAR                      { t[0] = getval(t[1]) }
+
 $$

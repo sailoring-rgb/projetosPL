@@ -10,19 +10,15 @@ tokens = [
     'TOK',
     'literals',
     'tokenList',
-    'BLFUN',
-    'funL',
+    'BFUN',
+    'fun',
     'BYACC',
     'PREC',
     'preceList',
     'TS',
     'tsList',
     'BGRAM',
-    'EGRAM',
-    'gram',
-    'EFUNY',
-    'BFUNY',
-    'funY',
+    'prod',
     'BPARSER',
     'instructions',
     'BCOM',
@@ -32,9 +28,8 @@ tokens = [
 
 states = [
     ("lex", 'inclusive'),
-    ("lexFun", 'inclusive'),
+    ("fun", 'inclusive'),
     ("yacc", 'inclusive'),
-    ("yaccFun", 'inclusive'),
     ("grammar", 'inclusive'),
     ("parser", 'inclusive'),
     ("comment", 'exclusive')
@@ -83,7 +78,7 @@ def t_yacc_PREC(t):
     return t
 
 def t_yacc_preceList(t):
-    r'\[\(.*\]'
+    r'\[\(.*\)\]'
     return t
 
 def t_yacc_TS(t):
@@ -94,37 +89,15 @@ def t_yacc_tsList(t):
     r'\{\}'
     return t
 
-### GRAMMAR ###
 def t_yacc_BGRAM(t):
     r'/%\\'
     t.lexer.begin("grammar")
     return t
 
-def t_grammar_EGRAM(t):
-    r'/%%\\'
-    t.lexer.begin("yacc")
-    return t
-
-def t_grammar_gram(t):
+def t_grammar_prod(t):
     r'(.*\{.*\})'
     return t
 
-### YACC FUNCTIONS ###
-def t_yacc_EFUNY(t):
-    r'%\)'
-    t.lexer.begin("yaccFun")
-    return t
-
-def t_yaccFun_EFUNY(t):
-    r'\(%'
-    t.lexer.begin("yacc")
-    return t
-
-def t_yaccFun_funY(t):
-    r'def .*'
-    return t
-
-### LEX SECTION ###
 def t_ANY_BLEX(t):
     r'%%\s*LEX\s*%%'
     t.lexer.begin("lex")
@@ -150,15 +123,14 @@ def t_lex_tokenList(t):
     r'\[(\'*.*\')+\]'
     return t
 
-### LEX FUNCTIONS ###
-def t_lex_BLFUN(t):
+def t_ANY_BFUN(t):
     r'\s*%\)\s*'
-    t.lexer.begin("lexFun")
+    t.lexer.begin("fun")
     return t
 
-def t_lexFun_funL(t):
-    r'.*(return|error).*'
-    t.lexer.begin("lex")
+def t_fun_fun(t):
+    r'.*(def|return|error).*'
+    t.lexer.begin("INITIAL")
     return t
 
 ### ERRO FUNCTION ###
