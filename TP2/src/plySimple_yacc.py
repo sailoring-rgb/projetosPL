@@ -1,3 +1,4 @@
+from ast import parse
 import ply.yacc as yacc
 from plySimple_lex import tokens
 from helper import *
@@ -16,14 +17,25 @@ from helper import *
 """
 
 # Production rules
+def p_PlySiple_Empty(p):
+    'PlySimple : EOF'
+
+def p_PlySiple_notEmpty(p):
+    'PlySimple : Lex'
+
 def p_Lex(p):
-    'Lex : BLEX Vars Funs'
+    'Lex : '
+    pass
+
+def p_Lex(p):
+    'Lex : BLEX Vars'
 
 def p_Vars_notEmpty(p):
-    'Vars : Vars Var'
+    'Vars : Vars "+" Var'
 
 def p_Vars_Empty(p):
     'Vars : '
+    pass
 
 def p_Var_Literals(p):
     'Var : LIT literals'
@@ -33,15 +45,6 @@ def p_Var_Ignore(p):
 
 def p_Var_ListTok(p):
     'Var : TOK tokenList'
-
-def p_Funs_notEmpty(p):
-    'Funs : Funs Fun EFUNL'
-
-def p_Funs_Empty(p):
-    'Funs : '
-
-def p_Fun(p):
-    'Fun : BFUNL funL'
 
 def p_error(p):
     print("ERROR",p)

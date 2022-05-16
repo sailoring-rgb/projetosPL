@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'BCOM BFUNL BFUNY BGRAM BLEX BPARSER BYACC ECOM EFUNL EFUNY EGRAM EOF IGN LIT PREC TOK TS comm funL funY gram ig instructions literals preceList tokenList tsListLex : BLEX Vars FunsVars : Vars VarVars : Var : LIT literalsVar : IGN igVar : TOK tokenListFuns : Funs Fun EFUNLFuns : Fun : BFUNL funL'
+_lr_signature = 'BCOM BFUNL BFUNY BGRAM BLEX BPARSER BYACC ECOM EFUNL EFUNY EGRAM EOF IGN LIT PREC TOK TS comm funL funY gram ig instructions literals preceList tokenList tsListPlySimple : EOFPlySimple : LexLex : BLEX VarsVars : Vars "+" VarVars : Var : LIT literalsVar : IGN igVar : TOK tokenList'
     
-_lr_action_items = {'BLEX':([0,],[2,]),'$end':([1,2,3,4,5,11,12,13,14,],[0,-3,-8,-1,-2,-4,-5,-6,-7,]),'LIT':([2,3,5,11,12,13,],[-3,6,-2,-4,-5,-6,]),'IGN':([2,3,5,11,12,13,],[-3,7,-2,-4,-5,-6,]),'TOK':([2,3,5,11,12,13,],[-3,8,-2,-4,-5,-6,]),'BFUNL':([2,3,4,5,11,12,13,14,],[-3,-8,10,-2,-4,-5,-6,-7,]),'literals':([6,],[11,]),'ig':([7,],[12,]),'tokenList':([8,],[13,]),'EFUNL':([9,15,],[14,-9,]),'funL':([10,],[15,]),}
+_lr_action_items = {'EOF':([0,],[2,]),'BLEX':([0,],[4,]),'$end':([1,2,3,4,5,7,11,12,13,],[0,-1,-2,-5,-3,-4,-6,-7,-8,]),'+':([4,5,7,11,12,13,],[-5,6,-4,-6,-7,-8,]),'LIT':([6,],[8,]),'IGN':([6,],[9,]),'TOK':([6,],[10,]),'literals':([8,],[11,]),'ig':([9,],[12,]),'tokenList':([10,],[13,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'Lex':([0,],[1,]),'Vars':([2,],[3,]),'Funs':([3,],[4,]),'Var':([3,],[5,]),'Fun':([4,],[9,]),}
+_lr_goto_items = {'PlySimple':([0,],[1,]),'Lex':([0,],[3,]),'Vars':([4,],[5,]),'Var':([6,],[7,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,14 +26,13 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> Lex","S'",1,None,None,None),
-  ('Lex -> BLEX Vars Funs','Lex',3,'p_Lex','plySimple_yacc.py',22),
-  ('Vars -> Vars Var','Vars',2,'p_Vars_notEmpty','plySimple_yacc.py',25),
-  ('Vars -> <empty>','Vars',0,'p_Vars_Empty','plySimple_yacc.py',28),
-  ('Var -> LIT literals','Var',2,'p_Var_Literals','plySimple_yacc.py',31),
-  ('Var -> IGN ig','Var',2,'p_Var_Ignore','plySimple_yacc.py',34),
-  ('Var -> TOK tokenList','Var',2,'p_Var_ListTok','plySimple_yacc.py',37),
-  ('Funs -> Funs Fun EFUNL','Funs',3,'p_Funs_notEmpty','plySimple_yacc.py',40),
-  ('Funs -> <empty>','Funs',0,'p_Funs_Empty','plySimple_yacc.py',43),
-  ('Fun -> BFUNL funL','Fun',2,'p_Fun','plySimple_yacc.py',46),
+  ("S' -> PlySimple","S'",1,None,None,None),
+  ('PlySimple -> EOF','PlySimple',1,'p_PlySiple_Empty','plySimple_yacc.py',20),
+  ('PlySimple -> Lex','PlySimple',1,'p_PlySiple_notEmpty','plySimple_yacc.py',23),
+  ('Lex -> BLEX Vars','Lex',2,'p_Lex','plySimple_yacc.py',29),
+  ('Vars -> Vars + Var','Vars',3,'p_Vars_notEmpty','plySimple_yacc.py',32),
+  ('Vars -> <empty>','Vars',0,'p_Vars_Empty','plySimple_yacc.py',35),
+  ('Var -> LIT literals','Var',2,'p_Var_Literals','plySimple_yacc.py',38),
+  ('Var -> IGN ig','Var',2,'p_Var_Ignore','plySimple_yacc.py',41),
+  ('Var -> TOK tokenList','Var',2,'p_Var_ListTok','plySimple_yacc.py',44),
 ]

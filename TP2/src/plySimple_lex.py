@@ -145,23 +145,23 @@ def t_lex_LIT(t):
     t.lexer.forLEX.append(t.value)
     return t
 
-def t_lex_IGN(t):
-    r'%\s*ignore\s*=\s*'
-    t.lexer.forLEX.append(t.value)
-    return t
-
-def t_lex_TOK(t):
-    r'%\s*tokens\s*=\s*'
-    t.lexer.forLEX.append(t.value)
-    return t
-
 def t_lex_literals(t):
     r'\".*\"'
     t.lexer.forLEX.append(t.value)
     return t
 
+def t_lex_IGN(t):
+    r'%\s*ignore\s*=\s*'
+    t.lexer.forLEX.append(t.value)
+    return t
+
 def t_lex_ig(t):
     r'\".*\"'
+    t.lexer.forLEX.append(t.value)
+    return t
+
+def t_lex_TOK(t):
+    r'%\s*tokens\s*=\s*'
     t.lexer.forLEX.append(t.value)
     return t
 
