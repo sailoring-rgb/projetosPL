@@ -11,7 +11,10 @@
 (%
 
 
-<#> ANOTHER COMMENT >#<
+<#>
+ANOTHER COMMENT 
+THIS IS STILL A COMMENT
+>#<
 %% YACC %%
 
 %precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
