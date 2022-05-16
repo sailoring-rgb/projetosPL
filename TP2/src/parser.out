@@ -6,6 +6,7 @@ Unused terminals:
     BFUNY
     BGRAM
     BPARSER
+    BYACC
     ECOM
     EFUNY
     EGRAM
@@ -21,76 +22,69 @@ Unused terminals:
 Grammar
 
 Rule 0     S' -> Ply-Simple
-Rule 1     Ply-Simple -> EOF
-Rule 2     Ply-Simple -> BLEX Lex BYACC Yacc EOF
-Rule 3     Ply-Simple -> BYACC Yacc BLEX Lex EOF
-Rule 4     Lex -> Vars Funs
-Rule 5     Lex -> <empty>
-Rule 6     Vars -> Vars Var
-Rule 7     Vars -> <empty>
-Rule 8     Var -> LIT literals
-Rule 9     Var -> IGN ig
-Rule 10    Var -> TOK tokenList
-Rule 11    Funs -> Funs Fun EFUNL
-Rule 12    Funs -> <empty>
-Rule 13    Fun -> BFUNL funL
-Rule 14    Yacc -> <empty>
+Rule 1     Ply-Simple -> Lex EOF
+Rule 2     Lex -> BLEX Vars Funs
+Rule 3     Vars -> Vars Var
+Rule 4     Vars -> <empty>
+Rule 5     Var -> LIT literals
+Rule 6     Var -> IGN ig
+Rule 7     Var -> TOK tokenList
+Rule 8     Funs -> Funs Fun EFUNL
+Rule 9     Funs -> <empty>
+Rule 10    Fun -> BFUNL funL
 
 Terminals, with rules where they appear
 
 BCOM                 : 
-BFUNL                : 13
+BFUNL                : 10
 BFUNY                : 
 BGRAM                : 
-BLEX                 : 2 3
+BLEX                 : 2
 BPARSER              : 
-BYACC                : 2 3
+BYACC                : 
 ECOM                 : 
-EFUNL                : 11
+EFUNL                : 8
 EFUNY                : 
 EGRAM                : 
-EOF                  : 1 2 3
-IGN                  : 9
-LIT                  : 8
+EOF                  : 1
+IGN                  : 6
+LIT                  : 5
 PREC                 : 
-TOK                  : 10
+TOK                  : 7
 TS                   : 
 comm                 : 
 error                : 
-funL                 : 13
+funL                 : 10
 funY                 : 
 gram                 : 
-ig                   : 9
+ig                   : 6
 instructions         : 
-literals             : 8
+literals             : 5
 preceList            : 
-tokenList            : 10
+tokenList            : 7
 tsList               : 
 
 Nonterminals, with rules where they appear
 
-Fun                  : 11
-Funs                 : 4 11
-Lex                  : 2 3
+Fun                  : 8
+Funs                 : 2 8
+Lex                  : 1
 Ply-Simple           : 0
-Var                  : 6
-Vars                 : 4 6
-Yacc                 : 2 3
+Var                  : 3
+Vars                 : 2 3
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . Ply-Simple
-    (1) Ply-Simple -> . EOF
-    (2) Ply-Simple -> . BLEX Lex BYACC Yacc EOF
-    (3) Ply-Simple -> . BYACC Yacc BLEX Lex EOF
+    (1) Ply-Simple -> . Lex EOF
+    (2) Lex -> . BLEX Vars Funs
 
-    EOF             shift and go to state 2
     BLEX            shift and go to state 3
-    BYACC           shift and go to state 4
 
     Ply-Simple                     shift and go to state 1
+    Lex                            shift and go to state 2
 
 state 1
 
@@ -100,245 +94,152 @@ state 1
 
 state 2
 
-    (1) Ply-Simple -> EOF .
+    (1) Ply-Simple -> Lex . EOF
 
-    $end            reduce using rule 1 (Ply-Simple -> EOF .)
+    EOF             shift and go to state 4
 
 
 state 3
 
-    (2) Ply-Simple -> BLEX . Lex BYACC Yacc EOF
-    (4) Lex -> . Vars Funs
-    (5) Lex -> .
-    (6) Vars -> . Vars Var
-    (7) Vars -> .
+    (2) Lex -> BLEX . Vars Funs
+    (3) Vars -> . Vars Var
+    (4) Vars -> .
 
-  ! reduce/reduce conflict for BYACC resolved using rule 5 (Lex -> .)
-    BYACC           reduce using rule 5 (Lex -> .)
-    LIT             reduce using rule 7 (Vars -> .)
-    IGN             reduce using rule 7 (Vars -> .)
-    TOK             reduce using rule 7 (Vars -> .)
-    BFUNL           reduce using rule 7 (Vars -> .)
+    LIT             reduce using rule 4 (Vars -> .)
+    IGN             reduce using rule 4 (Vars -> .)
+    TOK             reduce using rule 4 (Vars -> .)
+    BFUNL           reduce using rule 4 (Vars -> .)
+    EOF             reduce using rule 4 (Vars -> .)
 
-  ! BYACC           [ reduce using rule 7 (Vars -> .) ]
-
-    Lex                            shift and go to state 5
-    Vars                           shift and go to state 6
+    Vars                           shift and go to state 5
 
 state 4
 
-    (3) Ply-Simple -> BYACC . Yacc BLEX Lex EOF
-    (14) Yacc -> .
+    (1) Ply-Simple -> Lex EOF .
 
-    BLEX            reduce using rule 14 (Yacc -> .)
+    $end            reduce using rule 1 (Ply-Simple -> Lex EOF .)
 
-    Yacc                           shift and go to state 7
 
 state 5
 
-    (2) Ply-Simple -> BLEX Lex . BYACC Yacc EOF
+    (2) Lex -> BLEX Vars . Funs
+    (3) Vars -> Vars . Var
+    (8) Funs -> . Funs Fun EFUNL
+    (9) Funs -> .
+    (5) Var -> . LIT literals
+    (6) Var -> . IGN ig
+    (7) Var -> . TOK tokenList
 
-    BYACC           shift and go to state 8
+    BFUNL           reduce using rule 9 (Funs -> .)
+    EOF             reduce using rule 9 (Funs -> .)
+    LIT             shift and go to state 8
+    IGN             shift and go to state 9
+    TOK             shift and go to state 10
 
+    Funs                           shift and go to state 6
+    Var                            shift and go to state 7
 
 state 6
 
-    (4) Lex -> Vars . Funs
-    (6) Vars -> Vars . Var
-    (11) Funs -> . Funs Fun EFUNL
-    (12) Funs -> .
-    (8) Var -> . LIT literals
-    (9) Var -> . IGN ig
-    (10) Var -> . TOK tokenList
+    (2) Lex -> BLEX Vars Funs .
+    (8) Funs -> Funs . Fun EFUNL
+    (10) Fun -> . BFUNL funL
 
-    BFUNL           reduce using rule 12 (Funs -> .)
-    BYACC           reduce using rule 12 (Funs -> .)
-    EOF             reduce using rule 12 (Funs -> .)
-    LIT             shift and go to state 11
-    IGN             shift and go to state 12
-    TOK             shift and go to state 13
+    EOF             reduce using rule 2 (Lex -> BLEX Vars Funs .)
+    BFUNL           shift and go to state 12
 
-    Funs                           shift and go to state 9
-    Var                            shift and go to state 10
+    Fun                            shift and go to state 11
 
 state 7
 
-    (3) Ply-Simple -> BYACC Yacc . BLEX Lex EOF
+    (3) Vars -> Vars Var .
 
-    BLEX            shift and go to state 14
+    LIT             reduce using rule 3 (Vars -> Vars Var .)
+    IGN             reduce using rule 3 (Vars -> Vars Var .)
+    TOK             reduce using rule 3 (Vars -> Vars Var .)
+    BFUNL           reduce using rule 3 (Vars -> Vars Var .)
+    EOF             reduce using rule 3 (Vars -> Vars Var .)
 
 
 state 8
 
-    (2) Ply-Simple -> BLEX Lex BYACC . Yacc EOF
-    (14) Yacc -> .
+    (5) Var -> LIT . literals
 
-    EOF             reduce using rule 14 (Yacc -> .)
+    literals        shift and go to state 13
 
-    Yacc                           shift and go to state 15
 
 state 9
 
-    (4) Lex -> Vars Funs .
-    (11) Funs -> Funs . Fun EFUNL
-    (13) Fun -> . BFUNL funL
+    (6) Var -> IGN . ig
 
-    BYACC           reduce using rule 4 (Lex -> Vars Funs .)
-    EOF             reduce using rule 4 (Lex -> Vars Funs .)
-    BFUNL           shift and go to state 17
+    ig              shift and go to state 14
 
-    Fun                            shift and go to state 16
 
 state 10
 
-    (6) Vars -> Vars Var .
+    (7) Var -> TOK . tokenList
 
-    LIT             reduce using rule 6 (Vars -> Vars Var .)
-    IGN             reduce using rule 6 (Vars -> Vars Var .)
-    TOK             reduce using rule 6 (Vars -> Vars Var .)
-    BFUNL           reduce using rule 6 (Vars -> Vars Var .)
-    BYACC           reduce using rule 6 (Vars -> Vars Var .)
-    EOF             reduce using rule 6 (Vars -> Vars Var .)
+    tokenList       shift and go to state 15
 
 
 state 11
 
-    (8) Var -> LIT . literals
+    (8) Funs -> Funs Fun . EFUNL
 
-    literals        shift and go to state 18
+    EFUNL           shift and go to state 16
 
 
 state 12
 
-    (9) Var -> IGN . ig
+    (10) Fun -> BFUNL . funL
 
-    ig              shift and go to state 19
+    funL            shift and go to state 17
 
 
 state 13
 
-    (10) Var -> TOK . tokenList
+    (5) Var -> LIT literals .
 
-    tokenList       shift and go to state 20
+    LIT             reduce using rule 5 (Var -> LIT literals .)
+    IGN             reduce using rule 5 (Var -> LIT literals .)
+    TOK             reduce using rule 5 (Var -> LIT literals .)
+    BFUNL           reduce using rule 5 (Var -> LIT literals .)
+    EOF             reduce using rule 5 (Var -> LIT literals .)
 
 
 state 14
 
-    (3) Ply-Simple -> BYACC Yacc BLEX . Lex EOF
-    (4) Lex -> . Vars Funs
-    (5) Lex -> .
-    (6) Vars -> . Vars Var
-    (7) Vars -> .
+    (6) Var -> IGN ig .
 
-  ! reduce/reduce conflict for EOF resolved using rule 5 (Lex -> .)
-    EOF             reduce using rule 5 (Lex -> .)
-    LIT             reduce using rule 7 (Vars -> .)
-    IGN             reduce using rule 7 (Vars -> .)
-    TOK             reduce using rule 7 (Vars -> .)
-    BFUNL           reduce using rule 7 (Vars -> .)
+    LIT             reduce using rule 6 (Var -> IGN ig .)
+    IGN             reduce using rule 6 (Var -> IGN ig .)
+    TOK             reduce using rule 6 (Var -> IGN ig .)
+    BFUNL           reduce using rule 6 (Var -> IGN ig .)
+    EOF             reduce using rule 6 (Var -> IGN ig .)
 
-  ! EOF             [ reduce using rule 7 (Vars -> .) ]
-
-    Lex                            shift and go to state 21
-    Vars                           shift and go to state 6
 
 state 15
 
-    (2) Ply-Simple -> BLEX Lex BYACC Yacc . EOF
+    (7) Var -> TOK tokenList .
 
-    EOF             shift and go to state 22
+    LIT             reduce using rule 7 (Var -> TOK tokenList .)
+    IGN             reduce using rule 7 (Var -> TOK tokenList .)
+    TOK             reduce using rule 7 (Var -> TOK tokenList .)
+    BFUNL           reduce using rule 7 (Var -> TOK tokenList .)
+    EOF             reduce using rule 7 (Var -> TOK tokenList .)
 
 
 state 16
 
-    (11) Funs -> Funs Fun . EFUNL
+    (8) Funs -> Funs Fun EFUNL .
 
-    EFUNL           shift and go to state 23
+    BFUNL           reduce using rule 8 (Funs -> Funs Fun EFUNL .)
+    EOF             reduce using rule 8 (Funs -> Funs Fun EFUNL .)
 
 
 state 17
 
-    (13) Fun -> BFUNL . funL
+    (10) Fun -> BFUNL funL .
 
-    funL            shift and go to state 24
+    EFUNL           reduce using rule 10 (Fun -> BFUNL funL .)
 
-
-state 18
-
-    (8) Var -> LIT literals .
-
-    LIT             reduce using rule 8 (Var -> LIT literals .)
-    IGN             reduce using rule 8 (Var -> LIT literals .)
-    TOK             reduce using rule 8 (Var -> LIT literals .)
-    BFUNL           reduce using rule 8 (Var -> LIT literals .)
-    BYACC           reduce using rule 8 (Var -> LIT literals .)
-    EOF             reduce using rule 8 (Var -> LIT literals .)
-
-
-state 19
-
-    (9) Var -> IGN ig .
-
-    LIT             reduce using rule 9 (Var -> IGN ig .)
-    IGN             reduce using rule 9 (Var -> IGN ig .)
-    TOK             reduce using rule 9 (Var -> IGN ig .)
-    BFUNL           reduce using rule 9 (Var -> IGN ig .)
-    BYACC           reduce using rule 9 (Var -> IGN ig .)
-    EOF             reduce using rule 9 (Var -> IGN ig .)
-
-
-state 20
-
-    (10) Var -> TOK tokenList .
-
-    LIT             reduce using rule 10 (Var -> TOK tokenList .)
-    IGN             reduce using rule 10 (Var -> TOK tokenList .)
-    TOK             reduce using rule 10 (Var -> TOK tokenList .)
-    BFUNL           reduce using rule 10 (Var -> TOK tokenList .)
-    BYACC           reduce using rule 10 (Var -> TOK tokenList .)
-    EOF             reduce using rule 10 (Var -> TOK tokenList .)
-
-
-state 21
-
-    (3) Ply-Simple -> BYACC Yacc BLEX Lex . EOF
-
-    EOF             shift and go to state 25
-
-
-state 22
-
-    (2) Ply-Simple -> BLEX Lex BYACC Yacc EOF .
-
-    $end            reduce using rule 2 (Ply-Simple -> BLEX Lex BYACC Yacc EOF .)
-
-
-state 23
-
-    (11) Funs -> Funs Fun EFUNL .
-
-    BFUNL           reduce using rule 11 (Funs -> Funs Fun EFUNL .)
-    BYACC           reduce using rule 11 (Funs -> Funs Fun EFUNL .)
-    EOF             reduce using rule 11 (Funs -> Funs Fun EFUNL .)
-
-
-state 24
-
-    (13) Fun -> BFUNL funL .
-
-    EFUNL           reduce using rule 13 (Fun -> BFUNL funL .)
-
-
-state 25
-
-    (3) Ply-Simple -> BYACC Yacc BLEX Lex EOF .
-
-    $end            reduce using rule 3 (Ply-Simple -> BYACC Yacc BLEX Lex EOF .)
-
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: reduce/reduce conflict in state 3 resolved using rule (Lex -> <empty>)
-WARNING: rejected rule (Vars -> <empty>) in state 3
-WARNING: reduce/reduce conflict in state 14 resolved using rule (Lex -> <empty>)
-WARNING: rejected rule (Vars -> <empty>) in state 14
