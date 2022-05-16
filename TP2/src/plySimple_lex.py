@@ -212,7 +212,6 @@ for file_name in files:
     except FileNotFoundError:
         lines = ''
         print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
-
     for line in lines:
         lexer.input(line)
         for tok in lexer:

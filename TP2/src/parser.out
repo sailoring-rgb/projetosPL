@@ -10,6 +10,7 @@ Unused terminals:
     ECOM
     EFUNY
     EGRAM
+    EOF
     PREC
     TS
     comm
@@ -21,225 +22,207 @@ Unused terminals:
 
 Grammar
 
-Rule 0     S' -> Ply-Simple
-Rule 1     Ply-Simple -> Lex EOF
-Rule 2     Lex -> BLEX Vars Funs
-Rule 3     Vars -> Vars Var
-Rule 4     Vars -> <empty>
-Rule 5     Var -> LIT literals
-Rule 6     Var -> IGN ig
-Rule 7     Var -> TOK tokenList
-Rule 8     Funs -> Funs Fun EFUNL
-Rule 9     Funs -> <empty>
-Rule 10    Fun -> BFUNL funL
+Rule 0     S' -> Lex
+Rule 1     Lex -> BLEX Vars Funs
+Rule 2     Vars -> Vars Var
+Rule 3     Vars -> <empty>
+Rule 4     Var -> LIT literals
+Rule 5     Var -> IGN ig
+Rule 6     Var -> TOK tokenList
+Rule 7     Funs -> Funs Fun EFUNL
+Rule 8     Funs -> <empty>
+Rule 9     Fun -> BFUNL funL
 
 Terminals, with rules where they appear
 
 BCOM                 : 
-BFUNL                : 10
+BFUNL                : 9
 BFUNY                : 
 BGRAM                : 
-BLEX                 : 2
+BLEX                 : 1
 BPARSER              : 
 BYACC                : 
 ECOM                 : 
-EFUNL                : 8
+EFUNL                : 7
 EFUNY                : 
 EGRAM                : 
-EOF                  : 1
-IGN                  : 6
-LIT                  : 5
+EOF                  : 
+IGN                  : 5
+LIT                  : 4
 PREC                 : 
-TOK                  : 7
+TOK                  : 6
 TS                   : 
 comm                 : 
 error                : 
-funL                 : 10
+funL                 : 9
 funY                 : 
 gram                 : 
-ig                   : 6
+ig                   : 5
 instructions         : 
-literals             : 5
+literals             : 4
 preceList            : 
-tokenList            : 7
+tokenList            : 6
 tsList               : 
 
 Nonterminals, with rules where they appear
 
-Fun                  : 8
-Funs                 : 2 8
-Lex                  : 1
-Ply-Simple           : 0
-Var                  : 3
-Vars                 : 2 3
+Fun                  : 7
+Funs                 : 1 7
+Lex                  : 0
+Var                  : 2
+Vars                 : 1 2
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . Ply-Simple
-    (1) Ply-Simple -> . Lex EOF
-    (2) Lex -> . BLEX Vars Funs
+    (0) S' -> . Lex
+    (1) Lex -> . BLEX Vars Funs
 
-    BLEX            shift and go to state 3
+    BLEX            shift and go to state 2
 
-    Ply-Simple                     shift and go to state 1
-    Lex                            shift and go to state 2
+    Lex                            shift and go to state 1
 
 state 1
 
-    (0) S' -> Ply-Simple .
+    (0) S' -> Lex .
 
 
 
 state 2
 
-    (1) Ply-Simple -> Lex . EOF
+    (1) Lex -> BLEX . Vars Funs
+    (2) Vars -> . Vars Var
+    (3) Vars -> .
 
-    EOF             shift and go to state 4
+    LIT             reduce using rule 3 (Vars -> .)
+    IGN             reduce using rule 3 (Vars -> .)
+    TOK             reduce using rule 3 (Vars -> .)
+    BFUNL           reduce using rule 3 (Vars -> .)
+    $end            reduce using rule 3 (Vars -> .)
 
+    Vars                           shift and go to state 3
 
 state 3
 
-    (2) Lex -> BLEX . Vars Funs
-    (3) Vars -> . Vars Var
-    (4) Vars -> .
+    (1) Lex -> BLEX Vars . Funs
+    (2) Vars -> Vars . Var
+    (7) Funs -> . Funs Fun EFUNL
+    (8) Funs -> .
+    (4) Var -> . LIT literals
+    (5) Var -> . IGN ig
+    (6) Var -> . TOK tokenList
 
-    LIT             reduce using rule 4 (Vars -> .)
-    IGN             reduce using rule 4 (Vars -> .)
-    TOK             reduce using rule 4 (Vars -> .)
-    BFUNL           reduce using rule 4 (Vars -> .)
-    EOF             reduce using rule 4 (Vars -> .)
+    BFUNL           reduce using rule 8 (Funs -> .)
+    $end            reduce using rule 8 (Funs -> .)
+    LIT             shift and go to state 6
+    IGN             shift and go to state 7
+    TOK             shift and go to state 8
 
-    Vars                           shift and go to state 5
+    Funs                           shift and go to state 4
+    Var                            shift and go to state 5
 
 state 4
 
-    (1) Ply-Simple -> Lex EOF .
+    (1) Lex -> BLEX Vars Funs .
+    (7) Funs -> Funs . Fun EFUNL
+    (9) Fun -> . BFUNL funL
 
-    $end            reduce using rule 1 (Ply-Simple -> Lex EOF .)
+    $end            reduce using rule 1 (Lex -> BLEX Vars Funs .)
+    BFUNL           shift and go to state 10
 
+    Fun                            shift and go to state 9
 
 state 5
 
-    (2) Lex -> BLEX Vars . Funs
-    (3) Vars -> Vars . Var
-    (8) Funs -> . Funs Fun EFUNL
-    (9) Funs -> .
-    (5) Var -> . LIT literals
-    (6) Var -> . IGN ig
-    (7) Var -> . TOK tokenList
+    (2) Vars -> Vars Var .
 
-    BFUNL           reduce using rule 9 (Funs -> .)
-    EOF             reduce using rule 9 (Funs -> .)
-    LIT             shift and go to state 8
-    IGN             shift and go to state 9
-    TOK             shift and go to state 10
+    LIT             reduce using rule 2 (Vars -> Vars Var .)
+    IGN             reduce using rule 2 (Vars -> Vars Var .)
+    TOK             reduce using rule 2 (Vars -> Vars Var .)
+    BFUNL           reduce using rule 2 (Vars -> Vars Var .)
+    $end            reduce using rule 2 (Vars -> Vars Var .)
 
-    Funs                           shift and go to state 6
-    Var                            shift and go to state 7
 
 state 6
 
-    (2) Lex -> BLEX Vars Funs .
-    (8) Funs -> Funs . Fun EFUNL
-    (10) Fun -> . BFUNL funL
+    (4) Var -> LIT . literals
 
-    EOF             reduce using rule 2 (Lex -> BLEX Vars Funs .)
-    BFUNL           shift and go to state 12
+    literals        shift and go to state 11
 
-    Fun                            shift and go to state 11
 
 state 7
 
-    (3) Vars -> Vars Var .
+    (5) Var -> IGN . ig
 
-    LIT             reduce using rule 3 (Vars -> Vars Var .)
-    IGN             reduce using rule 3 (Vars -> Vars Var .)
-    TOK             reduce using rule 3 (Vars -> Vars Var .)
-    BFUNL           reduce using rule 3 (Vars -> Vars Var .)
-    EOF             reduce using rule 3 (Vars -> Vars Var .)
+    ig              shift and go to state 12
 
 
 state 8
 
-    (5) Var -> LIT . literals
+    (6) Var -> TOK . tokenList
 
-    literals        shift and go to state 13
+    tokenList       shift and go to state 13
 
 
 state 9
 
-    (6) Var -> IGN . ig
+    (7) Funs -> Funs Fun . EFUNL
 
-    ig              shift and go to state 14
+    EFUNL           shift and go to state 14
 
 
 state 10
 
-    (7) Var -> TOK . tokenList
+    (9) Fun -> BFUNL . funL
 
-    tokenList       shift and go to state 15
+    funL            shift and go to state 15
 
 
 state 11
 
-    (8) Funs -> Funs Fun . EFUNL
+    (4) Var -> LIT literals .
 
-    EFUNL           shift and go to state 16
+    LIT             reduce using rule 4 (Var -> LIT literals .)
+    IGN             reduce using rule 4 (Var -> LIT literals .)
+    TOK             reduce using rule 4 (Var -> LIT literals .)
+    BFUNL           reduce using rule 4 (Var -> LIT literals .)
+    $end            reduce using rule 4 (Var -> LIT literals .)
 
 
 state 12
 
-    (10) Fun -> BFUNL . funL
+    (5) Var -> IGN ig .
 
-    funL            shift and go to state 17
+    LIT             reduce using rule 5 (Var -> IGN ig .)
+    IGN             reduce using rule 5 (Var -> IGN ig .)
+    TOK             reduce using rule 5 (Var -> IGN ig .)
+    BFUNL           reduce using rule 5 (Var -> IGN ig .)
+    $end            reduce using rule 5 (Var -> IGN ig .)
 
 
 state 13
 
-    (5) Var -> LIT literals .
+    (6) Var -> TOK tokenList .
 
-    LIT             reduce using rule 5 (Var -> LIT literals .)
-    IGN             reduce using rule 5 (Var -> LIT literals .)
-    TOK             reduce using rule 5 (Var -> LIT literals .)
-    BFUNL           reduce using rule 5 (Var -> LIT literals .)
-    EOF             reduce using rule 5 (Var -> LIT literals .)
+    LIT             reduce using rule 6 (Var -> TOK tokenList .)
+    IGN             reduce using rule 6 (Var -> TOK tokenList .)
+    TOK             reduce using rule 6 (Var -> TOK tokenList .)
+    BFUNL           reduce using rule 6 (Var -> TOK tokenList .)
+    $end            reduce using rule 6 (Var -> TOK tokenList .)
 
 
 state 14
 
-    (6) Var -> IGN ig .
+    (7) Funs -> Funs Fun EFUNL .
 
-    LIT             reduce using rule 6 (Var -> IGN ig .)
-    IGN             reduce using rule 6 (Var -> IGN ig .)
-    TOK             reduce using rule 6 (Var -> IGN ig .)
-    BFUNL           reduce using rule 6 (Var -> IGN ig .)
-    EOF             reduce using rule 6 (Var -> IGN ig .)
+    BFUNL           reduce using rule 7 (Funs -> Funs Fun EFUNL .)
+    $end            reduce using rule 7 (Funs -> Funs Fun EFUNL .)
 
 
 state 15
 
-    (7) Var -> TOK tokenList .
+    (9) Fun -> BFUNL funL .
 
-    LIT             reduce using rule 7 (Var -> TOK tokenList .)
-    IGN             reduce using rule 7 (Var -> TOK tokenList .)
-    TOK             reduce using rule 7 (Var -> TOK tokenList .)
-    BFUNL           reduce using rule 7 (Var -> TOK tokenList .)
-    EOF             reduce using rule 7 (Var -> TOK tokenList .)
-
-
-state 16
-
-    (8) Funs -> Funs Fun EFUNL .
-
-    BFUNL           reduce using rule 8 (Funs -> Funs Fun EFUNL .)
-    EOF             reduce using rule 8 (Funs -> Funs Fun EFUNL .)
-
-
-state 17
-
-    (10) Fun -> BFUNL funL .
-
-    EFUNL           reduce using rule 10 (Fun -> BFUNL funL .)
+    EFUNL           reduce using rule 9 (Fun -> BFUNL funL .)
 

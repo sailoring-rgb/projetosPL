@@ -2,10 +2,20 @@ import ply.yacc as yacc
 from plySimple_lex import tokens
 from helper import *
 
-# Production rules
-def p_plySimple_BLEX(p):
-    "Ply-Simple : Lex EOF"
+"""
+    PlySimple : Lex EOF
+    Lex : BLEX Vars Funs
+    Vars : Vars Var
+         |
+    Var : LIT literals
+         | IGN ig"
+         | TOK tokenList"
+    Funs : Funs Fun EFUNL
+         |
+    Fun : BFUNL funL
+"""
 
+# Production rules
 def p_Lex(p):
     'Lex : BLEX Vars Funs'
 
@@ -16,22 +26,22 @@ def p_Vars_Empty(p):
     'Vars : '
 
 def p_Var_Literals(p):
-    "Var : LIT literals"
+    'Var : LIT literals'
 
 def p_Var_Ignore(p):
-    "Var : IGN ig"
+    'Var : IGN ig'
 
 def p_Var_ListTok(p):
-    "Var : TOK tokenList"
+    'Var : TOK tokenList'
 
 def p_Funs_notEmpty(p):
-    "Funs : Funs Fun EFUNL"
+    'Funs : Funs Fun EFUNL'
 
 def p_Funs_Empty(p):
-    "Funs : "
+    'Funs : '
 
 def p_Fun(p):
-    "Fun : BFUNL funL"
+    'Fun : BFUNL funL'
 
 def p_error(p):
     print("ERROR",p)
@@ -43,14 +53,18 @@ parser = yacc.yacc()
 # Definir estado / modelo
 parser.info = {}
 
-## PARSING TO EVENTUALLY MOVE TO YACC
 import sys
 files = sys.argv[1:]
 
 for file_name in files:
-    f = open("../input/"+file_name) 
-    for line in f:
+    try:
+        lines = open_file(file_name)
+    except FileNotFoundError:
+        lines = ''
+        print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
+    for line in lines:
         parser.success = True
         parser.parse(line)
         if parser.success:
             print('Frase válida: ', line)
+    print("###### END YACC PROCESSING ######")
