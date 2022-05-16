@@ -4,8 +4,10 @@ from plySimple_lex import tokens
 from helper import *
 
 """
-    PlySimple : Lex EOF
+    PlySimple : Lex
+              | EOF
     Lex : BLEX Vars Funs
+        | 
     Vars : Vars Var
          |
     Var : LIT literals
@@ -21,14 +23,14 @@ def p_PlySiple_Empty(p):
     'PlySimple : EOF'
 
 def p_PlySiple_notEmpty(p):
-    'PlySimple : Lex'
+    'PlySimple : BLEX Lex'
 
 def p_Lex(p):
     'Lex : '
     pass
 
 def p_Lex(p):
-    'Lex : BLEX Vars'
+    'Lex : Vars'
 
 def p_Vars_notEmpty(p):
     'Vars : Vars "+" Var'
