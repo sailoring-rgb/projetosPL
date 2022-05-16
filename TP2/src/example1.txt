@@ -1,24 +1,21 @@
 %% LEX %%
-%literals = "+-/*=()"                ## a single char
+%literals = "+-/*=()"              
 %ignore = " \t\n"
 %tokens = ['VAR','NUMBER']
 
-[_A-Za-z][_0-9A-Za-z]* return('VAR', '')
-\d+(\.\d+)?            return('NUMBER', 't.value = float(t.value)')
-.                      error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+%)
+[_A-Za-z][_0-9A-Za-z]*  return('VAR', '')
+\d+(\.\d+)? return('NUMBER', 't.value = float(t.value)')
+.   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+(%
 
-%% YACC
+%% YACC %%
 
-%precedence = [
-    ('left','+','-'),
-    ('left','*','/'),
-    ('right','UMINUS'),
-]
+%precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
 
-# symboltable : dictionary of variables
-ts = {}
+%ts = {}
 
-/%
+/%\
 
 stat : VAR '=' exp              { ts[t[1]] = t[3] }
 stat : exp                      { print(t[1]) }
@@ -31,14 +28,17 @@ exp  : '(' exp ')'              { t[0] = t[2] }
 exp  : NUMBER                   { t[0] = t[1] }
 exp  : VAR                      { t[0] = getval(t[1]) }
 
-%%
+/%%\
 
-def p_error(t):
-    print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
+%)
 
-def getval(n):
-    if n not in ts: print(f"Undefined name '{n}'")
-    return ts.get(n,0)
+def p_error(t): print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]") ;
+def getval(n): if n not in ts: print(f"Undefined name '{n}'") ; return ts.get(n,0)
 
-/%y=yacc()
-/%y.parse("3+4*7")
+(%
+    
+%% PARSER %%
+
+y=yacc() ; y.parse("3+4*7")
+
+$$
