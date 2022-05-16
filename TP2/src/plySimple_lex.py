@@ -66,7 +66,7 @@ def t_ANY_EOF(t):
     return t
 
 ### PARSER INFORMATION AND INSTRUCTIONS ###
-def t_BPARSER(t):
+def t_ANY_BPARSER(t):
     r'%%\s*PARSER\s*%%'
     t.lexer.begin("parser")
     return t
@@ -77,7 +77,7 @@ def t_parser_instructions(t):
     return t
 
 ### YACC SECTION ###
-def t_BYACC(t):
+def t_ANY_BYACC(t):
     r'%%\s*YACC\s*%%'
     t.lexer.begin("yacc")
     return t
@@ -135,7 +135,7 @@ def t_yaccFun_funY(t):
     return t
 
 ### LEX SECTION ###
-def t_BLEX(t):
+def t_ANY_BLEX(t):
     r'%%\s*LEX\s*%%'
     t.lexer.begin("lex")
     return t
@@ -187,7 +187,7 @@ def t_lexFun_funL(t):
     return t
 
 ### ERRO FUNCTION ###
-def t_error(t):
+def t_ANY_error(t):
     print(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]")
     t.lexer.skip(1)
 
