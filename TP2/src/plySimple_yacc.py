@@ -4,9 +4,9 @@ from plySimple_lex import tokens
 from helper import *
 
 """
-    PlySimple : Lex
+    PlySimple : BLEX Lex
               | EOF
-    Lex : BLEX Vars Funs
+    Lex : Vars Funs
         | 
     Vars : Vars Var
          |
