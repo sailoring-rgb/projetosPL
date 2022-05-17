@@ -22,7 +22,8 @@ tokens = [
     'BGRAM',
     'prod',
     'BINST',
-    'instruction'
+    'instruction',
+    'inst'
     ]
 
 states = [
@@ -32,7 +33,8 @@ states = [
     ("grammar", 'exclusive'),
     ("comment", 'exclusive'),
     ("def", 'exclusive'),
-    ("parser", 'exclusive')
+    ("parser", 'exclusive'),
+    ("instrution", 'exclusive')
     ]
 
 t_ANY_ignore = " \t\n"
@@ -122,8 +124,12 @@ def t_ANY_BDEF(t):
     return t
 
 def t_def_definition(t):
-    r'(def.*)\|.*'
-    t.lexer.begin("INITIAL")
+    r'(def.*)'
+    t.lexer.begin("instrution")
+    return t
+
+def t_instrution_inst(t):
+    r'.+'
     return t
 
 def t_ANY_error(t):
@@ -132,7 +138,7 @@ def t_ANY_error(t):
 
 lexer = lex.lex()
 
-import sys
+"""import sys
 files = sys.argv[1:]
 
 for file_name in files:
@@ -145,4 +151,4 @@ for file_name in files:
         lexer.input(line)
         for tok in lexer:
             print(tok)
-    print("###### END LEX PROCESSING ######")
+    print("###### END LEX PROCESSING ######")"""
