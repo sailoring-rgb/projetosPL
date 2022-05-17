@@ -22,15 +22,13 @@ tokens = [
     'BGRAM',
     'prod',
     'BINST',
-    'instruction',
-    'BCOM',
-    'comm',
+    'instruction'
     ]
 
 states = [
-    ("lex", 'inclusive'),
+    ("lex", 'exclusive'),
     ("fun", 'exclusive'),
-    ("yacc", 'inclusive'),
+    ("yacc", 'exclusive'),
     ("grammar", 'exclusive'),
     ("comment", 'exclusive'),
     ("def", 'exclusive'),
@@ -38,16 +36,6 @@ states = [
     ]
 
 t_ANY_ignore = " \t\n"
-
-### TREATING COMMENTS ###
-def t_ANY_BCOM(t):
-    r'\<\#\>'
-    t.lexer.begin("comment")
-    return t
-
-def t_comment_comm(t):
-    r'(:?\s*:?[A-z]+:?\s*)+'
-    return t
 
 def t_ANY_EOF(t):
     r'\$\$'
@@ -90,7 +78,7 @@ def t_ANY_BGRAM(t):
     return t
 
 def t_grammar_prod(t):
-    r'.*\{.*\}'
+    r'.*\s*:\s*.*\{.*\}\s*$'
     return t
 
 def t_ANY_BLEX(t):
@@ -134,7 +122,7 @@ def t_ANY_BDEF(t):
     return t
 
 def t_def_definition(t):
-    r'def(.*)(\|\~\s*\".*\")'
+    r'(def.*)\|.*'
     t.lexer.begin("INITIAL")
     return t
 
