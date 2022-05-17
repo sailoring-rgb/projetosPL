@@ -1,4 +1,3 @@
-<#> THIS IS A COMMENT >#<
 %% LEX %%
 %literals = "+-/*=()"              
 %ignore = " \t\n"
@@ -8,18 +7,13 @@
 %) \d+(\.\d+)? return('NUMBER', 't.value = float(t.value)')
 %) .   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
-<#>
-ANOTHER COMMENT 
-THIS IS STILL A COMMENT
->#<
 %% YACC %%
 
 %precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
 
 %ts = {}
 
-/%\
-
+/grammar
 stat : VAR '=' exp              { ts[t[1]] = t[3] }
 stat : exp                      { print(t[1]) }
 exp  : exp '+' exp              { t[0] = t[1] + t[3] }
@@ -31,10 +25,15 @@ exp  : '(' exp ')'              { t[0] = t[2] }
 exp  : NUMBER                   { t[0] = t[1] }
 exp  : VAR                      { t[0] = getval(t[1]) }
 
+~) def p_error(t): 
+    print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]") 
 
-%) def p_error(t): print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
-%% PARSER %%
+~) def getval(n):
+    if n not in ts: print(f"Undefined name '{n}'")
+    return ts.get(n,0)
 
-y=yacc() ; y.parse("3+4*7")
+/% y=yacc()
+/% y.parse("3+4*7")
+
 
 $$
