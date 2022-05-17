@@ -128,6 +128,6 @@ for file_name in files:
         print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
     if input != "":
         parser.success = True
-        parser.parse(f.read())
+        parser.parse(input)
         if parser.success:
             print("###### END YACC PROCESSING ######")

@@ -78,7 +78,7 @@ def t_ANY_BGRAM(t):
     return t
 
 def t_grammar_prod(t):
-    r'.*\s*:\s*.*\{.*\}\s*$'
+    r'.*\:.*\{.*\}'
     return t
 
 def t_ANY_BLEX(t):
