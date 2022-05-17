@@ -11,9 +11,7 @@ tokens = [
     'literals',
     'tokenList',
     'BFUN',
-    'function',
-    'BDEF',
-    'definition',
+    'fun',
     'BYACC',
     'PREC',
     'preceList',
@@ -21,20 +19,20 @@ tokens = [
     'tsList',
     'BGRAM',
     'prod',
-    'BINST',
-    'instruction',
+    'BPARSER',
+    'instructions',
     'BCOM',
+    'ECOM',
     'comm',
     ]
 
 states = [
     ("lex", 'inclusive'),
-    ("fun", 'exclusive'),
+    ("fun", 'inclusive'),
     ("yacc", 'inclusive'),
-    ("grammar", 'exclusive'),
-    ("comment", 'exclusive'),
-    ("def", 'exclusive'),
-    ("parser", 'exclusive')
+    ("grammar", 'inclusive'),
+    ("parser", 'inclusive'),
+    ("comment", 'exclusive')
     ]
 
 t_ANY_ignore = " \t\n"
@@ -45,24 +43,31 @@ def t_ANY_BCOM(t):
     t.lexer.begin("comment")
     return t
 
+def t_ANY_ECOM(t):
+    r'\>\#\<'
+    t.lexer.begin("INITIAL")
+    return t
+
 def t_comment_comm(t):
     r'(:?\s*:?[A-z]+:?\s*)+'
     return t
 
+### MARKER FOR EOF ###
 def t_ANY_EOF(t):
     r'\$\$'
     return t
 
-def t_yacc_BINST(t):
-    r'/\%'
+### PARSER INFORMATION AND INSTRUCTIONS ###
+def t_yacc_BPARSER(t):
+    r'%%\s*PARSER\s*%%'
     t.lexer.begin("parser")
     return t
 
-def t_parser_instruction(t):
-    r'.*(\.|\=).*'
-    t.lexer.begin("INITIAL")
+def t_parser_instructions(t):
+    r'.*parse(.*).*'
     return t
 
+### YACC SECTION ###
 def t_ANY_BYACC(t):
     r'%%\s*YACC\s*%%'
     t.lexer.begin("yacc")
@@ -84,13 +89,13 @@ def t_yacc_tsList(t):
     r'\{\}'
     return t
 
-def t_ANY_BGRAM(t):
-    r'/grammar'
+def t_yacc_BGRAM(t):
+    r'/%\\'
     t.lexer.begin("grammar")
     return t
 
 def t_grammar_prod(t):
-    r'.*\{.*\}'
+    r'(.*\{.*\})'
     return t
 
 def t_ANY_BLEX(t):
@@ -123,21 +128,12 @@ def t_ANY_BFUN(t):
     t.lexer.begin("fun")
     return t
 
-def t_fun_function(t):
-    r'.*(return|error).*'
+def t_fun_fun(t):
+    r'.*(def|return|error).*'
     t.lexer.begin("INITIAL")
     return t
 
-def t_ANY_BDEF(t):
-    r'\~\)'
-    t.lexer.begin("def")
-    return t
-
-def t_ANY_definition(t):
-    r'def(.*?\n)*'
-    t.lexer.begin("INITIAL")
-    return t
-
+### ERRO FUNCTION ###
 def t_ANY_error(t):
     print(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]")
     t.lexer.skip(1)
