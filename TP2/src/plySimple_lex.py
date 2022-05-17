@@ -122,7 +122,7 @@ def t_ANY_BDEF(t):
     return t
 
 def t_def_definition(t):
-    r'(def.*)\|\|\|.*'
+    r'(def.*)\|.*'
     t.lexer.begin("INITIAL")
     return t
 
