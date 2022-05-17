@@ -133,7 +133,7 @@ def t_ANY_BDEF(t):
     t.lexer.begin("def")
     return t
 
-def t_ANY_definition(t):
+def t_def_definition(t):
     r'def(.*?\n)*'
     t.lexer.begin("INITIAL")
     return t
@@ -144,7 +144,7 @@ def t_ANY_error(t):
 
 lexer = lex.lex()
 
-"""import sys
+import sys
 files = sys.argv[1:]
 
 for file_name in files:
@@ -157,4 +157,4 @@ for file_name in files:
         lexer.input(line)
         for tok in lexer:
             print(tok)
-    print("###### END LEX PROCESSING ######")"""
+    print("###### END LEX PROCESSING ######")
