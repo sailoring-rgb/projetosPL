@@ -53,8 +53,8 @@ def t_ANY_EOF(t):
     r'\$\$'
     return t
 
-def t_yacc_BINST(t):
-    r'/\%'
+def t_ANY_BINST(t):
+    r'/%'
     t.lexer.begin("parser")
     return t
 
@@ -134,7 +134,7 @@ def t_ANY_BDEF(t):
     return t
 
 def t_def_definition(t):
-    r'def(.*?\n)*'
+    r'def(.*)(\|\~\s*\".*\")'
     t.lexer.begin("INITIAL")
     return t
 
