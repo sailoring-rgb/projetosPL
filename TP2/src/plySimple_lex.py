@@ -61,7 +61,7 @@ def t_yacc_PREC(t):
     return t
 
 def t_yacc_preceList(t):
-    r'\[\(.*\)\]'
+    r'\[\(.*\)\];'
     return t
 
 def t_yacc_TS(t):
@@ -122,8 +122,7 @@ def t_ANY_BDEF(t):
     return t
 
 def t_def_definition(t):
-    r'(def.*)\|.*'
-    t.lexer.begin("INITIAL")
+    r'def.*\{|.*\}$'
     return t
 
 def t_ANY_error(t):
