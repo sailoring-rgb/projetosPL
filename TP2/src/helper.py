@@ -1,5 +1,6 @@
 import re
 from typing import List
+from xxlimited import new
 
 # ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
 def open_file(input_name:str):
@@ -193,7 +194,7 @@ def process_grammar(grammar: List[str]):
             # segundo termo do grupo =          VAR '=' exp
             # terceiro termo do grupo =         ts[t[1]] = t[3]
             group = (re.findall(r'([^: ]+)(?: *: *(.*?) {2,})(?:{ *(.*?) *})',line))[0]
-            print(group)
+
             # process a production of grammar
             prod = re.sub(r'( %.*)','',group[1])     # remover, por exemplo, %prec UMINUS
 
@@ -227,25 +228,14 @@ def process_function(line: str, i: int, res_error: str, res_functions: str):
     newFunctions = []
 
     if re.search(r'^\~\) *def ',line):
-        #newline = re.sub(r'\~\) *','',line)
-        defFunction = (re.findall(r'def .*\:',line))[0]
-        functions = re.findall(r'\{\|(.*) \|\} ',line)
-        for func in functions:
-            newFunctions.append(f"  {func}")
-        for a in newFunctions:
-            print(a)
-        """
-        function.append(newline)
-        f = i + 1
-        for s in lines[f:]:
-            if re.match(r'  +',s):
-               function.append(s)
-            else:
-                break
-            f = f + 1
-        """
 
-        def_match = defFunction + "\n" + "\n".join(functions) + "\n\n"
+        newline = re.sub(r'\~\) *','',line)
+        functions = newline.split('{|')
+
+        for s in functions:
+            newFunctions.append(re.sub(r' *\|\} *','',s))
+
+        def_match = "\n".join(newFunctions) + "\n\n"
 
     if re.search(r'error',line):
         res_error += def_match
@@ -280,8 +270,8 @@ def translate_yacc(lines: List[str]):
             pos = pos + 1                               # avançar a última posição da gramática e a linha %%
 
         # process yacc parser
-        elif re.match(r'/%.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no yacc
-            about_parser += (lines[pos])[lines[pos].index("/%")+len("/%"):] + "\n"
+        elif re.match(r'/% *.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no yacc
+            about_parser += (re.findall(r'(?:\/\% *(.*))',lines[pos]))[0] + "\n"
 
         # process precendence variable if exists
         elif re.search(r'%[a-z][A-Za-z]*\s?=\s?\[.*\];',lines[pos]):

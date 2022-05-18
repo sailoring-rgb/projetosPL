@@ -17,8 +17,10 @@ precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
 
 ts = {}
 
-def getval(n): {|    if n not in ts:
-    if n not in ts: |} {|        print(f"Undefined name '{n}'")
+def getval(n): 
+    if n not in ts:
+        print(f"Undefined name '{n}'")
+    return ts.get(n,0)
 
 def p_stat_p1(p):
     "stat : VAR '=' exp"
@@ -60,8 +62,8 @@ def p_exp_p10(p):
     "exp : VAR"
     p[0] = getval(p[1])
 
-def p_error(t):
+def p_error(t): 
+   print(f"Syntax error at '{t.value}', [{t.lexer.lineno}]")
 
-
- y=yacc()
- y.parse("3+4*7")
+y=yacc()
+y.parse("3+4*7")
