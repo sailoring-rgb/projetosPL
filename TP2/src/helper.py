@@ -2,6 +2,16 @@ import re
 from typing import List
 from xxlimited import new
 
+###################################################### EXCEPTIONS ######################################################
+class GrammarError(Exception):
+    """Raised when no grammar is defined"""
+    pass
+
+class VariableError(Exception):
+    """Raised when variables are missing or not correctly introduced"""
+    pass
+#######################################################################################################################
+
 # DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
 def get_lex_yacc(lines: List[str]):
 

@@ -153,10 +153,22 @@ for file_name in files:
             lines = input.splitlines()
             print("\033[96m[" + file_name[:-4] + "]\033[0m\033[92m approved by lexical and syntactic analysis.\033[0m")
             lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
-            res = translate_lex(lines_for_LEX)
-            write_file_lex(file_name, res)    
-            res = translate_yacc(lines_for_YACC)
-            write_file_yacc(file_name, res)
+            if lex_exists:
+                try:                                                               # controlling lex possible errors
+                    res = translate_lex(lines_for_LEX)
+                    write_file_lex(file_name, res)    
+                except VariableError:
+                    print("\033[91m[ERROR] variables missing or not introduced with caracter '%' on LEX.\033[0m")
+            else:
+                print("\033[93m[WARNING] nothing defined for LEX in PLY-Simple.\033[0m")
+            if yacc_exists:
+                try:                                                           # controlling yacc possible errors
+                    res = translate_yacc(lines_for_YACC)
+                    write_file_yacc(file_name, res)
+                except GrammarError:
+                    print("\033[91m[ERROR] grammar not found on YACC.\033[0m")
+                except VariableError:
+                    print("\033[91m[ERROR] variables missing or not introduced with caracter '%' on YACC.\033[0m")
         else:
             print("\033[91m[ERROR] file "+ file_name + " does not respect lexical/syntatic structure for PLY-Simple.\033[0m")
             print(parser.errorLog)
