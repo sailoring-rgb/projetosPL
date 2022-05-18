@@ -143,7 +143,7 @@ files = sys.argv[1:]
 
 for file_name in files:
     try:
-        lines = open_file(file_name)
+        lines = open_file(file_name, 'LEX')
     except FileNotFoundError:
         lines = ''
         print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")

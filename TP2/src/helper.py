@@ -13,13 +13,17 @@ class VariableError(Exception):
 #######################################################################################################################
 
 # ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
-def open_file(input_name:str):
+def open_file(input_name:str, mode:str):
     file = open("../input/"+input_name)
     
     if not file:
         raise FileNotFoundError
-
-    lines = file.read().splitlines()
+    if mode == 'LEX':
+        lines = file.read().splitlines()
+    elif mode == 'YACC':
+        lines = file.read()
+    else:
+        lines = ''
     file.close()
     print("\033[96m[" + input_name[:-4] + "]\033[0m\033[92m opened successfully.\033[0m")
     return lines

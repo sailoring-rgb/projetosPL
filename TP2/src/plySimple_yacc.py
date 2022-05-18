@@ -148,9 +148,7 @@ files = sys.argv[1:]
 
 for file_name in files:
     try:
-        f = open("../input/"+file_name, 'r')
-        input = f.read()
-        f.close()
+        input = open_file(file_name,'YACC')
     except FileNotFoundError:
         input = ""
         print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
