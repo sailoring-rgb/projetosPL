@@ -9,6 +9,7 @@ tokens = [
     'IGN',
     'TOK',
     'literals',
+    'literalsV2',
     'tokenList',
     'BFUN',
     'function',
@@ -47,7 +48,7 @@ def t_ANY_BINST(t):
     return t
 
 def t_parser_instruction(t):
-    r'.*(\.|\=).*'
+    r'.*(\.|\=|\w+).*'
     t.lexer.begin("INITIAL")
     return t
 
@@ -86,6 +87,14 @@ def t_ANY_BLEX(t):
     t.lexer.begin("lex")
     return t
 
+def t_lex_TOK(t):
+    r'%\s*tokens\s*=\s*'
+    return t
+
+def t_lex_tokenList(t):
+    r'\[\'*.*\'\]'
+    return t
+
 def t_lex_LIT(t):
     r'%\s*literals\s*=\s*'
     return t
@@ -94,16 +103,12 @@ def t_lex_literals(t):
     r'\".*\"'
     return t
 
+def t_lex_literalsV2(t):
+    r'\'.*\''
+    return t
+
 def t_lex_IGN(t):
     r'%\s*ignore\s*=\s*'
-    return t
-
-def t_lex_TOK(t):
-    r'%\s*tokens\s*=\s*'
-    return t
-
-def t_lex_tokenList(t):
-    r'\[(\'*.*\')+\]'
     return t
 
 def t_ANY_BFUN(t):

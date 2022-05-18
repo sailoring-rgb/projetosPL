@@ -1,0 +1,16 @@
+%% LEX %%
+
+%tokens = ['INI','FIM','nome','real','int','sinal']
+%sinal = '[=+\-*/()]'
+%ignore = " \n\t"
+
+%)(?:begin)|\{                    return('INI','')
+%)\}|[eE] [nN] [dD]               return('FIM','')
+%)[a-zA-Z] [a-zA-Z0-9]*           return('nome','')
+%)[0-9]+\.[0-9]+                  return('real','')
+%)[0-9]+                          return('int','')
+%).                               error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+
+/% lexer = lex.lex()
+
+$$

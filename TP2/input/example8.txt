@@ -1,0 +1,23 @@
+%% LEX %%
+
+%ignore = " \t\n"
+
+%)\(                  simpleToken('PA','')
+%)\)                  simpleToken('PF','')
+%)\d+                 simpleToken('NUM','')
+%).                   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
+
+%% YACC %%
+
+/grammar
+
+ABin : PA PF                            {}
+ABin : PA NUM ABin ABin PF              {}
+
+
+~) def p_error(p): {|    print("Erro sintático: ", p) |} {|    parser.success = False |}
+
+/% parser = yacc.yacc()
+/% parser.abins = []   
+
+$$

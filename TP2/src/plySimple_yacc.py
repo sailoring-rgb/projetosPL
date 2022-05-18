@@ -9,12 +9,14 @@ from helper import *
               | BYACC Yacc EOF
               | BYACC Yacc BLEX Lex EOF
               | EOF
-    Lex : Vars Funs
+    Lex : Vars Funs InstrList
     Vars : Vars Var
          |
-    Var : LIT literals
-        | IGN literals
+    Var : LIT Liters
+        | IGN Liters
         | TOK tokenList
+    Liters : literals
+           | literalsV2
     Yacc : Precedence Dictionary Grammar Defs InstrList
     Precedence : PREC preceList
                |
@@ -97,7 +99,7 @@ def p_Inst(p):
     'Inst : BINST instruction'
 
 def p_Lex(p):
-    'Lex : Vars Funs'
+    'Lex : Vars Funs InstrList'
 
 def p_Vars(p):
     'Vars : Vars Var'
@@ -106,10 +108,16 @@ def p_Vars_Empty(p):
     'Vars : '
 
 def p_Var_Literals(p):
-    'Var : LIT literals'
+    'Var : LIT Liters'
 
 def p_Var_Ignore(p):
-    'Var : IGN literals'
+    'Var : IGN Liters'
+
+def p_Liters(p):
+    'Liters : literals'
+
+def p_Liters_V2(p):
+    'Liters : literalsV2'
 
 def p_Var_ListTok(p):
     'Var : TOK tokenList'
