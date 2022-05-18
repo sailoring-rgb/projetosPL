@@ -112,7 +112,7 @@ def t_ANY_BFUN(t):
     return t
 
 def t_fun_function(t):
-    r'.*(return|error).*'
+    r'.*(return|error|simpleToken).*'
     t.lexer.begin("INITIAL")
     return t
 
@@ -131,6 +131,8 @@ def t_ANY_error(t):
 
 lexer = lex.lex()
 
+# In case some testing might be needed
+"""
 import sys
 files = sys.argv[1:]
 
@@ -145,3 +147,4 @@ for file_name in files:
         for tok in lexer:
             print(tok)
     print("###### END LEX PROCESSING ######")
+"""

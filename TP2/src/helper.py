@@ -2,18 +2,6 @@ import re
 from typing import List
 from xxlimited import new
 
-# ABRE UM FICHEIRO E DEVOLVE UMA LISTA COM O SEU CONTEÚDO
-def open_file(input_name:str):
-    file = open("../input/"+input_name)
-    
-    if not file:
-        raise FileNotFoundError
-
-    lines = file.read().splitlines()
-    file.close()
-    print("\033[96m[" + input_name[:-4] + "]\033[0m\033[92m opened successfully.\033[0m")
-    return lines
-
 # DEVOLVE UMA LISTA COM O CONTEÚDO DO FILE LEX E OUTRA LISTA COM O CONTEÚDO DO FILE YACC
 def get_lex_yacc(lines: List[str]):
 

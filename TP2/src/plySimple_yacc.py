@@ -5,33 +5,51 @@ from helper import *
 
 """
     PlySimple : BLEX Lex BYACC Yacc EOF
+              | BLEX Lex EOF
+              | BYACC Yacc EOF
+              | BYACC Yacc BLEX Lex EOF
+              | EOF
     Lex : Vars Funs
     Vars : Vars Var
          |
     Var : LIT literals
-         | IGN ig
-         | TOK tokenList
-    Funs : Funs Fun
-         |
-    Fun : BFUN function
+        | IGN literals
+        | TOK tokenList
     Yacc : Precedence Dictionary Grammar Defs InstrList
+    Precedence : PREC preceList
+               |
     Dictionary : TS tsList
                |
     Grammar : BGRAM ProdList
             |
     ProdList : ProdList prod
-             |
+             | 
     Defs : Defs Def
          |
     Def : BDEF definition
     InstrList : InstrList Inst
               |
     Inst : BINST instruction
+    Funs : Funs Fun
+         |
+    Fun : BFUN function
 """
 
 # Production rules
 def p_PlySimple(p):
     'PlySimple : BLEX Lex BYACC Yacc EOF'
+
+def p_PlySimple_LexOnly(p):
+    'PlySimple : BLEX Lex EOF'
+
+def p_PlySimple_YaccOnly(p):
+    'PlySimple : BYACC Yacc EOF'
+
+def p_PlySimple_ReverseOrder(p):
+    'PlySimple : BYACC Yacc BLEX Lex EOF'
+
+def p_PlySimple_Empty(p):
+    'PlySimple : EOF'
 
 def p_Yacc(p):
     'Yacc : Precedence Dictionary Grammar Defs InstrList'
@@ -106,15 +124,16 @@ def p_Fun(p):
     'Fun : BFUN function'
 
 def p_error(p):
-    print("ERROR", p)
     parser.success = False
-    exit(1)
+    parser.errorLog.append('ERROR : ' + str(p))
+    pass
 
 # Build the parser
 parser = yacc.yacc()
 
 # Definir estado / modelo
 parser.state = {}
+parser.errorLog = []
 
 import sys
 files = sys.argv[1:]
@@ -123,6 +142,7 @@ for file_name in files:
     try:
         f = open("../input/"+file_name, 'r')
         input = f.read()
+        f.close()
     except FileNotFoundError:
         input = ""
         print("\033[91m[ERROR] file "+ file_name + " not found.\033[0m")
@@ -130,4 +150,13 @@ for file_name in files:
         parser.success = True
         parser.parse(input)
         if parser.success:
-            print("###### END YACC PROCESSING ######")
+            lines = input.splitlines()
+            print("\033[96m[" + file_name[:-4] + "]\033[0m\033[92m approved by lexical and syntactic analysis.\033[0m")
+            lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
+            res = translate_lex(lines_for_LEX)
+            write_file_lex(file_name, res)    
+            res = translate_yacc(lines_for_YACC)
+            write_file_yacc(file_name, res)
+        else:
+            print("\033[91m[ERROR] file "+ file_name + " does not respect lexical/syntatic structure for PLY-Simple.\033[0m")
+            print(parser.errorLog)
