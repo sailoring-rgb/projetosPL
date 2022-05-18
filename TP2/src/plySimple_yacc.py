@@ -170,6 +170,8 @@ for file_name in files:
                     print("\033[91m[ERROR] grammar not found on YACC.\033[0m")
                 except VariableError:
                     print("\033[91m[ERROR] variables missing or not introduced with caracter '%' on YACC.\033[0m")
+            else:
+                print("\033[93m[WARNING] nothing defined for YACC in PLY-Simple.\033[0m")
         else:
             print("\033[91m[ERROR] file "+ file_name + " does not respect lexical/syntatic structure for PLY-Simple.\033[0m")
             print(parser.errorLog)
