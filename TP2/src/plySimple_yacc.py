@@ -151,7 +151,8 @@ for file_name in files:
         parser.parse(input)
         if parser.success:
             lines = input.splitlines()
-            print("\033[96m[" + file_name[:-4] + "]\033[0m\033[92m approved by lexical and syntactic analysis.\033[0m")
+            file_name = file_name[:-4] 
+            print("\033[96m[" + file_name + "]\033[0m\033[92m approved by lexical and syntactic analysis.\033[0m")
             lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC = get_lex_yacc(lines)
             if lex_exists:
                 try:                                                               # controlling lex possible errors
