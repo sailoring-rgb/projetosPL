@@ -98,7 +98,7 @@ def process_tokens(tok: str, list_regex: List[str]):
         # found an element that is dedicated for token tok
         if re.search(f'\'\w*(?i:{tok})\'',element):
 
-            regex = re.findall(r'^%\)(.*)(?:simpleToken|return)',element)[0]               # apanha toda a regex até à palavra return (exclusive) 
+            regex = re.findall(r'^%\) *(.*)(?:simpleToken|return)',element)[0]               # apanha toda a regex até à palavra return (exclusive) 
             regex = re.sub(r' +$','',regex)                                             # remove todos os espaços à frente da regex
             regex = re.sub(r'\\{2}',r'\\',regex)
 
@@ -193,7 +193,7 @@ def process_grammar(grammar: List[str]):
             # segundo termo do grupo =          VAR '=' exp
             # terceiro termo do grupo =         ts[t[1]] = t[3]
             group = (re.findall(r'([^: ]+)(?: *: *(.*?) {2,})(?:{ *(.*?) *})',line))[0]
-
+            print(group)
             # process a production of grammar
             prod = re.sub(r'( %.*)','',group[1])     # remover, por exemplo, %prec UMINUS
 
@@ -221,13 +221,21 @@ def process_grammar(grammar: List[str]):
 
 
 # PROCESSA UMA FUNÇÃO DESTINADA AO FILE YACC
-def process_function(lines: List[str], line: str, i: int, res_error: str, res_functions: str):
+def process_function(line: str, i: int, res_error: str, res_functions: str):
 
-    function = []
     def_match = ""
+    newFunctions = []
 
-    if re.match(r'\~\) *def ',line):
-        function.append(line)
+    if re.search(r'^\~\) *def ',line):
+        #newline = re.sub(r'\~\) *','',line)
+        defFunction = (re.findall(r'def .*\:',line))[0]
+        functions = re.findall(r'\{\|(.*) \|\} ',line)
+        for func in functions:
+            newFunctions.append(f"  {func}")
+        for a in newFunctions:
+            print(a)
+        """
+        function.append(newline)
         f = i + 1
         for s in lines[f:]:
             if re.match(r'  +',s):
@@ -235,9 +243,9 @@ def process_function(lines: List[str], line: str, i: int, res_error: str, res_fu
             else:
                 break
             f = f + 1
+        """
 
-        def_match = "\n".join(function) + "\n\n"
-        i = f - 1
+        def_match = defFunction + "\n" + "\n".join(functions) + "\n\n"
 
     if re.search(r'error',line):
         res_error += def_match
@@ -265,7 +273,7 @@ def translate_yacc(lines: List[str]):
         # process grammar
         if re.match(r'^/grammar$',lines[pos]):
             for subline in lines[pos+1:]:
-                if re.match(r'[A-Za-z] : .*',subline):
+                if re.match(r'\w+ : .*',subline):
                     grammar.append(subline)
                     pos = pos + 1
                 else: break
@@ -289,10 +297,10 @@ def translate_yacc(lines: List[str]):
 
         # if dictionary exists
         elif re.search(r'%.*= *\{\}',lines[pos]):
-            dictionary = lines[pos] + "\n\n"
+            dictionary = (lines[pos])[lines[pos].index("%")+len("%"):] + "\n\n"
 
         # process functions -- def
-        pos, res_error, res_functions = process_function(lines, lines[pos], pos, res_error, res_functions)
+        pos, res_error, res_functions = process_function(lines[pos], pos, res_error, res_functions)
         pos = pos + 1
 
     defGrammar, res_grammar = process_grammar(grammar)
@@ -302,3 +310,17 @@ def translate_yacc(lines: List[str]):
     res += dictionary + res_functions + res_grammar + res_error + about_parser
 
     return res
+
+# CRIA E ESCREVE NO FILE YACC
+def write_file_yacc(input_name:str, res0: str):
+
+    input_name = re.sub(r'\.(.*)',r'',input_name)
+
+    imports = f"""import ply.yacc as yacc\nfrom {input_name}_lex import *"""
+    res = imports + "\n\n" + res0
+
+    outputFile = open("../output/"+f'{input_name}_yacc.py','w')
+    outputFile.write(res)
+    outputFile.close
+
+    print("\033[96m[" + input_name + "]\033[92m translated YACC successfully.\033[0m")
