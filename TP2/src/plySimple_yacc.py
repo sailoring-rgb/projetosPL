@@ -181,3 +181,6 @@ for file_name in files:
         else:
             print("\033[91m[ERROR] file "+ file_name + " does not respect lexical/syntatic structure for PLY-Simple.\033[0m")
             print(parser.errorLog)
+
+
+# python3.9 plySimple_yacc.py example1.txt example2.txt example3.txt example4.txt example5.txt example6.txt example7.txt example8.txt example9.txt example10.txt example11.txt

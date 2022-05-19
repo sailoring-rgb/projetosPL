@@ -1,7 +1,7 @@
 %% LEX %%
 
 %tokens = ['INI','FIM','nome','real','int','sinal']
-%signal = '[=+\-*/()]'
+%literals = '[=+\-*/()]'
 %ignore = " \n\t"
 
 %)(?:begin)|\{                    return('INI','')
