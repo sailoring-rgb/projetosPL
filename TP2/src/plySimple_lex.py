@@ -31,7 +31,6 @@ states = [
     ("fun", 'exclusive'),
     ("yacc", 'exclusive'),
     ("grammar", 'exclusive'),
-    ("comment", 'exclusive'),
     ("def", 'exclusive'),
     ("parser", 'exclusive')
     ]
@@ -127,7 +126,7 @@ def t_ANY_BDEF(t):
     return t
 
 def t_def_definition(t):
-    r'def\s*[A-z]+\([A-z]+\)\: \s*\{\|\s.* \|\}'
+    r'def\s*\w+\(\w+\)\: \s*\{\|\s.* \|\}'
     return t
 
 def t_ANY_error(t):
