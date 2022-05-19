@@ -136,12 +136,18 @@ def translate_lex(lines_for_LEX: List[str]):
     literals_match = ""
     res_literals = ""
     about_lexer = ""
+    run_ignore = False
+    run_error = False
 
     list_regex = [s for s in lines_for_LEX if "return" in s or "simpleToken" in s]
 
     list_tokens = [s for s in lines_for_LEX if re.search(r'%tokens',s)]                       # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
-    tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', list_tokens[0])[0]).split(",")             # list: tokens = ["'VAR'", "'NUMBER'"]
-    res_tokens_list = list_tokens[0][list_tokens[0].index("tokens"):] + "\n"
+    if len(list_tokens) == 0:
+        run_tokens = False
+    else:
+        tokens = (re.findall(r'(?:\[\s?)(.*)(?:\s?\])', list_tokens[0])[0]).split(",")             # list: tokens = ["'VAR'", "'NUMBER'"]
+        res_tokens_list = list_tokens[0][list_tokens[0].index("tokens"):] + "\n"
+        run_tokens = True
 
     for line in lines_for_LEX:
 
@@ -163,20 +169,25 @@ def translate_lex(lines_for_LEX: List[str]):
             var_match = line
             res_var = var_match[var_match.index("%")+len("%"):] + "\n" 
 
-    res_toks_func = ""
-    res_toks_no_func = ""
+    if run_tokens and run_error and run_ignore:
 
-    for tok in tokens:
-        tok_func, tok_no_func = process_tokens(tok,list_regex)
-        res_toks_func = res_toks_func + tok_func
-        res_toks_no_func = res_toks_no_func + tok_no_func
+        res_toks_func = ""
+        res_toks_no_func = ""
 
-    res += res_literals + res_tokens_list + res_var + res_ignore + res_toks_no_func + "\n" + res_toks_func
+        for tok in tokens:
+            tok_func, tok_no_func = process_tokens(tok,list_regex)
+            res_toks_func = res_toks_func + tok_func
+            res_toks_no_func = res_toks_no_func + tok_no_func
 
-    res +=  f"""def t_error(t):
+        res += res_literals + res_tokens_list + res_var + res_ignore + res_toks_no_func + "\n" + res_toks_func
+
+        res +=  f"""def t_error(t):
     print(f"{error_message}")
     t.lexer.skip(1)\n\n"""
-    res += "lexer = lex.lex()\n" + about_lexer
+        res += "lexer = lex.lex()\n" + about_lexer
+
+    else:
+        raise VariableError
 
     return res
 
@@ -263,6 +274,7 @@ def process_function(line: str, i: int, res_error: str, res_functions: str):
 def translate_yacc(lines: List[str]):
     
     pos = 0
+    found_grammar = False
 
     res = ""
     res_functions = ""
@@ -276,6 +288,7 @@ def translate_yacc(lines: List[str]):
         
         # process grammar
         if re.match(r'^/grammar$',lines[pos]):
+            found_grammar = True
             for subline in lines[pos+1:]:
                 if re.match(r'\w+ : .*',subline):
                     grammar.append(subline)
@@ -307,8 +320,11 @@ def translate_yacc(lines: List[str]):
         pos, res_error, res_functions = process_function(lines[pos], pos, res_error, res_functions)
         pos = pos + 1
 
-    defGrammar, res_grammar = process_grammar(grammar)
-    res += "\n".join(defGrammar) + "\n\n" + prec + "\n\n"
+    if found_grammar == False:
+        raise GrammarError
+    else:
+        defGrammar, res_grammar = process_grammar(grammar)
+        res += "\n".join(defGrammar) + "\n\n" + prec + "\n\n"
 
     # a função de error tem de aparecer depois das funções da gramática
     res += dictionary + res_functions + res_grammar + res_error + about_parser
