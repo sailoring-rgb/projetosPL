@@ -49,14 +49,14 @@ def p_Lista_p6(p):
 
 def p_error(p): 
     print("Erro sintático: ", p)
-   parser.success = False
+    parser.success = False
 
 parser = yacc.yacc()
 import sys
 for linha in sys.stdin:
-parser.success = True
-parser.parse(linha)
-if parser.success:
-print('Frase válida: ', linha)
-else:
-print('Frase inválida.')
+    parser.success = True
+    parser.parse(linha)
+    if parser.success:
+        print('Frase válida: ', linha)
+    else:
+        print('Frase inválida.')

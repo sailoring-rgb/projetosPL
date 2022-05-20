@@ -2,6 +2,7 @@ import re
 from typing import List
 from xxlimited import new
 
+
 ###################################################### EXCEPTIONS ######################################################
 class GrammarError(Exception):
     """Raised when no grammar is defined"""
@@ -83,7 +84,7 @@ def get_lex_yacc(lines: List[str]):
     return lex_exists, yacc_exists, lines_for_LEX, lines_for_YACC
 
 
-########################################################################################################################################
+################################################################ LEX ################################################################
 
 # DEVOLVE UMA STRING COM A DEFINIÇÃO DA FUNÇÃO PARA O FILE LEX
 # IMPORTANTE: O FORMATO DA FUNÇÃO TEM DE SER ASSIM!!!
@@ -204,7 +205,7 @@ def write_file_lex(input_name:str, res0: str):
 
     print("\033[96m[" + input_name + "]\033[92m translated LEX successfully.\033[0m")
 
-########################################################################################################################################
+################################################################ YACC ################################################################
 
 # PROCESSA A GRAMÁTICA RECEBIDA E DEVOLVE UMA STRING COM TODAS AS FUNÇÕES PARA O FILE YACC
 def process_grammar(grammar: List[str]):
@@ -297,20 +298,24 @@ def translate_yacc(lines: List[str]):
             pos = pos + 1                               # avançar a última posição da gramática e a linha %%
 
         # process yacc parser
-        elif re.match(r'/% *.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no yacc
-            about_parser += (re.findall(r'(?:\/\% *(.*))',lines[pos]))[0] + "\n"
+        elif re.match(r'/% ?.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no yacc
+            about_parser += (re.findall(r'(?:\/\% ?(.*))',lines[pos]))[0] + "\n"
 
         # process precendence variable if exists
-        elif re.search(r'%[a-z][A-Za-z]*\s?=\s?\[.*\];',lines[pos]):
-            newline = re.sub(r'% *|;','',lines[pos])
-            prec += newline
-            """
-            precedence.append(newline)
-            for subline in lines[lines.index(lines[pos])-len(lines)+1:]:
-                if re.search(r'\s*\(.*\),|\]',subline):
-                    precedence.append(subline)
-                else: break
-            """
+        elif re.search(r'% *[a-z][A-Za-z]*\s?=\s?\[',lines[pos]):
+            newline = re.sub(r'% *','',lines[pos])
+            if re.search(r'\]\;$',lines[pos]):
+                prec += re.sub(r';','',newline)
+            elif re.search(r'\[$',lines[pos]):
+                i = pos + 1
+                for line in lines[pos+1:]:
+                    if re.search(r'\]\;$',line):
+                        prec += re.sub(r';','',line)
+                        break
+                    else:
+                        prec += line
+                        i = i + 1
+            pos = i + 1
 
         # if dictionary exists
         elif re.search(r'%.*= *\{\}',lines[pos]):

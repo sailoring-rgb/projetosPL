@@ -158,7 +158,7 @@ def t_ANY_error(t):
 lexer = lex.lex()
 
 # In case some testing might be needed
-
+"""
 import sys
 files = sys.argv[1:]
 
@@ -173,3 +173,4 @@ for file_name in files:
         for tok in lexer:
             print(tok)
     print("###### END LEX PROCESSING ######")
+"""

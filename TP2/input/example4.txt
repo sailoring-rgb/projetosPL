@@ -23,7 +23,7 @@ Lista : Exp                             {p[0] = [p[1]]}
 
 
 
-~) def p_error(p): {|    print("Erro sintático: ", p) |} {|   parser.success = False |}
+~) def p_error(p): {|    print("Erro sintático: ", p) |} {|    parser.success = False |}
 
 ~)def produtorio(lista): {|    res = 1 |} {|    for elem in lista: |} {|        res *= elem |} {|    return res |}
 
@@ -32,13 +32,13 @@ Lista : Exp                             {p[0] = [p[1]]}
 /% parser = yacc.yacc()
 
 /% import sys
-/%  for linha in sys.stdin:
-/%  parser.success = True
-/%  parser.parse(linha)
-/%      if parser.success:
-/%          print('Frase válida: ', linha)
-/%      else:
-/%          print('Frase inválida.')
+/% for linha in sys.stdin:
+/%     parser.success = True
+/%     parser.parse(linha)
+/%     if parser.success:
+/%         print('Frase válida: ', linha)
+/%     else:
+/%         print('Frase inválida.')
 
 
 $$
