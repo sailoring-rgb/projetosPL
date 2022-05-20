@@ -21,7 +21,6 @@ tokens = [
     'BYACC',
     'BPREC',
     'preceList',
-    'EPREC',
     'TS',
     'tsList',
     'BGRAM',

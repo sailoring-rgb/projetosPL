@@ -111,7 +111,7 @@ def p_Inst(p):
     'Inst : BINST instruction'
 
 def p_Lex(p):
-    'Lex : Vars Funs InstrList'
+    'Lex : Vars States Funs InstrList'
 
 def p_Vars(p):
     'Vars : Vars Var'
