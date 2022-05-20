@@ -122,10 +122,6 @@ def t_ANY_BSTAT(t):
     t.lexer.begin("prec")
     return t
 
-def t_stat_statList(t):
-    r'\[?\((\'|\").*(\'|\")\)\,?,\]\;'
-    return t
-
 def t_ANY_BFUN(t):
     r'\s*%\)\s*'
     t.lexer.begin("fun")

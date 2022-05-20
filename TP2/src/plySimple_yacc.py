@@ -11,24 +11,24 @@ from helper import *
               | EOF
     Yacc : Precedence Dictionary Grammar Defs InstrList
     Precedence : BPREC List
-               |
-    List : psList
-          |
+               | 
+    List : List psList
+         |
     Dictionary : TS tsList
-               |
+               | 
     Grammar : BGRAM ProdList
             | 
     ProdList : ProdList prod
-             |
+             |   
     Defs : Defs Def
          | 
     Def : BDEF ListD
     ListD : ListD definition
-          |
+          | 
     InstrList : InstrList Inst
               |
     Inst : BINST instruction
-    Lex : Vars States Funs InstrList
+    Lex : Vars Funs States InstrList
     Vars : Vars Var
          |
     Var : LIT Liters
@@ -36,7 +36,7 @@ from helper import *
         | TOK tokenList
     Liters : literals
            | literalsV2
-    States : BSTAT List 
+    States : BSTAT List
            |
     Funs : Funs Fun
          |
