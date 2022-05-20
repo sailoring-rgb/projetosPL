@@ -23,11 +23,21 @@ Lista : Exp                             {p[0] = [p[1]]}
 
 
 
-~) def p_error(p): {|    print("Erro sintático: ", p) |} {|    parser.success = False |}
+~) def p_error(p):
+    print("Erro sintático: ", p)
+    parser.success = False
 
-~)def produtorio(lista): {|    res = 1 |} {|    for elem in lista: |} {|        res *= elem |} {|    return res |}
+~)def produtorio(lista):
+    res = 1
+    for elem in lista:
+        res *= elem
+    return res
 
-~)def somatorio(lista): {|    res = 0 |} {|    for elem in lista: |} {|        res += elem |} {|    return res |}
+~)def somatorio(lista):
+    res = 0
+    for elem in lista:
+        res += elem
+    return res
 
 /% parser = yacc.yacc()
 

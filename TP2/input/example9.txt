@@ -17,7 +17,8 @@ Lista : Lista Ficheiro                  {}
 Lista :                                 {}
 Ficheiro : '(' id id ')'                {p.parser.itens.appen(p[2])}
 
-~) def p_error(p): print("Erro sintático: ", p)
+~) def p_error(p):
+    print("Erro sintático: ", p)
     parser.success = False
 
 /% parser = yacc.yacc()

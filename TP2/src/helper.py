@@ -169,6 +169,7 @@ def translate_lex(lines: List[str]):
             res_literals = literals_match[literals_match.index("%")+len("%"):] + "\n" 
 
         elif re.search(r'% *states*\s?=',lines[pos]):
+            states = "\n"
             newline = re.sub(r'% *','',lines[pos])
             if re.search(r'\]\;$',lines[pos]):
                 states += re.sub(r';','',newline)
@@ -182,6 +183,7 @@ def translate_lex(lines: List[str]):
                     else:
                         states += re.sub(r'^\s*','',line)
                         i = i + 1
+                states += "\n"
                 pos = i
 
         elif re.match(r'%[^tokens]+ *=',lines[pos]):              # é respeitada a regra "variáveis a começar com %"
@@ -200,7 +202,7 @@ def translate_lex(lines: List[str]):
             res_toks_func = res_toks_func + tok_func
             res_toks_no_func = res_toks_no_func + tok_no_func
 
-        res += res_literals + res_tokens_list + res_var + res_ignore + res_toks_no_func + "\n" + res_toks_func
+        res += res_literals + res_tokens_list + res_var + res_ignore + states + res_toks_no_func + "\n" + res_toks_func
 
         res +=  f"""def t_error(t):
     print(f"{error_message}")
@@ -268,21 +270,26 @@ def process_grammar(grammar: List[str]):
 
 
 # PROCESSA UMA FUNÇÃO DESTINADA AO FILE YACC
-def process_function(line: str, i: int, res_error: str, res_functions: str):
+def process_function(lines: List[str], line: str, i: int, res_error: str, res_functions: str):
 
     def_match = ""
-    newFunctions = []
+    function = []
 
     if re.search(r'^\~\) *def ',line):
 
         newline = re.sub(r'\~\) *','',line)
-        functions = newline.split('{|')
+        function.append(newline)
+        f = i + 1
+        for s in lines[f:]:
+            if re.match(r'  +',s):
+               function.append(s)
+            else:
+                break
+            f = f + 1
 
-        for s in functions:
-            newFunctions.append(re.sub(r' *\|\} *','',s))
-
-        def_match = "\n".join(newFunctions) + "\n\n"
-
+        def_match = "\n".join(function) + "\n\n"
+        i = f - 1
+        
     if re.search(r'error',line):
         res_error += def_match
     else:
@@ -315,7 +322,7 @@ def translate_yacc(lines: List[str]):
                     grammar.append(subline)
                     pos = pos + 1
                 else: break
-            pos = pos + 1                               # avançar a última posição da gramática e a linha %%
+            pos = pos                               # avançar a última posição da gramática e a linha %%
 
         # process yacc parser
         elif re.match(r'/% ?.*',lines[pos]):                      # não é uma variável, mas é uma linha importante que deve ser escrita no yacc
@@ -343,7 +350,7 @@ def translate_yacc(lines: List[str]):
             dictionary = (lines[pos])[lines[pos].index("%")+len("%"):] + "\n\n"
 
         # process functions -- def
-        pos, res_error, res_functions = process_function(lines[pos], pos, res_error, res_functions)
+        pos, res_error, res_functions = process_function(lines, lines[pos], pos, res_error, res_functions)
         pos = pos + 1
 
     if found_grammar == False:
