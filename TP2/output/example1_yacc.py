@@ -13,7 +13,7 @@ from example1_lex import *
 # p9:      | NUMBER
 # p10:      | VAR
 
-precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')]
+
 
 ts = {}
 

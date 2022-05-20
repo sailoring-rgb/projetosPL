@@ -10,7 +10,7 @@ from helper import *
               | BYACC Yacc BLEX Lex EOF
               | EOF
     Yacc : Precedence Dictionary Grammar Defs InstrList
-    Precedence : BPREC ListP EPREC
+    Precedence : BPREC ListP
                |
     ListP : preceList
           |
@@ -63,13 +63,13 @@ def p_Yacc(p):
     'Yacc : Precedence Dictionary Grammar Defs InstrList'
 
 def p_Precedence(p):
-    'Precedence : BPREC ListP EPREC'
+    'Precedence : BPREC ListP'
 
 def p_Precedence_Empty(p):
     'Precedence : '
 
 def p_ListP(p):
-    'ListP : preceList'
+    'ListP : ListP preceList'
 
 def p_ListP_Empty(p):
     'ListP : '
@@ -141,7 +141,7 @@ def p_States_Empty(p):
     'States : '
 
 def p_ListS(p):
-    'ListS : statList'
+    'ListS : ListS statList'
 
 def p_ListS_Empty(p):
     'ListS : '

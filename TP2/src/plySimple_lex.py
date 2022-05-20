@@ -64,20 +64,17 @@ def t_ANY_BYACC(t):
     return t
 
 def t_yacc_BPREC(t):
-    r'%\s*precedence\s*=\s*\['
+    r'%\s*precedence\s*=\s*'
     t.lexer.begin("prec")
     return t
 
 def t_prec_preceList(t):
-    r'.*\(\s*(\'{1,2}|\").*(\'{1,2}|\")\s*\)\,?'
+    r'\[?.*\(\s*(\'{1,2}|\").*(\'{1,2}|\")\s*\)\,?(\]\;)?'
     return t
 
-def t_prec_endPreceList(t):
-    r'.*(\(\s*(\'{1,2}|\").*(\'{1,2}|\")\s*\))?\]\;'
-    t.lexer.begin("yacc")
-
-def t_yacc_TS(t):
+def t_ANY_TS(t):
     r'%\s*ts\s*=\s*'
+    t.lexer.begin("yacc")
     return t
 
 def t_yacc_tsList(t):
@@ -162,7 +159,7 @@ def t_ANY_error(t):
 lexer = lex.lex()
 
 # In case some testing might be needed
-"""
+
 import sys
 files = sys.argv[1:]
 
@@ -177,4 +174,3 @@ for file_name in files:
         for tok in lexer:
             print(tok)
     print("###### END LEX PROCESSING ######")
-"""
