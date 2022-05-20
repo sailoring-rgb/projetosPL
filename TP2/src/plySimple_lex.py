@@ -9,7 +9,6 @@ tokens = [
     'IGN',
     'TOK',
     'BSTAT',
-    'ESTAT',
     'literals',
     'literalsV2',
     'tokenList',
@@ -119,7 +118,7 @@ def t_lex_IGN(t):
 
 def t_ANY_BSTAT(t):
     r'%\s*states\s*=\s*'
-    t.lexer.begin("prec")
+    t.lexer.begin("stat")
     return t
 
 def t_ANY_BFUN(t):
@@ -129,7 +128,7 @@ def t_ANY_BFUN(t):
 
 def t_fun_function(t):
     r'.*(return|error|simpleToken).*'
-    t.lexer.begin("INITIAL")
+    t.lexer.begin("lex")
     return t
 
 def t_ANY_BDEF(t):

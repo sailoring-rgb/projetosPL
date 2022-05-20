@@ -7,6 +7,10 @@
 %) \d+(\.\d+)? return('NUMBER', 't.value = float(t.value)')
 %) .   error(f"Illegal character '{t.value[0]}', [{t.lexer.lineno}]",t.lexer.skip(1) )
 
+%states =   
+    [("lex", 'exclusive'),
+    ("fun", 'exclusive')];
+
 %% YACC %%
 
 %precedence =  [('left','+','-'), ('left','*','/'), ('right','UMINUS')];
