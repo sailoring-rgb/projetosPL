@@ -9,7 +9,11 @@
 
 %% YACC %%
 
-%precedence = [('left','+','-'),('left','*','/'),('right','UMINUS')];
+%precedence = [
+    ('left','+','-'),
+    ('left','*','/'),
+    ('right','UMINUS')
+];
 
 %ts = {}
 
