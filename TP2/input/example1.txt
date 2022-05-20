@@ -37,7 +37,7 @@ exp : VAR                      { t[0] = getval(t[1]) }
         print(f"Undefined name '{n}'")
     return ts.get(n,0)
 
-/% y=yacc()
+/% y=yacc.yacc()
 /% y.parse("3+4*7")
 
 
