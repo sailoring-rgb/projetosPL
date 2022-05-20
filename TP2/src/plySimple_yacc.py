@@ -10,9 +10,9 @@ from helper import *
               | BYACC Yacc BLEX Lex EOF
               | EOF
     Yacc : Precedence Dictionary Grammar Defs InstrList
-    Precedence : BPREC ListP
+    Precedence : BPREC List
                |
-    ListP : preceList
+    List : psList
           |
     Dictionary : TS tsList
                |
@@ -22,7 +22,9 @@ from helper import *
              |
     Defs : Defs Def
          | 
-    Def : BDEF definition
+    Def : BDEF ListD
+    ListD : ListD definition
+          |
     InstrList : InstrList Inst
               |
     Inst : BINST instruction
@@ -34,10 +36,8 @@ from helper import *
         | TOK tokenList
     Liters : literals
            | literalsV2
-    States : BSTAT ListS ESTAT
+    States : BSTAT List 
            |
-    ListS : statList
-         |
     Funs : Funs Fun
          |
     Fun : BFUN function
@@ -63,16 +63,16 @@ def p_Yacc(p):
     'Yacc : Precedence Dictionary Grammar Defs InstrList'
 
 def p_Precedence(p):
-    'Precedence : BPREC ListP'
+    'Precedence : BPREC List'
 
 def p_Precedence_Empty(p):
     'Precedence : '
 
-def p_ListP(p):
-    'ListP : ListP preceList'
+def p_List(p):
+    'List : List psList'
 
-def p_ListP_Empty(p):
-    'ListP : '
+def p_List_Empty(p):
+    'List : '
 
 def p_Dictionary(p):
     'Dictionary : TS tsList'
@@ -99,7 +99,13 @@ def p_Defs_Empty(p):
     'Defs : '
  
 def p_Def(p):
-    'Def : BDEF definition'
+    'Def : BDEF ListD'
+
+def p_ListD(p):
+    'ListD : ListD definition'
+
+def p_ListD_Empty(p):
+    'ListD : '
 
 def p_InstrList(p):
     'InstrList : InstrList Inst'
@@ -111,7 +117,7 @@ def p_Inst(p):
     'Inst : BINST instruction'
 
 def p_Lex(p):
-    'Lex : Vars States Funs InstrList'
+    'Lex : Vars Funs States InstrList'
 
 def p_Vars(p):
     'Vars : Vars Var'
@@ -135,16 +141,10 @@ def p_Var_ListTok(p):
     'Var : TOK tokenList'
 
 def p_States(p):
-    'States : BSTAT ListS ESTAT'
+    'States : BSTAT List'
 
 def p_States_Empty(p):
     'States : '
-
-def p_ListS(p):
-    'ListS : ListS statList'
-
-def p_ListS_Empty(p):
-    'ListS : '
 
 def p_Funs(p):
     'Funs : Funs Fun'

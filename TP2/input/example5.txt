@@ -8,7 +8,9 @@ A : F                   {}
 F : F S                 {}
 
 
-~) def p_error(p): {|    print("Erro sintático: ", p) |} {|    parser.success = False |}
+~) def p_error(p): 
+    print("Erro sintático: ", p)
+    parser.success = False
 
 
 

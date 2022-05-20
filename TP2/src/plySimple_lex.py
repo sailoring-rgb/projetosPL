@@ -9,7 +9,6 @@ tokens = [
     'IGN',
     'TOK',
     'BSTAT',
-    'statList',
     'ESTAT',
     'literals',
     'literalsV2',
@@ -20,7 +19,7 @@ tokens = [
     'definition',
     'BYACC',
     'BPREC',
-    'preceList',
+    'psList',
     'TS',
     'tsList',
     'BGRAM',
@@ -67,7 +66,7 @@ def t_yacc_BPREC(t):
     t.lexer.begin("prec")
     return t
 
-def t_prec_preceList(t):
+def t_prec_stat_psList(t):
     r'\[?.*\(\s*(\'{1,2}|\").*(\'{1,2}|\")\s*\)\,?(\]\;)?'
     return t
 
@@ -118,18 +117,13 @@ def t_lex_IGN(t):
     r'%\s*ignore\s*=\s*'
     return t
 
-def t_lex_BSTAT(t):
-    r'% *states*\s*\=\s*\[.*'
-    t.lexer.begin("stat")
+def t_ANY_BSTAT(t):
+    r'%\s*states\s*=\s*'
+    t.lexer.begin("prec")
     return t
 
 def t_stat_statList(t):
-    r'\((\'|\").*(\'|\")\)\,?,'
-    return t
-
-def t_stat_endStatList(t):
-    r'(\((\'|\").*(\'|\")\)\]\;)|(\]\;)'
-    t.lexer.begin("lex")
+    r'\[?\((\'|\").*(\'|\")\)\,?,\]\;'
     return t
 
 def t_ANY_BFUN(t):
@@ -143,12 +137,12 @@ def t_fun_function(t):
     return t
 
 def t_ANY_BDEF(t):
-    r'\~\)'
+    r'\~\)\s*def.*\:\s*'
     t.lexer.begin("def")
     return t
 
 def t_def_definition(t):
-    r'def\s*\w+\(\w+\)\: \s*\{\|\s.* \|\}'
+    r'.+'
     return t
 
 def t_ANY_error(t):

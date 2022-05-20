@@ -21,7 +21,8 @@ Resto : VIRG Elems                              {}
 Elem  : NUM                                     {}
 Elem : Lista                                    {}
 
-~) def p_error(p):{|  print("Erro sintático",p) |}
+~) def p_error(p):
+    print("Erro sintático",p)
 
 /% parser = yacc.yacc()
 
