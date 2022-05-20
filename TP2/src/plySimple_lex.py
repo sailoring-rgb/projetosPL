@@ -8,6 +8,9 @@ tokens = [
     'LIT',
     'IGN',
     'TOK',
+    'BSTAT',
+    'statList',
+    'endStatList',
     'literals',
     'literalsV2',
     'tokenList',
@@ -16,8 +19,9 @@ tokens = [
     'BDEF',
     'definition',
     'BYACC',
-    'PREC',
+    'BPREC',
     'preceList',
+    'endPreceList',
     'TS',
     'tsList',
     'BGRAM',
@@ -30,7 +34,10 @@ states = [
     ("lex", 'exclusive'),
     ("fun", 'exclusive'),
     ("yacc", 'exclusive'),
+    ("prec", 'exclusive'),
+    ("stat", "exclusive"),
     ("grammar", 'exclusive'),
+    ("comment", 'exclusive'),
     ("def", 'exclusive'),
     ("parser", 'exclusive')
     ]
@@ -56,13 +63,18 @@ def t_ANY_BYACC(t):
     t.lexer.begin("yacc")
     return t
 
-def t_yacc_PREC(t):
-    r'%\s*precedence\s*=\s*'
+def t_yacc_BPREC(t):
+    r'%\s*precedence\s*=\s*\['
+    t.lexer.begin("prec")
     return t
 
-def t_yacc_preceList(t):
-    r'\[\(.*\)\];'
+def t_prec_preceList(t):
+    r'.*\(\s*(\'{1,2}|\").*(\'{1,2}|\")\s*\)\,?'
     return t
+
+def t_prec_endPreceList(t):
+    r'.*(\(\s*(\'{1,2}|\").*(\'{1,2}|\")\s*\))?\]\;'
+    t.lexer.begin("yacc")
 
 def t_yacc_TS(t):
     r'%\s*ts\s*=\s*'
@@ -108,6 +120,20 @@ def t_lex_literalsV2(t):
 
 def t_lex_IGN(t):
     r'%\s*ignore\s*=\s*'
+    return t
+
+def t_lex_BSTAT(t):
+    r'% *states*\s*\=\s*\[.*'
+    t.lexer.begin("stat")
+    return t
+
+def t_stat_statList(t):
+    r'\((\'|\").*(\'|\")\)\,?,'
+    return t
+
+def t_stat_endStatList(t):
+    r'(\((\'|\").*(\'|\")\)\]\;)|(\]\;)'
+    t.lexer.begin("lex")
     return t
 
 def t_ANY_BFUN(t):

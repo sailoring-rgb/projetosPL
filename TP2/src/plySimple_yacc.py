@@ -10,8 +10,10 @@ from helper import *
               | BYACC Yacc BLEX Lex EOF
               | EOF
     Yacc : Precedence Dictionary Grammar Defs InstrList
-    Precedence : PREC preceList
+    Precedence : BPREC ListP EPREC
                |
+    ListP : preceList
+          |
     Dictionary : TS tsList
                |
     Grammar : BGRAM ProdList
@@ -24,7 +26,7 @@ from helper import *
     InstrList : InstrList Inst
               |
     Inst : BINST instruction
-    Lex : Vars Funs InstrList
+    Lex : Vars States Funs InstrList
     Vars : Vars Var
          |
     Var : LIT Liters
@@ -32,6 +34,10 @@ from helper import *
         | TOK tokenList
     Liters : literals
            | literalsV2
+    States : BSTAT ListS ESTAT
+           |
+    ListS : statList
+         |
     Funs : Funs Fun
          |
     Fun : BFUN function
@@ -57,10 +63,16 @@ def p_Yacc(p):
     'Yacc : Precedence Dictionary Grammar Defs InstrList'
 
 def p_Precedence(p):
-    'Precedence : PREC preceList'
+    'Precedence : BPREC ListP EPREC'
 
 def p_Precedence_Empty(p):
     'Precedence : '
+
+def p_ListP(p):
+    'ListP : preceList'
+
+def p_ListP_Empty(p):
+    'ListP : '
 
 def p_Dictionary(p):
     'Dictionary : TS tsList'
@@ -121,6 +133,18 @@ def p_Liters_V2(p):
 
 def p_Var_ListTok(p):
     'Var : TOK tokenList'
+
+def p_States(p):
+    'States : BSTAT ListS ESTAT'
+
+def p_States_Empty(p):
+    'States : '
+
+def p_ListS(p):
+    'ListS : statList'
+
+def p_ListS_Empty(p):
+    'ListS : '
 
 def p_Funs(p):
     'Funs : Funs Fun'
