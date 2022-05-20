@@ -302,20 +302,21 @@ def translate_yacc(lines: List[str]):
             about_parser += (re.findall(r'(?:\/\% ?(.*))',lines[pos]))[0] + "\n"
 
         # process precendence variable if exists
-        elif re.search(r'% *[a-z][A-Za-z]*\s?=\s?\[',lines[pos]):
+        elif re.search(r'% *precedence*\s?=',lines[pos]):
             newline = re.sub(r'% *','',lines[pos])
             if re.search(r'\]\;$',lines[pos]):
                 prec += re.sub(r';','',newline)
-            elif re.search(r'\[$',lines[pos]):
+            elif re.search(r'\[\(.*\)\,?',lines[pos+1]):
                 i = pos + 1
+                prec += newline
                 for line in lines[pos+1:]:
                     if re.search(r'\]\;$',line):
-                        prec += re.sub(r';','',line)
+                        prec += re.sub(r'^\s*|;','',line)
                         break
                     else:
-                        prec += line
+                        prec += re.sub(r'^\s*','',line)
                         i = i + 1
-            pos = i + 1
+                pos = i
 
         # if dictionary exists
         elif re.search(r'%.*= *\{\}',lines[pos]):
