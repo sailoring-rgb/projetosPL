@@ -130,19 +130,21 @@ def process_tokens(tok: str, list_regex: List[str]):
     return tok_func, tok_no_func
 
 # DEVOLVE UMA LISTA COM O CONTEÚDO TRADUZIDO PARA O FILE LEX
-def translate_lex(lines_for_LEX: List[str]):
+def translate_lex(lines: List[str]):
 
+    pos = 0
     res = ""
     res_var = ""                                   # a variável literals (que não é obrigatória) não existe no ply-simple
     literals_match = ""
     res_literals = ""
+    states = ""
     about_lexer = ""
     run_ignore = False
     run_error = False
 
-    list_regex = [s for s in lines_for_LEX if "return" in s or "simpleToken" in s]
+    list_regex = [s for s in lines if "return" in s or "simpleToken" in s]
 
-    list_tokens = [s for s in lines_for_LEX if re.search(r'%tokens',s)]                       # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
+    list_tokens = [s for s in lines if re.search(r'% *tokens',s)]                       # string: tokens_match = "tokens = [ 'VAR', 'NUMBER' ]"
     if len(list_tokens) == 0:
         run_tokens = False
     else:
@@ -150,25 +152,43 @@ def translate_lex(lines_for_LEX: List[str]):
         res_tokens_list = list_tokens[0][list_tokens[0].index("tokens"):] + "\n"
         run_tokens = True
 
-    for line in lines_for_LEX:
+    while pos < len(lines):
 
-        if re.match(r'%ignore',line):
-            ignore_match = line
+        if re.match(r'%ignore',lines[pos]):
+            ignore_match = lines[pos]
             res_ignore = "t_ignore" + ignore_match[ignore_match.index("ignore") + len("ignore"):] + "\n"
             run_ignore = True                                                       # garante que a variável existe e está introduzida com um %
 
-        elif re.search(r'.*?error',line):
-            error_match = line
+        elif re.search(r'.*?error',lines[pos]):
+            error_match = lines[pos]
             error_message = (re.findall(r'(?:f\")(.*)(?:\"\,)',error_match))[0]
             run_error = True                                                        # garante que a variável existe e está introduzida com um %
 
-        elif re.search(r'%literals',line):
-            literals_match = line
+        elif re.search(r'%literals',lines[pos]):
+            literals_match = lines[pos]
             res_literals = literals_match[literals_match.index("%")+len("%"):] + "\n" 
 
-        elif re.match(r'%[^tokens]+ *=',line):              # é respeitada a regra "variáveis a começar com %"
-            var_match = line
+        elif re.search(r'% *states*\s?=',lines[pos]):
+            newline = re.sub(r'% *','',lines[pos])
+            if re.search(r'\]\;$',lines[pos]):
+                states += re.sub(r';','',newline)
+            elif re.search(r'\[\(.*\)\,?',lines[pos+1]):
+                i = pos + 1
+                states += newline
+                for line in lines[pos+1:]:
+                    if re.search(r'\]\;$',line):
+                        states += re.sub(r'^\s*|;','',line)
+                        break
+                    else:
+                        states += re.sub(r'^\s*','',line)
+                        i = i + 1
+                pos = i
+
+        elif re.match(r'%[^tokens]+ *=',lines[pos]):              # é respeitada a regra "variáveis a começar com %"
+            var_match = lines[pos]
             res_var = var_match[var_match.index("%")+len("%"):] + "\n" 
+
+        pos = pos + 1
 
     if run_tokens and run_error and run_ignore:
 
