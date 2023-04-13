@@ -1,12 +1,12 @@
 # PL
 
-Projetos de Processamento de Linguagens 21/22
+Projects accomplished in the scope of <b><i>Language Processing 21/22</i></b>
 
-Classificação do TP1: 17/20\
-Classificação do TP2: 17/20
+- <a href="https://github.com/sailoring-rgb/projetosPL/tree/main/TP1">TP1</a> Classification: 17/20
+- <a href="https://github.com/sailoring-rgb/projetosPL/tree/main/TP2">TP2</a> Classification: 17/20
 
-# Autores
+# Authors
 
-- Ana Murta
-- Ana Henriques
-- Rui Coelho
+- <a href="https://github.com/AnaMurta10">Ana Murta</a>
+- <a href="https://github.com/sailoring-rgb">Ana Henriques</a>
+- <a href="https://github.com/ruipgcoelho">Rui Coelho</a>
